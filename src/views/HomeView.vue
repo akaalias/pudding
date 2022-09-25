@@ -11,7 +11,7 @@
                 <v-text-field
                     v-model="query"
                     :rules="queryRules"
-                    :counter="55"
+                    :counter="42"
                     label="Query"
                     required
                 ></v-text-field>
@@ -43,7 +43,6 @@
               :afterCreated="afterCreated"
               v-if="elements.length !== 0"
           />
-        {{ elements }}
       </v-col>
     </v-row>
 
@@ -61,10 +60,10 @@
     data() {
       return {
         valid: false,
-        query: '',
+        query: '0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC',
         queryRules: [
           v => !!v || 'Query is required',
-          v => v.length >= 10 || 'Query must be more than 10 characters',
+          v => v.length == 42 || 'Query must be 42 characters',
         ],
         elements: [],
         config: {
@@ -73,20 +72,37 @@
               selector: 'node',
               style: {
                 'background-color': '#666',
-                'label': 'data(id)'
+                'label': 'data(label)',
+                'width': 100,
+                'height': 100,
+                'font-size': 40,
+                'text-halign': 'center',
+                'text-valign': 'bottom'
               }
-            }, {
+            },
+            {
+              selector: 'node.target',
+              style: {
+                'background-color': 'red',
+                'label': 'data(label)',
+                'width': 120,
+                'height': 120,
+              }
+            }
+            , {
               selector: 'edge',
               style: {
-                'width': 3,
+                'width': 'data(weight)',
                 'line-color': '#ccc',
                 'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'triangle'
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'haystack',
+                'haystack-radius': 0.5
               }
             }
           ],
           layout: {
-            name: 'grid',
+            name: 'circle',
             row: 1
           }
         }
@@ -94,7 +110,9 @@
     },
     methods: {
       async search() {
-        this.elements = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
+        if(this.query.length == 42) {
+          this.elements = await GraphDataProvider.getTransactionsNetworkForAccount(this.query);
+        }
       },
       preConfig(cytoscape) {
         // cytoscape.use( cola );
@@ -102,7 +120,7 @@
       async afterCreated(cy) {
         this.cy = cy;
         this.cy.add(this.elements);
-
+        this.cy.layout({name: 'concentric'}).run();
         this.cy.resize();
         this.cy.fit();
       }
@@ -115,8 +133,6 @@
 <style>
 
 #cytoscape-div {
-  background-color: azure;
-  border: 1px solid black;
 }
 
 </style>

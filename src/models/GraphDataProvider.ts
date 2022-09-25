@@ -3,36 +3,71 @@ import API from "@/models/API"
 export default class GraphDataProvider {
 
     public static async getTransactionsNetworkForAccount(account: string) {
+        // @ts-ignore
+        var elements = [];
+        const accountLowerCase = account.toLowerCase()
+        const txs = await API.getTransactionsForAccount(accountLowerCase);
 
-        /*
-            https://js.cytoscape.org/#getting-started/specifying-basic-options
-            elements: [ // list of graph elements to start with
-                { // node a
-                  data: { id: 'a' }
-                },
-                { // node b
-                  data: { id: 'b' }
-                },
-                { // edge ab
-                  data: { id: 'ab', source: 'a', target: 'b' }
-                }
-              ]
-         */
-        const txs = await API.getTransactionsForAccount(account);
-        var elements = [ // list of graph elements to start with
-            { // node a
-                data: { id: 'a' }
-            },
-            { // node b
-                data: { id: 'b' }
-            },
-            { // edge ab
-                data: { id: 'ab', source: 'a', target: 'b' }
+        var seenAddresses: string[] = [];
+        var seenTransactions = new Map<string, object>();
+        var fromToTransactionsCounter = 0
+        var fromOnlyTransactionsCounter = 0
+        var nodeCount = 0
+        var edgeCount = 0
+
+        // create target node
+        console.log("Target: " + accountLowerCase)
+        seenAddresses.push(accountLowerCase);
+        // @ts-ignore
+        elements.push({data: { id: accountLowerCase, label: accountLowerCase.substring(0, 10)}, classes: 'target'})
+        nodeCount += 1
+
+        txs.forEach((tx: any, index: number) => {
+            const from = tx["from"]
+            const to = tx["to"]
+            const txSignature = from + to + tx["timeStamp"];
+
+            // Skip empty TOs
+            if(from == "" || to == "") {
+                fromOnlyTransactionsCounter += 1
+                return
+            } else {
+                fromToTransactionsCounter += 1
             }
-        ]
 
-        // Magic TBD...
+            // Account for addresses
+            if(!seenAddresses.includes(from)) {
+                seenAddresses.push(from);
+                // @ts-ignore
+                elements.push({data: { id: from, label: from.substring(0, 10)}})
+                nodeCount += 1
+            }
 
+            if(!seenAddresses.includes(to)) {
+                console.log("To: " + to)
+                seenAddresses.push(to)
+                // @ts-ignore
+                elements.push({data: { id: to, label: to.substring(0, 10)}})
+                nodeCount += 1
+            }
+
+            // Account for TXs
+            if(!(txSignature in seenTransactions)) {
+                seenTransactions.set(txSignature, {count: 0})
+                elements.push({ data: { id: txSignature, source: from, target: to, weight: 1} })
+                edgeCount +=  1
+            } else {
+                // update count
+            }
+        });
+
+        console.log("We have " + txs.length + " transactions")
+        console.log("We have " + nodeCount + " nodes")
+        console.log("We have " + edgeCount + " edges")
+        console.log("We have " + fromToTransactionsCounter + " From/To transactions")
+        console.log("We have " + fromOnlyTransactionsCounter + " From transactions")
+
+        // @ts-ignore
         return elements;
     }
 }
