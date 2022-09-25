@@ -34,8 +34,19 @@
     </v-row>
 
     <v-row>
-      {{ transactionsNetwork }}
+      <v-col
+          cols="12"
+      >
+          <cytoscape
+              :config="config"
+              :preConfig="preConfig"
+              :afterCreated="afterCreated"
+              v-if="elements.length !== 0"
+          />
+        {{ elements }}
+      </v-col>
     </v-row>
+
   </v-container>
 </template>
 
@@ -55,17 +66,59 @@
           v => !!v || 'Query is required',
           v => v.length >= 10 || 'Query must be more than 10 characters',
         ],
-        transactionsNetwork: []
+        elements: [],
+        config: {
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'background-color': '#666',
+                'label': 'data(id)'
+              }
+            }, {
+              selector: 'edge',
+              style: {
+                'width': 3,
+                'line-color': '#ccc',
+                'target-arrow-color': '#ccc',
+                'target-arrow-shape': 'triangle'
+              }
+            }
+          ],
+          layout: {
+            name: 'grid',
+            row: 1
+          }
+        }
       }
     },
     methods: {
       async search() {
         // `this` inside methods point to the Vue instance
-        this.transactionsNetwork = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
+        this.elements = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
+      },
+      preConfig(cytoscape) {
+        // cytoscape.use( cola );
+      },
+      async afterCreated(cy) {
+        this.cy = cy;
+        this.cy.add(this.elements);
+
+        this.cy.resize();
+        this.cy.fit();
       }
     },
     async created() {
-      // this.transactionsNetwork = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
-    }
+      // this.elements = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
+    },
   })
 </script>
+
+<style>
+
+#cytoscape-div {
+  background-color: azure;
+  border: 1px solid black;
+}
+
+</style>
