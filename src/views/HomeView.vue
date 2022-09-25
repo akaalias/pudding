@@ -51,6 +51,7 @@
 
 <script lang="ts">
   import Vue from 'vue'
+  import cola from "cytoscape-cola";
   import GraphDataProvider from "@/models/GraphDataProvider"
 
   export default Vue.extend({
@@ -115,7 +116,7 @@
         }
       },
       preConfig(cytoscape) {
-        // cytoscape.use( cola );
+        cytoscape.use( cola );
       },
       async afterCreated(cy) {
         this.cy = cy;

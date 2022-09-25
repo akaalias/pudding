@@ -23,16 +23,16 @@ export default class API {
 
     private offsetForDepth(depth: number) {
         if(depth >= 3) {
-            return 50
+            return 100
         }
         if(depth == 2) {
-            return 30
+            return 50
         }
         if(depth == 1) {
-            return 20
+            return 25
         }
 
-        return 10
+        return 12
     }
 
     private extractAccounts(txs: any[]) {
@@ -64,8 +64,8 @@ export default class API {
             method: "GET",
         });
 
-        console.log("Delay...")
         delay(500)
+        console.log(".")
 
         const jsonData = await response.json();
         const transactions = jsonData["result"]
