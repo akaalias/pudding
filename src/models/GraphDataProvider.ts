@@ -4,9 +4,11 @@ export default class GraphDataProvider {
 
     public static async getTransactionsNetworkForAccount(account: string) {
         // @ts-ignore
-        var elements = [];
+        var elements: any[] = []
         const accountLowerCase = account.toLowerCase()
-        const txs = await API.getTransactionsForAccount(accountLowerCase);
+        const api = new API()
+        await api.getTransactionsForAccount(accountLowerCase, 3);
+        const txs = api.getAllTransactionsFlattened()
 
         var seenAddresses: string[] = [];
         var seenTransactions = new Map<string, object>();
@@ -16,7 +18,6 @@ export default class GraphDataProvider {
         var edgeCount = 0
 
         // create target node
-        console.log("Target: " + accountLowerCase)
         seenAddresses.push(accountLowerCase);
         // @ts-ignore
         elements.push({data: { id: accountLowerCase, label: accountLowerCase.substring(0, 10)}, classes: 'target'})
