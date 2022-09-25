@@ -4,19 +4,17 @@ export default class API {
     }
 
     public static async getTransactions(address: string) {
-        const requestURL = 'https://chain.api.btc.com/v3/address/15urYnyeJe3gwbGJ74wcX89Tz7ZtsFDVew/tx'
+        const requestURL = 'https://api.etherscan.io/api?module=account&action=txlist&address=0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=XYHEBQ85935M5CEDH821RHRG8FMQSYASY6';
 
+        console.log("Before fetching...")
         const response = await fetch(requestURL, {
             method: "GET",
-            headers: {
-                accept: "application/json",
-                'Access-Control-Allow-Origin': 'http://localhost:8080',
-                'Access-Control-Allow-Methods': 'GET'
-            }
         });
 
+        console.log("After fetching...")
         const jsonData = await response.json();
-        const transactions = jsonData.data.list;
+        const transactions = jsonData["result"]
+
         return transactions;
     }
 }
