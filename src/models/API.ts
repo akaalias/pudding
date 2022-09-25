@@ -1,10 +1,6 @@
 export default class API {
-    async get(query: string) {
-        return []
-    }
-
-    public static async getTransactions(address: string) {
-        const requestURL = 'https://api.etherscan.io/api?module=account&action=txlist&address=0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=XYHEBQ85935M5CEDH821RHRG8FMQSYASY6';
+    public static async getTransactionsForAccount(account: string) {
+        const requestURL = 'https://api.etherscan.io/api?module=account&action=txlist&address=0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC&startblock=0&endblock=99999999&page=1&offset=100&sort=asc&apikey=XYHEBQ85935M5CEDH821RHRG8FMQSYASY6';
 
         console.log("Before fetching...")
         const response = await fetch(requestURL, {
