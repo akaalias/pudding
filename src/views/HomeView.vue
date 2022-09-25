@@ -94,7 +94,6 @@
     },
     methods: {
       async search() {
-        // `this` inside methods point to the Vue instance
         this.elements = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
       },
       preConfig(cytoscape) {
@@ -109,7 +108,6 @@
       }
     },
     async created() {
-      // this.elements = await GraphDataProvider.getTransactionsNetworkForAccount("0x9aa99c23f67c81701c772b106b4f83f6e858dd2e");
     },
   })
 </script>
