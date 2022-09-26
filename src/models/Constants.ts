@@ -1,5 +1,5 @@
 export default class Constants {
-    public static maxDepth = 4
+    public static maxDepth = 2
 
     public static offsetForDepth(depth: number) {
         if(depth >= 3) {

@@ -72,7 +72,7 @@
     data() {
       return {
         valid: false,
-        query: '0xc5102fE9359FD9a28f877a67E36B0F050d81a3CC',
+        query: '0xee599d36b41759d0343d997657e51665f973e944',
         queryRules: [
           v => !!v || 'Query is required',
           v => v.length == 42 || 'Query must be 42 characters',
@@ -107,11 +107,18 @@
             , {
               selector: 'edge',
               style: {
-                "curve-style": "haystack",
-                "haystack-radius": 0.5,
-                "line-color": "#444",
+                'curve-style': 'haystack',
+                'haystack-radius': 0.8,
+                "font-size": "6px",
+                "opacity": 0.5,
+                "line-color": "#333",
                 "width": 'mapData(weight, 1, 100, 1, 10)',
-                'label': 'data(weight)'
+                'arrow-scale': 'mapData(weight, 1, 100, 0.5, 2)',
+                'label': 'data(weight)',
+                'color': 'white',
+                'mid-target-arrow-fill': 'filled',
+                'mid-target-arrow-shape': 'triangle',
+                'mid-target-arrow-color': "#333"
               }
             }
           ]

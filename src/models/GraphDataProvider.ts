@@ -4,7 +4,7 @@ import Constants from "@/models/Constants"
 export default class GraphDataProvider {
     public static cache: Map<any, any>
     public static addressSeenCounts: Map<string, number>
-    public static txSignatureSeenCounts: Map<string, number>
+    public static txSignatureSeenCounts: Map<string, string[]>
 
     private static setupStaticMembers() {
         if(GraphDataProvider.cache == null) {
@@ -16,7 +16,7 @@ export default class GraphDataProvider {
         }
 
         if(GraphDataProvider.txSignatureSeenCounts == null) {
-            GraphDataProvider.txSignatureSeenCounts = new  Map<string, number>()
+            GraphDataProvider.txSignatureSeenCounts = new  Map<string, string[]>()
         }
     }
 
@@ -55,6 +55,9 @@ export default class GraphDataProvider {
             txs.forEach((tx: any, index: number) => {
                 const from = tx["from"]
                 const to = tx["to"]
+                const timestamp = tx["timeStamp"]
+                const hash = tx["hash"]
+                console.log(hash)
                 const txSignature = from + to
 
                 // Skip empty TOs
@@ -87,13 +90,13 @@ export default class GraphDataProvider {
                 // Account for TXs
                 if(!(ransactionSignaturesAddedToGraphElements.includes(txSignature))) {
                     ransactionSignaturesAddedToGraphElements.push(txSignature)
-                    const weight = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
+                    const listOfTXHashes = GraphDataProvider.txSignatureSeenCounts.get(txSignature) || []
 
                     elements.push({ data:
                                         {   id: txSignature,
                                             source: from,
                                             target: to,
-                                            weight: weight}
+                                            weight: listOfTXHashes.length}
                     })
 
                     edgeCount +=  1
@@ -112,22 +115,32 @@ export default class GraphDataProvider {
         txs.forEach((tx: any, index: number) => {
             const from = tx["from"]
             const to = tx["to"]
-            const txSignature = from + to
 
             GraphDataProvider.updateAddressSeenCount(from)
             GraphDataProvider.updateAddressSeenCount(to)
-            GraphDataProvider.updateTxSignatureSeenCount(txSignature)
+            GraphDataProvider.updateTxSignatureSeenCount(tx)
         })
     }
 
-    private static async updateTxSignatureSeenCount(txSignature: string) {
+    private static async updateTxSignatureSeenCount(tx: any) {
+        const from = tx["from"]
+        const to = tx["to"]
+        const hash = tx["hash"]
+        const txSignature = from + to
 
-        let seenCount = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
+        let listOfTXHashes = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
 
-        if(seenCount == null) {
-            GraphDataProvider.txSignatureSeenCounts.set(txSignature, 1)
+        if(listOfTXHashes == null) {
+            let newListOfTXHashes = []
+            newListOfTXHashes.push(hash)
+            GraphDataProvider.txSignatureSeenCounts.set(txSignature, newListOfTXHashes)
         } else {
-            GraphDataProvider.txSignatureSeenCounts.set(txSignature, seenCount + 1)
+            if(!listOfTXHashes.includes(hash)) {
+                listOfTXHashes.push(hash)
+                GraphDataProvider.txSignatureSeenCounts.set(txSignature, listOfTXHashes)
+            } else {
+                console.log("Skipping dupes.")
+            }
         }
     }
 
