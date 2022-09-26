@@ -3,6 +3,7 @@
     <v-app-bar
         app
         dark
+        fluid
     >
       <v-row>
         <v-col cols="12">
@@ -40,7 +41,7 @@
 
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container fluid>
         <v-row>
           <v-col
               cols="12"
