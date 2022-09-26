@@ -57,7 +57,6 @@ export default class GraphDataProvider {
                 const to = tx["to"]
                 const timestamp = tx["timeStamp"]
                 const hash = tx["hash"]
-                console.log(hash)
                 const txSignature = from + to
 
                 // Skip empty TOs
@@ -138,8 +137,6 @@ export default class GraphDataProvider {
             if(!listOfTXHashes.includes(hash)) {
                 listOfTXHashes.push(hash)
                 GraphDataProvider.txSignatureSeenCounts.set(txSignature, listOfTXHashes)
-            } else {
-                console.log("Skipping dupes.")
             }
         }
     }
