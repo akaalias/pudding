@@ -50,6 +50,7 @@
             </div>
 
             <cytoscape
+                ref="cy"
                 :config="config"
                 :afterCreated="afterCreated"
                 v-if="elements.length !== 0"
@@ -83,8 +84,7 @@
         elements: [],
         config: Constants.cyConfig,
         apiResultCount: 0,
-        api: new API(),
-        $cy: null
+        api: new API()
       }
     },
     methods: {
@@ -141,6 +141,13 @@
       this.graphDataProvider = new GraphDataProvider(this.api)
     },
     watch: {
+      elements: {
+        handler(newVal, oldVal) {
+          console.log("Elements changed!")
+        },
+        deep: true,
+        immediate: true
+      },
       api: {
         handler(newVal, oldVal){  // here having access to the new and old value
           this.apiResultCount = newVal.totalTransactionsFetchedCount

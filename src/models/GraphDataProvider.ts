@@ -137,12 +137,9 @@ export default class GraphDataProvider {
         var finalElements = []
 
         for(var el of allElementsIncludingCaches) {
-            console.log("prior element")
             if(this.queriedAddresses.includes(el["data"]["id"])) {
-                console.log("Update this prior target!")
                 el["classes"] = "target"
             }
-
             finalElements.push(el)
         }
 
