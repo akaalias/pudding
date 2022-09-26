@@ -85,41 +85,37 @@
               style: {
                 'background-color': '#222',
                 'label': 'data(label)',
-                'width': 50,
-                'height': 50,
-                'font-size': 20,
-                'text-halign': 'center',
-                'text-valign': 'center',
-                'text-outline-color': '#222',
-                'text-outline-width': 4,
-                'color': '#444'
+                "width": "mapData(score, 0, 100, 20, 60)",
+                "height": "mapData(score, 0, 100, 20, 60)",
+                "font-size": "12px",
+                "text-valign": "center",
+                "text-halign": "center",
+                "background-color": "#555",
+                "text-outline-color": "#555",
+                "text-outline-width": "2px",
+                "color": "#fff",
+                "overlay-padding": "6px",
+                "z-index": "10"
               }
             },
             {
               selector: 'node.target',
               style: {
                 'background-color': 'red',
-                'label': 'data(label)',
-                'width': 100,
-                'height': 100,
               }
             }
             , {
               selector: 'edge',
               style: {
-                'width': 'data(weight)',
-                'line-color': '#666',
-                'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'triangle',
-                'curve-style': 'haystack',
-                'haystack-radius': 0.8
+                "curve-style": "haystack",
+                "haystack-radius": "0.5",
+                "opacity": "0.4",
+                "line-color": "#bbb",
+                "width": "mapData(weight, 0, 1, 1, 8)",
+                "overlay-padding": "3px"
               }
             }
-          ],
-          layout: {
-            name: 'circle',
-            row: 1
-          }
+          ]
         }
       }
     },
