@@ -2,38 +2,32 @@ import API from "@/models/API"
 import Constants from "@/models/Constants"
 
 export default class GraphDataProvider {
-    public static cache: Map<any, any>
-    public static addressSeenCounts: Map<string, number>
-    public static txSignatureSeenCounts: Map<string, string[]>
 
-    private static setupStaticMembers() {
-        if(GraphDataProvider.cache == null) {
-            GraphDataProvider.cache = new Map<any, any>()
-        }
+    private cache: Map<any, any>
+    private addressSeenCounts: Map<string, number>
+    private txSignatureSeenCounts: Map<string, string[]>
+    private api: API
 
-        if(GraphDataProvider.addressSeenCounts == null) {
-            GraphDataProvider.addressSeenCounts = new  Map<string, number>()
-        }
-
-        if(GraphDataProvider.txSignatureSeenCounts == null) {
-            GraphDataProvider.txSignatureSeenCounts = new  Map<string, string[]>()
-        }
+    constructor(api: API) {
+        this.cache = new Map<any, any>()
+        this.addressSeenCounts = new Map<string, number>()
+        this.txSignatureSeenCounts = new Map<string, string[]>()
+        this.api = api
     }
 
-    public static async getTransactionsNetworkForAccount(account: string) {
-        GraphDataProvider.setupStaticMembers()
+    public async getTransactionsNetworkForAccount(account: string) {
+        console.log("getTransactionsNetworkForAccount")
 
         const accountLowerCase = account.toLowerCase()
 
         // Check cache
-        if(GraphDataProvider.cache.get(accountLowerCase) != null) {
-            return GraphDataProvider.cache.get(accountLowerCase)
+        if (this.cache.get(accountLowerCase) != null) {
+            return this.cache.get(accountLowerCase)
         } else {
             // @ts-ignore
             var elements: any[] = []
-            const api = new API()
-            await api.getTransactionsForAccount(accountLowerCase, Constants.maxDepth);
-            const txs = api.getAllTransactionsFlattened()
+            await this.api.getTransactionsForAccount(accountLowerCase, Constants.maxDepth);
+            const txs = this.api.getAllTransactionsFlattened()
 
             await this.setupAddressAndTxSignatureSeenCounts(txs);
 
@@ -45,10 +39,13 @@ export default class GraphDataProvider {
             var edgeCount = 0
 
             // create target node
-            const seenCount = GraphDataProvider.addressSeenCounts.get(accountLowerCase)  || 0
+            const seenCount = this.addressSeenCounts.get(accountLowerCase) || 0
             const score = seenCount // * 0.006769776522008331
             // @ts-ignore
-            elements.push({data: { id: accountLowerCase, label: accountLowerCase.substring(0, 10), score: score}, classes: 'target'})
+            elements.push({
+                data: {id: accountLowerCase, label: accountLowerCase.substring(0, 10), score: score},
+                classes: 'target'
+            })
             addressesAddedToGraphElements.push(accountLowerCase);
             nodeCount += 1
 
@@ -60,7 +57,7 @@ export default class GraphDataProvider {
                 const txSignature = from + to
 
                 // Skip empty TOs
-                if(from == "" || to == "") {
+                if (from == "" || to == "") {
                     fromOnlyTransactionsCounter += 1
                     return
                 } else {
@@ -68,88 +65,89 @@ export default class GraphDataProvider {
                 }
 
                 // Account for addresses
-                if(!addressesAddedToGraphElements.includes(from)) {
+                if (!addressesAddedToGraphElements.includes(from)) {
                     addressesAddedToGraphElements.push(from);
-                    const seenCount = GraphDataProvider.addressSeenCounts.get(from) || 0
+                    const seenCount = this.addressSeenCounts.get(from) || 0
                     const score = seenCount // * 0.006769776522008331
                     // @ts-ignore
-                    elements.push({data: { id: from, label: from.substring(0, 10), score: score}})
+                    elements.push({data: {id: from, label: from.substring(0, 10), score: score}})
                     nodeCount += 1
                 }
 
-                if(!addressesAddedToGraphElements.includes(to)) {
+                if (!addressesAddedToGraphElements.includes(to)) {
                     addressesAddedToGraphElements.push(to)
-                    const seenCount = GraphDataProvider.addressSeenCounts.get(to) || 0
+                    const seenCount = this.addressSeenCounts.get(to) || 0
                     const score = seenCount // * 0.006769776522008331
                     // @ts-ignore
-                    elements.push({data: { id: to, label: to.substring(0, 10), score: score}})
+                    elements.push({data: {id: to, label: to.substring(0, 10), score: score}})
                     nodeCount += 1
                 }
 
                 // Account for TXs
-                if(!(ransactionSignaturesAddedToGraphElements.includes(txSignature))) {
+                if (!(ransactionSignaturesAddedToGraphElements.includes(txSignature))) {
                     ransactionSignaturesAddedToGraphElements.push(txSignature)
-                    const listOfTXHashes = GraphDataProvider.txSignatureSeenCounts.get(txSignature) || []
+                    const listOfTXHashes = this.txSignatureSeenCounts.get(txSignature) || []
 
-                    elements.push({ data:
-                                        {   id: txSignature,
-                                            source: from,
-                                            target: to,
-                                            weight: listOfTXHashes.length}
+                    elements.push({
+                        data:
+                            {
+                                id: txSignature,
+                                source: from,
+                                target: to,
+                                weight: listOfTXHashes.length
+                            }
                     })
 
-                    edgeCount +=  1
+                    edgeCount += 1
                 }
             });
 
             // Make sure to cache this!
-            GraphDataProvider.cache.set(accountLowerCase, elements);
+            this.cache.set(accountLowerCase, elements);
 
             // @ts-ignore
             return elements;
         }
     }
 
-    private static async setupAddressAndTxSignatureSeenCounts(txs: any) {
+    private async setupAddressAndTxSignatureSeenCounts(txs: any) {
         txs.forEach((tx: any, index: number) => {
             const from = tx["from"]
             const to = tx["to"]
 
-            GraphDataProvider.updateAddressSeenCount(from)
-            GraphDataProvider.updateAddressSeenCount(to)
-            GraphDataProvider.updateTxSignatureSeenCount(tx)
+            this.updateAddressSeenCount(from)
+            this.updateAddressSeenCount(to)
+            this.updateTxSignatureSeenCount(tx)
         })
     }
 
-    private static async updateTxSignatureSeenCount(tx: any) {
+    private async updateTxSignatureSeenCount(tx: any) {
         const from = tx["from"]
         const to = tx["to"]
         const hash = tx["hash"]
         const txSignature = from + to
 
-        let listOfTXHashes = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
+        let listOfTXHashes = this.txSignatureSeenCounts.get(txSignature)
 
-        if(listOfTXHashes == null) {
+        if (listOfTXHashes == null) {
             let newListOfTXHashes = []
             newListOfTXHashes.push(hash)
-            GraphDataProvider.txSignatureSeenCounts.set(txSignature, newListOfTXHashes)
+            this.txSignatureSeenCounts.set(txSignature, newListOfTXHashes)
         } else {
-            if(!listOfTXHashes.includes(hash)) {
+            if (!listOfTXHashes.includes(hash)) {
                 listOfTXHashes.push(hash)
-                GraphDataProvider.txSignatureSeenCounts.set(txSignature, listOfTXHashes)
+                this.txSignatureSeenCounts.set(txSignature, listOfTXHashes)
             }
         }
     }
 
-    private static async updateAddressSeenCount(address: string) {
-        let seenCount = GraphDataProvider.addressSeenCounts.get(address)
+    private async updateAddressSeenCount(address: string) {
+        let seenCount = this.addressSeenCounts.get(address)
 
-        if(seenCount == null) {
-            GraphDataProvider.addressSeenCounts.set(address, 1)
+        if (seenCount == null) {
+            this.addressSeenCounts.set(address, 1)
         } else {
-            GraphDataProvider.addressSeenCounts.set(address, seenCount + 1)
+            this.addressSeenCounts.set(address, seenCount + 1)
         }
     }
-
-
 }
