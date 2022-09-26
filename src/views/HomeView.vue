@@ -108,11 +108,10 @@
               selector: 'edge',
               style: {
                 "curve-style": "haystack",
-                "haystack-radius": "0.5",
-                "opacity": "0.4",
-                "line-color": "#bbb",
-                "width": "mapData(weight, 0, 1, 1, 8)",
-                "overlay-padding": "3px"
+                "haystack-radius": 0.5,
+                "line-color": "#444",
+                "width": 'mapData(weight, 1, 100, 1, 10)',
+                'label': 'data(weight)'
               }
             }
           ]

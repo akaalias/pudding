@@ -1,3 +1,5 @@
+import Constants from "@/models/Constants"
+
 const delay = async (ms: number) => new Promise(res => setTimeout(res, ms));
 
 export default class API {
@@ -9,7 +11,9 @@ export default class API {
             return
         }
 
-        const txs = await this.getTransactions(account, this.offsetForDepth(depth))
+        console.log(".".repeat(depth))
+
+        const txs = await this.getTransactions(account, Constants.offsetForDepth(depth))
         this.allTransactions.push(txs)
 
         for (let newAccount of this.extractAccounts(txs)) {
@@ -19,20 +23,6 @@ export default class API {
 
     public getAllTransactionsFlattened() {
         return this.allTransactions.flat()
-    }
-
-    private offsetForDepth(depth: number) {
-        if(depth >= 3) {
-            return 50
-        }
-        if(depth == 2) {
-            return 25
-        }
-        if(depth == 1) {
-            return 12
-        }
-
-        return 12
     }
 
     private extractAccounts(txs: any[]) {
@@ -64,8 +54,8 @@ export default class API {
             method: "GET",
         });
 
+        // Be kind to the API
         await delay(200)
-        console.log(".")
 
         const jsonData = await response.json();
         const transactions = jsonData["result"]

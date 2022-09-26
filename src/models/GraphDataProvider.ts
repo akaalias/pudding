@@ -1,10 +1,12 @@
 import API from "@/models/API"
+import Constants from "@/models/Constants"
 
 export default class GraphDataProvider {
     public static cache: Map<any, any>
     public static addressSeenCounts: Map<string, number>
+    public static txSignatureSeenCounts: Map<string, number>
 
-    public static async getTransactionsNetworkForAccount(account: string) {
+    private static setupStaticMembers() {
         if(GraphDataProvider.cache == null) {
             GraphDataProvider.cache = new Map<any, any>()
         }
@@ -13,46 +15,47 @@ export default class GraphDataProvider {
             GraphDataProvider.addressSeenCounts = new  Map<string, number>()
         }
 
+        if(GraphDataProvider.txSignatureSeenCounts == null) {
+            GraphDataProvider.txSignatureSeenCounts = new  Map<string, number>()
+        }
+    }
+
+    public static async getTransactionsNetworkForAccount(account: string) {
+        GraphDataProvider.setupStaticMembers()
+
         const accountLowerCase = account.toLowerCase()
 
         // Check cache
         if(GraphDataProvider.cache.get(accountLowerCase) != null) {
-            console.log("Nice! Found this cached.")
             return GraphDataProvider.cache.get(accountLowerCase)
         } else {
-
             // @ts-ignore
             var elements: any[] = []
             const api = new API()
-            await api.getTransactionsForAccount(accountLowerCase, 3);
+            await api.getTransactionsForAccount(accountLowerCase, Constants.maxDepth);
             const txs = api.getAllTransactionsFlattened()
 
-            var seenAddresses: string[] = [];
-            var seenTransactions = new Map<string, object>();
+            await this.setupAddressAndTxSignatureSeenCounts(txs);
+
+            var addressesAddedToGraphElements: string[] = []
+            var ransactionSignaturesAddedToGraphElements: string[] = []
             var fromToTransactionsCounter = 0
             var fromOnlyTransactionsCounter = 0
             var nodeCount = 0
             var edgeCount = 0
 
-            txs.forEach((tx: any, index: number) => {
-                const from = tx["from"]
-                const to = tx["to"]
-                GraphDataProvider.updateAddressSeenCount(from)
-                GraphDataProvider.updateAddressSeenCount(to)
-            })
-
             // create target node
-            seenAddresses.push(accountLowerCase);
             const seenCount = GraphDataProvider.addressSeenCounts.get(accountLowerCase)  || 0
             const score = seenCount // * 0.006769776522008331
             // @ts-ignore
             elements.push({data: { id: accountLowerCase, label: accountLowerCase.substring(0, 10), score: score}, classes: 'target'})
+            addressesAddedToGraphElements.push(accountLowerCase);
             nodeCount += 1
 
             txs.forEach((tx: any, index: number) => {
                 const from = tx["from"]
                 const to = tx["to"]
-                const txSignature = from + to + tx["timeStamp"];
+                const txSignature = from + to
 
                 // Skip empty TOs
                 if(from == "" || to == "") {
@@ -63,8 +66,8 @@ export default class GraphDataProvider {
                 }
 
                 // Account for addresses
-                if(!seenAddresses.includes(from)) {
-                    seenAddresses.push(from);
+                if(!addressesAddedToGraphElements.includes(from)) {
+                    addressesAddedToGraphElements.push(from);
                     const seenCount = GraphDataProvider.addressSeenCounts.get(from) || 0
                     const score = seenCount // * 0.006769776522008331
                     // @ts-ignore
@@ -72,8 +75,8 @@ export default class GraphDataProvider {
                     nodeCount += 1
                 }
 
-                if(!seenAddresses.includes(to)) {
-                    seenAddresses.push(to)
+                if(!addressesAddedToGraphElements.includes(to)) {
+                    addressesAddedToGraphElements.push(to)
                     const seenCount = GraphDataProvider.addressSeenCounts.get(to) || 0
                     const score = seenCount // * 0.006769776522008331
                     // @ts-ignore
@@ -82,20 +85,20 @@ export default class GraphDataProvider {
                 }
 
                 // Account for TXs
-                if(!(txSignature in seenTransactions)) {
-                    seenTransactions.set(txSignature, {count: 0})
-                    elements.push({ data: { id: txSignature, source: from, target: to, weight: 0.1} })
+                if(!(ransactionSignaturesAddedToGraphElements.includes(txSignature))) {
+                    ransactionSignaturesAddedToGraphElements.push(txSignature)
+                    const weight = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
+
+                    elements.push({ data:
+                                        {   id: txSignature,
+                                            source: from,
+                                            target: to,
+                                            weight: weight}
+                    })
+
                     edgeCount +=  1
-                } else {
-                    // update count
                 }
             });
-
-            console.log("We have " + txs.length + " transactions")
-            console.log("We have " + nodeCount + " nodes")
-            console.log("We have " + edgeCount + " edges")
-            console.log("We have " + fromToTransactionsCounter + " From/To transactions")
-            console.log("We have " + fromOnlyTransactionsCounter + " From transactions")
 
             // Make sure to cache this!
             GraphDataProvider.cache.set(accountLowerCase, elements);
@@ -105,7 +108,30 @@ export default class GraphDataProvider {
         }
     }
 
-    private static updateAddressSeenCount(address: string) {
+    private static async setupAddressAndTxSignatureSeenCounts(txs: any) {
+        txs.forEach((tx: any, index: number) => {
+            const from = tx["from"]
+            const to = tx["to"]
+            const txSignature = from + to
+
+            GraphDataProvider.updateAddressSeenCount(from)
+            GraphDataProvider.updateAddressSeenCount(to)
+            GraphDataProvider.updateTxSignatureSeenCount(txSignature)
+        })
+    }
+
+    private static async updateTxSignatureSeenCount(txSignature: string) {
+
+        let seenCount = GraphDataProvider.txSignatureSeenCounts.get(txSignature)
+
+        if(seenCount == null) {
+            GraphDataProvider.txSignatureSeenCounts.set(txSignature, 1)
+        } else {
+            GraphDataProvider.txSignatureSeenCounts.set(txSignature, seenCount + 1)
+        }
+    }
+
+    private static async updateAddressSeenCount(address: string) {
         let seenCount = GraphDataProvider.addressSeenCounts.get(address)
 
         if(seenCount == null) {
@@ -114,4 +140,6 @@ export default class GraphDataProvider {
             GraphDataProvider.addressSeenCounts.set(address, seenCount + 1)
         }
     }
+
+
 }
