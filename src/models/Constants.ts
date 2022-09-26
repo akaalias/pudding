@@ -1,8 +1,7 @@
 export default class Constants {
-    public static maxDepth = 3
+    public static maxDepth = 1
 
     public static offsetForDepth(depth: number) {
-
         if(depth >= 3) {
             return 20
         }
@@ -10,10 +9,10 @@ export default class Constants {
             return 10
         }
         if(depth == 1) {
-            return 5
+            return 10
         }
 
-        return 1
+        return 10
     }
 
     public static cyConfig = {
@@ -45,17 +44,17 @@ export default class Constants {
                 selector: 'edge',
                 style: {
                     "font-size": "6px",
-                    "opacity": 0.5,
+                    "opacity": 1,
                     "line-color": "#333",
-                    "width": 'mapData(weight, 1, 100, 1, 10)',
-                    'arrow-scale': 'mapData(weight, 1, 100, 0.5, 3)',
+                    "width": 'mapData(weight, 1, 100, 1, 100)',
+                    'arrow-scale': 'mapData(weight, 1, 100, 1, 3)',
                     'mid-target-arrow-fill': 'filled',
+                    'text-margin-x': 10,
+                    'text-margin-y': 10,
+                    'mid-target-arrow-color': "#333",
                     'mid-target-arrow-shape': 'triangle',
-                    'mid-target-arrow-color': "#333"
                     // 'curve-style': 'haystack',
                     // 'haystack-radius': 0.8,
-                    // 'label': 'data(weight)',
-                    // 'color': 'white',
                 }
             },
             {
@@ -71,7 +70,11 @@ export default class Constants {
             },
             {
                 selector: 'edge.highlight',
-                style: { 'mid-target-arrow-color': '#FFF' }
+                style: {
+                    'mid-target-arrow-color': '#FFF',
+                    'label': 'data(weight)',
+                    'color': 'white',
+                }
             },
             {
                 selector: 'edge.semitransp',

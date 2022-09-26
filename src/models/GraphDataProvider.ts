@@ -3,36 +3,51 @@ import Constants from "@/models/Constants"
 
 export default class GraphDataProvider {
 
-    private cache: Map<any, any>
-    private addressSeenCounts: Map<string, number>
+    public addressSeenCounts: Map<string, number>
+    public totalTransactionsFetchedCount: number = 0
+    public transactionCount: number = 0
+
+    private cache: Map<string, any>
     private txSignatureSeenCounts: Map<string, string[]>
     private api: API
+    private queriedAddresses: string[]
 
     constructor(api: API) {
-        this.cache = new Map<any, any>()
+        this.cache = new Map<string, any>()
         this.addressSeenCounts = new Map<string, number>()
         this.txSignatureSeenCounts = new Map<string, string[]>()
+        this.queriedAddresses = []
         this.api = api
     }
 
     public async getTransactionsNetworkForAccount(account: string) {
-        console.log("getTransactionsNetworkForAccount")
-
         const accountLowerCase = account.toLowerCase()
+
+        this.queriedAddresses.push(accountLowerCase)
+
+        // Include what we've already got
+        var allElementsIncludingCaches: any[] = []
+        let keys = Array.from( this.cache.keys() );
+
+        for (var key of keys) {
+            allElementsIncludingCaches.push(this.cache.get(key))
+        }
 
         // Check cache
         if (this.cache.get(accountLowerCase) != null) {
-            return this.cache.get(accountLowerCase)
+            // return this.cache.get(accountLowerCase)
         } else {
             // @ts-ignore
             var elements: any[] = []
             await this.api.getTransactionsForAccount(accountLowerCase, Constants.maxDepth);
+
             const txs = this.api.getAllTransactionsFlattened()
+            this.transactionCount = txs.length
 
             await this.setupAddressAndTxSignatureSeenCounts(txs);
 
             var addressesAddedToGraphElements: string[] = []
-            var ransactionSignaturesAddedToGraphElements: string[] = []
+            var transactionSignaturesAddedToGraphElements: string[] = []
             var fromToTransactionsCounter = 0
             var fromOnlyTransactionsCounter = 0
             var nodeCount = 0
@@ -43,7 +58,7 @@ export default class GraphDataProvider {
             const score = seenCount // * 0.006769776522008331
             // @ts-ignore
             elements.push({
-                data: {id: accountLowerCase, label: accountLowerCase.substring(0, 10), score: score},
+                data: {id: accountLowerCase, label: "target " + accountLowerCase.substring(0, 10), score: score},
                 classes: 'target'
             })
             addressesAddedToGraphElements.push(accountLowerCase);
@@ -84,8 +99,8 @@ export default class GraphDataProvider {
                 }
 
                 // Account for TXs
-                if (!(ransactionSignaturesAddedToGraphElements.includes(txSignature))) {
-                    ransactionSignaturesAddedToGraphElements.push(txSignature)
+                if (!(transactionSignaturesAddedToGraphElements.includes(txSignature))) {
+                    transactionSignaturesAddedToGraphElements.push(txSignature)
                     const listOfTXHashes = this.txSignatureSeenCounts.get(txSignature) || []
 
                     elements.push({
@@ -104,10 +119,34 @@ export default class GraphDataProvider {
 
             // Make sure to cache this!
             this.cache.set(accountLowerCase, elements);
+            // console.log("addressesAddedToGraphElements.length: " + addressesAddedToGraphElements.length)
+            // console.log("transactionSignaturesAddedToGraphElements.length: " + transactionSignaturesAddedToGraphElements.length)
+            // console.log("fromToTransactionsCounter: " + fromToTransactionsCounter)
+            // console.log("fromOnlyTransactionsCounter: " + fromOnlyTransactionsCounter)
+            // console.log("nodeCount: " + nodeCount)
+            // console.log("edgeCount: " + edgeCount)
+            // console.log("transactionCount: " + this.transactionCount)
 
             // @ts-ignore
-            return elements;
+            // return elements;
+            allElementsIncludingCaches.push(elements)
         }
+
+        // Final assembly
+        allElementsIncludingCaches = allElementsIncludingCaches.flat()
+        var finalElements = []
+
+        for(var el of allElementsIncludingCaches) {
+            console.log("prior element")
+            if(this.queriedAddresses.includes(el["data"]["id"])) {
+                console.log("Update this prior target!")
+                el["classes"] = "target"
+            }
+
+            finalElements.push(el)
+        }
+
+        return finalElements
     }
 
     private async setupAddressAndTxSignatureSeenCounts(txs: any) {

@@ -38,23 +38,24 @@
           </v-form>
         </v-col>
       </v-row>
-
     </v-app-bar>
     <v-main>
-      <v-container fluid>
+      <v-container fluid id="content-container">
         <v-row>
           <v-col
               cols="12"
           >
+            <div class="status">
+              {{ apiResultCount }} Transactions
+            </div>
+
             <cytoscape
                 :config="config"
-                :preConfig="preConfig"
                 :afterCreated="afterCreated"
                 v-if="elements.length !== 0"
             />
           </v-col>
         </v-row>
-
       </v-container>
     </v-main>
   </v-app>
@@ -81,18 +82,26 @@
         ],
         elements: [],
         config: Constants.cyConfig,
+        apiResultCount: 0,
+        api: new API(),
+        $cy: null
       }
     },
     methods: {
       async search() {
         if(this.query.length == 42) {
           this.elements = []
-          console.log("Calling...")
           this.elements = await this.graphDataProvider.getTransactionsNetworkForAccount(this.query);
+          this.playSound('http://soundbible.com/mp3/Air Plane Ding-SoundBible.com-496729130.mp3')
         }
       },
-      preConfig(cytoscape) {
-        // cytoscape.use( cola );
+      playSound (sound) {
+        if(sound) {
+          var audio = new Audio(sound);
+          audio.play();
+        }
+      },
+      async preConfig(cytoscape) {
       },
       async afterCreated(cy) {
         this.cy = cy;
@@ -127,9 +136,18 @@
         this.cy.fit();
       }
     },
-    created() {
+    mounted() {
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
+    },
+    watch: {
+      api: {
+        handler(newVal, oldVal){  // here having access to the new and old value
+          this.apiResultCount = newVal.totalTransactionsFetchedCount
+        },
+        deep: true,
+        immediate: true //  Also very important the immediate in case you need it, the callback will be called immediately after the start of the observation
+      }
     }
   })
 </script>
@@ -143,6 +161,10 @@
 
 #cytoscape-div {
   height: 900px;
+}
+
+#content-container {
+  margin-top: 40px;
 }
 
 </style>
