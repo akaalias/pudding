@@ -113,13 +113,32 @@
                 "opacity": 0.5,
                 "line-color": "#333",
                 "width": 'mapData(weight, 1, 100, 1, 10)',
-                'arrow-scale': 'mapData(weight, 1, 100, 0.5, 2)',
+                'arrow-scale': 'mapData(weight, 1, 100, 0.5, 3)',
                 'label': 'data(weight)',
                 'color': 'white',
                 'mid-target-arrow-fill': 'filled',
                 'mid-target-arrow-shape': 'triangle',
                 'mid-target-arrow-color': "#333"
               }
+            },
+            {
+              selector: 'node.highlight',
+              style: {
+                'border-color': '#FFF',
+                'border-width': '2px'
+              }
+            },
+            {
+              selector: 'node.semitransp',
+              style:{ 'opacity': '0.5' }
+            },
+            {
+              selector: 'edge.highlight',
+              style: { 'mid-target-arrow-color': '#FFF' }
+            },
+            {
+              selector: 'edge.semitransp',
+              style:{ 'opacity': '0.2' }
             }
           ]
         }
@@ -139,6 +158,20 @@
         this.cy = cy;
         this.cy.add(this.elements);
 
+        this.cy.on('mouseover', 'node', function(e){
+            var sel = e.target;
+            this.cy.elements().difference(sel.outgoers()).not(sel).addClass('semitransp');
+            sel.addClass('highlight').outgoers().addClass('highlight');
+          }.bind(this)
+        );
+
+        this.cy.on('mouseout', 'node', function(e){
+          var sel = e.target;
+          this.cy.elements().removeClass('semitransp');
+          sel.removeClass('highlight').outgoers().removeClass('highlight');
+          }.bind(this)
+        );
+
         const coseLayout = {
           name: 'cose',
               animate: false,
@@ -157,7 +190,8 @@
               initialTemp: 200,
               coolingFactor: 0.95,
               minTemp: 1.0
-        },
+        }
+
 
         this.cy.layout(coseLayout).run();
         this.cy.resize();

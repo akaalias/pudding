@@ -6,12 +6,12 @@ export default class Constants {
             return 50
         }
         if(depth == 2) {
-            return 12
+            return 25
         }
         if(depth == 1) {
             return 12
         }
 
-        return 10
+        return 1
     }
 }
