@@ -1,52 +1,62 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12">
-        <v-form v-model="valid">
-          <v-container>
-            <v-row>
-              <v-col
-                  cols="10"
-              >
-                <v-text-field
-                    v-model="query"
-                    :rules="queryRules"
-                    :counter="42"
-                    label="Query"
-                    required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                  cols="2"
-              >
-                <v-btn
-                    class="mr-4"
-                    @click="search"
-                    :disabled="!valid"
+  <v-app>
+    <v-app-bar
+        app
+        dark
+    >
+      <v-row>
+        <v-col cols="12">
+          <v-form v-model="valid">
+            <v-container>
+              <v-row>
+                <v-col
+                    cols="10"
                 >
-                  Search
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-form>
-      </v-col>
-    </v-row>
+                  <v-text-field
+                      v-model="query"
+                      :rules="queryRules"
+                      :counter="42"
+                      label=""
+                      clearable
+                      required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                    cols="2"
+                >
+                  <v-btn
+                      class="mr-4"
+                      @click="search"
+                      :disabled="!valid"
+                  >
+                    Search
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-col>
+      </v-row>
 
-    <v-row>
-      <v-col
-          cols="12"
-      >
-          <cytoscape
-              :config="config"
-              :preConfig="preConfig"
-              :afterCreated="afterCreated"
-              v-if="elements.length !== 0"
-          />
-      </v-col>
-    </v-row>
+    </v-app-bar>
+    <v-main>
+      <v-container>
+        <v-row>
+          <v-col
+              cols="12"
+          >
+            <cytoscape
+                :config="config"
+                :preConfig="preConfig"
+                :afterCreated="afterCreated"
+                v-if="elements.length !== 0"
+            />
+          </v-col>
+        </v-row>
 
-  </v-container>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <script lang="ts">
@@ -72,13 +82,16 @@
             {
               selector: 'node',
               style: {
-                'background-color': '#666',
+                'background-color': '#222',
                 'label': 'data(label)',
-                'width': 100,
-                'height': 100,
-                'font-size': 40,
+                'width': 50,
+                'height': 50,
+                'font-size': 20,
                 'text-halign': 'center',
-                'text-valign': 'bottom'
+                'text-valign': 'center',
+                'text-outline-color': '#222',
+                'text-outline-width': 4,
+                'color': '#444'
               }
             },
             {
@@ -86,19 +99,19 @@
               style: {
                 'background-color': 'red',
                 'label': 'data(label)',
-                'width': 120,
-                'height': 120,
+                'width': 100,
+                'height': 100,
               }
             }
             , {
               selector: 'edge',
               style: {
                 'width': 'data(weight)',
-                'line-color': '#ccc',
+                'line-color': '#666',
                 'target-arrow-color': '#ccc',
                 'target-arrow-shape': 'triangle',
                 'curve-style': 'haystack',
-                'haystack-radius': 0.5
+                'haystack-radius': 0.8
               }
             }
           ],
@@ -121,7 +134,28 @@
       async afterCreated(cy) {
         this.cy = cy;
         this.cy.add(this.elements);
-        this.cy.layout({name: 'concentric'}).run();
+
+        const coseLayout = {
+          name: 'cose',
+              animate: false,
+              idealEdgeLength: 100,
+              nodeOverlap: 20,
+              refresh: 20,
+              fit: true,
+              padding: 30,
+              randomize: false,
+              componentSpacing: 100,
+              nodeRepulsion: 400000,
+              edgeElasticity: 100,
+              nestingFactor: 5,
+              gravity: 80,
+              numIter: 1000,
+              initialTemp: 200,
+              coolingFactor: 0.95,
+              minTemp: 1.0
+        },
+
+        this.cy.layout(coseLayout).run();
         this.cy.resize();
         this.cy.fit();
       }
@@ -133,7 +167,13 @@
 
 <style>
 
+.v-toolbar {
+  padding-top: 30px;
+  padding-bottom: 80px;
+}
+
 #cytoscape-div {
+  height: 900px;
 }
 
 </style>

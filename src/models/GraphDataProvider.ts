@@ -45,7 +45,6 @@ export default class GraphDataProvider {
             }
 
             if(!seenAddresses.includes(to)) {
-                console.log("To: " + to)
                 seenAddresses.push(to)
                 // @ts-ignore
                 elements.push({data: { id: to, label: to.substring(0, 10)}})

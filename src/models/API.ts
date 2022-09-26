@@ -23,13 +23,13 @@ export default class API {
 
     private offsetForDepth(depth: number) {
         if(depth >= 3) {
-            return 100
-        }
-        if(depth == 2) {
             return 50
         }
-        if(depth == 1) {
+        if(depth == 2) {
             return 25
+        }
+        if(depth == 1) {
+            return 12
         }
 
         return 12
@@ -64,7 +64,7 @@ export default class API {
             method: "GET",
         });
 
-        delay(500)
+        await delay(200)
         console.log(".")
 
         const jsonData = await response.json();

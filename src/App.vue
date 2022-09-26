@@ -1,16 +1,5 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <v-toolbar-title>Pudding</v-toolbar-title>
-    </v-app-bar>
-    <v-main>
-      <router-view/>
-    </v-main>
-  </v-app>
+  <router-view/>
 </template>
 
 <script lang="ts">
