@@ -125,6 +125,7 @@
     methods: {
       async search() {
         if(this.query.length == 42) {
+          this.elements = []
           this.elements = await GraphDataProvider.getTransactionsNetworkForAccount(this.query);
         }
       },
