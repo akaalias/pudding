@@ -15,8 +15,7 @@ export default class Constants {
         return 10
     }
 
-    public static cyConfig = {
-        style: [
+    public static cyStyle = [
             {
                 selector: 'node',
                 style: {
@@ -79,9 +78,8 @@ export default class Constants {
             {
                 selector: 'edge.semitransp',
                 style:{ 'opacity': '0.2' }
-            }
-        ]
-    }
+            }]
+
 
     public static coseLayout = {
         name: 'cose',
@@ -105,7 +103,6 @@ export default class Constants {
 
     public static concentricLayout = {
         name: 'concentric',
-
         fit: true, // whether to fit the viewport to the graph
         padding: 30, // the padding on fit
         startAngle: 3 / 2 * Math.PI, // where nodes start in radians
