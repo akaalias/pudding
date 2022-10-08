@@ -94,13 +94,11 @@
           const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]; // [ 'A', 'B']
 
           for(var id of uniqueCommunityIds) {
+            const rnd = Math.floor(Math. random() * Constants.RandomNodeCount)
             this.cy.style()
                 .selector('node.c' + id)
                 .style({
-                  'label': '',
-                  'width': '20px',
-                  'height': '20px',
-                  'background-color': Constants.colors[id]
+                  'background-color': Constants.getBackgroundColor(id + rnd)
                 })
                 .update()
           }

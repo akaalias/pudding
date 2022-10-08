@@ -1,8 +1,8 @@
 export default class Constants {
     public static maxDepth = 2
     public static RandomNodeCount = 500
-    public static RandomEdgeCount = 250
-    public static RandomWeightMax = 10
+    public static RandomEdgeCount = 300
+    public static RandomWeightMax = 15
 
     public static offsetForDepth(depth: number) {
         if(depth >= 3) {
@@ -34,9 +34,9 @@ export default class Constants {
         name: 'cose',
         animate: false,
         idealEdgeLength: 100,
-        nodeOverlap: 20,
+        nodeOverlap: 150,
         refresh: 20,
-        fit: true,
+        fit: false,
         padding: 30,
         randomize: false,
         componentSpacing: 100,
@@ -89,26 +89,26 @@ export default class Constants {
         {
             selector: 'node',
             style: {
-                'label': 'data(label)',
-                "width": "mapData(score, 0, 100, 20, 60)",
-                "height": "mapData(score, 0, 100, 20, 60)",
-                "font-size": "12px",
+                'label': '',
+                "width": "mapData(score, 0, 50, 0, 50)",
+                "height": "mapData(score, 0, 50, 0, 50)",
+                "font-size": "24px",
                 "text-valign": "center",
                 "text-halign": "center",
                 "background-color": "#555",
                 "text-outline-color": "#555",
-                "text-outline-width": "1px",
+                "text-outline-width": "3px",
                 "color": "#fff",
                 "overlay-padding": "6px",
                 "z-index": "10"
-            }
+            },
         },
         {
             selector: 'node.target',
             style: {
                 'background-color': 'red',
-                'width': '100 !important',
-                'height': '100 !important'
+                'border-color': 'red',
+                'border-width': '10px'
             }
         }
         , {
@@ -131,6 +131,7 @@ export default class Constants {
         {
             selector: 'node.highlight',
             style: {
+                'label': 'data(label)',
                 'border-color': '#FFF',
                 'border-width': '2px'
             }
@@ -301,4 +302,52 @@ export default class Constants {
         "WhiteSmoke",
         "Yellow",
     ]
+
+    public static colorForNumber(nodeId: any) {
+        return Constants.intToRGB(Constants.hashCode("" + nodeId))
+    }
+
+    private static hashCode(str: string) { // java String#hashCode
+        var hash = 0;
+        for (var i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return hash;
+    }
+
+    private static intToRGB(i: number){
+        var c = (i & 0x00FFFFFF)
+            .toString(16)
+            .toUpperCase();
+
+        return "00000".substring(0, 6 - c.length) + c;
+    }
+
+    public static getBackgroundColor(i: any) {
+        let stringUniqueHash = [...(i + "")].reduce((acc, char) => {
+            return char.charCodeAt(0) + ((acc << 5) - acc);
+        }, 0);
+        return `hsl(${stringUniqueHash % 360}, 95%, 35%)`;
+    }
+
+// Takes any string and converts it into a #RRGGBB color.
+    public static StringToColor = (function(){
+        var instance: any = null;
+
+        return {
+            next: function stringToColor(str: string) {
+                if(instance === null) {
+                    instance = {};
+                    instance.stringToColorHash = {};
+                    instance.nextVeryDifferntColorIdx = 0;
+                    instance.veryDifferentColors = ["#000000","#00FF00","#0000FF","#FF0000","#01FFFE","#FFA6FE","#FFDB66","#006401","#010067","#95003A","#007DB5","#FF00F6","#FFEEE8","#774D00","#90FB92","#0076FF","#D5FF00","#FF937E","#6A826C","#FF029D","#FE8900","#7A4782","#7E2DD2","#85A900","#FF0056","#A42400","#00AE7E","#683D3B","#BDC6FF","#263400","#BDD393","#00B917","#9E008E","#001544","#C28C9F","#FF74A3","#01D0FF","#004754","#E56FFE","#788231","#0E4CA1","#91D0CB","#BE9970","#968AE8","#BB8800","#43002C","#DEFF74","#00FFC6","#FFE502","#620E00","#008F9C","#98FF52","#7544B1","#B500FF","#00FF78","#FF6E41","#005F39","#6B6882","#5FAD4E","#A75740","#A5FFD2","#FFB167","#009BFF","#E85EBE"];
+                }
+
+                if(!instance.stringToColorHash[str])
+                    instance.stringToColorHash[str] = instance.veryDifferentColors[instance.nextVeryDifferntColorIdx++];
+
+                return instance.stringToColorHash[str];
+            }
+        }
+    })();
 }

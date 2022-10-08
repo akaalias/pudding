@@ -119,7 +119,7 @@ export default class GraphDataProvider {
         var elements: any[] = []
 
         for(var counter:number = 0; counter <= Constants.RandomNodeCount; counter++){
-            elements.push({ data: {id: "node" + counter + "", label: "node" + counter, score: 1} })
+            elements.push({ data: {id: "node" + counter + "", label: "" + counter, score: Math.floor(Math. random() * Constants.RandomNodeCount) + 1} })
         }
 
         for(var counter:number = 0; counter <= Constants.RandomEdgeCount; counter++){
