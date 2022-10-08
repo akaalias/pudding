@@ -1,5 +1,7 @@
 import API from "@/models/API"
 import Constants from "@/models/Constants"
+import cytoscape from 'cytoscape';
+import louvain from 'louvain-algorithm';
 
 export default class GraphDataProvider {
 
@@ -11,6 +13,7 @@ export default class GraphDataProvider {
     private txSignatureSeenCounts: Map<string, string[]>
     private api: API
     private queriedAddresses: string[]
+    private cy: any
 
     constructor(api: API) {
         this.cache = new Map<string, any>()
@@ -18,6 +21,125 @@ export default class GraphDataProvider {
         this.txSignatureSeenCounts = new Map<string, string[]>()
         this.queriedAddresses = []
         this.api = api
+    }
+
+    public async getNodeToCommunityMap(elements: any[]) {
+        var edges:any[] = []
+        var nodeIds:string[] = []
+
+        for(var element of elements) {
+            let elD = element.data
+            if(elD.source != undefined) {
+                edges.push(elD)
+            }
+            if(elD.id != undefined && elD.label != undefined) {
+                nodeIds.push(elD.id)
+            }
+        }
+
+        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, 1);
+        var map = new Map(Object.entries(nodeToCommunityMapping));
+
+        return map
+    }
+
+    public async getClusterElements(elements: any[]) {
+        var returnElements: any[] = []
+        var edges:any[] = []
+        var nodeIds:string[] = []
+
+        for(var element of elements) {
+            let elD = element.data
+            if(elD.source != undefined) {
+                edges.push(elD)
+            }
+            if(elD.id != undefined && elD.label != undefined) {
+                nodeIds.push(elD.id)
+            }
+        }
+
+        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, 1);
+
+        var nodeToCommunityMappingNodeIds: any[] = []
+
+        for(let nodeToCommunityMappingNodeId in nodeToCommunityMapping) {
+            let commId = nodeToCommunityMapping[nodeToCommunityMappingNodeId]
+            if(!nodeToCommunityMappingNodeIds.includes(commId)) {
+                returnElements.push({ data: {id: "C" + commId, label: "C" + commId, score: 1} })
+            }
+        }
+
+        for(let nodeId of nodeIds) {
+            returnElements.push({ data: {id: nodeId, label: nodeId, score: 1} })
+            let communityId = nodeToCommunityMapping[nodeId]
+            returnElements.push({
+                data:
+                    {
+                        id: "" + communityId + "" + nodeId,
+                        source: "C" + communityId,
+                        target: nodeId,
+                        weight: 1
+                    }
+            })
+        }
+
+        return returnElements
+    }
+
+    public async getBasicNetwork() {
+        var elements: any[] = []
+        elements.push({ data: {id: "1", label: "1", score: 1} })
+        elements.push({ data: {id: "2", label: "2", score: 1} })
+        elements.push({
+            data:
+                {
+                    id: "12",
+                    source: "1",
+                    target: "2",
+                    weight: 1
+                }
+        })
+
+        elements.push({ data: {id: "3", label: "3", score: 1} })
+        elements.push({ data: {id: "4", label: "4", score: 1} })
+        elements.push({
+            data:
+                {
+                    id: "34",
+                    source: "3",
+                    target: "4",
+                    weight: 1
+                }
+        })
+
+        return elements
+    }
+
+    public async getRandomNetwork() {
+        var elements: any[] = []
+
+        for(var counter:number = 0; counter <= Constants.RandomNodeCount; counter++){
+            elements.push({ data: {id: "node" + counter + "", label: "node" + counter, score: 1} })
+        }
+
+        for(var counter:number = 0; counter <= Constants.RandomEdgeCount; counter++){
+
+            let from:number = Math.floor(Math. random() * Constants.RandomNodeCount) + 1;
+            let to:number = Math.floor(Math. random() * Constants.RandomNodeCount) + 1;
+            let weight:number  = Math.floor(Math. random() * Constants.RandomWeightMax) + 1;
+
+            elements.push({
+                data:
+                    {
+                        id: "" + from + "" + to,
+                        source: "node" + from,
+                        target: "node" + to,
+                        weight: weight,
+                        value: weight
+                    }
+            })
+        }
+        return elements
     }
 
     public async getTransactionsNetworkForAccount(account: string) {
@@ -187,3 +309,4 @@ export default class GraphDataProvider {
         }
     }
 }
+

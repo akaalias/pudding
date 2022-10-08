@@ -45,6 +45,9 @@
           <v-col cols="12">
             <div id="cyto" ref="cyto"/>
           </v-col>
+<!--          <v-col cols="6">-->
+<!--            <div id="clusterCyto" ref="clusterCyto"/>-->
+<!--          </v-col>-->
         </v-row>
       </v-container>
     </v-main>
@@ -57,6 +60,7 @@
   import Constants from "@/models/Constants"
   import API from "@/models/API"
   import cytoscape from 'cytoscape';
+  import cola from 'cytoscape-cola';
 
   export default Vue.extend({
     name: 'Home',
@@ -71,7 +75,7 @@
           v => v.length == 42 || 'Query must be 42 characters',
         ],
         elements: [],
-        config: Constants.cyConfig,
+        clusterElements: [],
         apiResultCount: 0,
         api: new API()
       }
@@ -79,14 +83,45 @@
     methods: {
       async search() {
         if(this.query.length == 42) {
-          this.elements = []
-          this.elements = await this.graphDataProvider.getTransactionsNetworkForAccount(this.query);
 
+          this.elements = []
+          this.elements = await this.graphDataProvider.getRandomNetwork()
+          // this.elements = await this.graphDataProvider.getTransactionsNetworkForAccount(this.query);
+          this.cy.elements().remove()
           this.cy.add(this.elements)
+
+          const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
+          const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]; // [ 'A', 'B']
+
+          for(var id of uniqueCommunityIds) {
+            this.cy.style()
+                .selector('node.c' + id)
+                .style({
+                  'label': '',
+                  'width': '20px',
+                  'height': '20px',
+                  'background-color': Constants.colors[id]
+                })
+                .update()
+          }
+
+          var nodes = this.cy.nodes('')
+          for(var node of nodes) {
+            let nId = node.data('id')
+            this.cy.$('#' + nId).addClass("c" + nodeToCommunityMapping.get(nId))
+          }
+
           this.cy.layout(Constants.coseLayout).run();
           this.cy.resize();
           this.cy.fit();
-          this.playSound('http://soundbible.com/mp3/Air Plane Ding-SoundBible.com-496729130.mp3')
+
+          // this.clusterElements = []
+          // this.clusterElements = await this.graphDataProvider.getClusterElements(this.elements)
+          // this.clusterCy.elements().remove()
+          // this.clusterCy.add(this.clusterElements)
+          // this.clusterCy.layout(Constants.coseLayout).run()
+          // this.clusterCy.resize()
+          // this.clusterCy.fit()
         }
       },
       playSound (sound) {
@@ -94,41 +129,53 @@
           var audio = new Audio(sound);
           audio.play();
         }
-      }
+      },
+      setupCyGraph() {
+        let cy = cytoscape({
+          container: this.$refs.cyto,
+          elements: [],
+          style: Constants.cyStyle
+        })
+
+        this.cy = cy
+        this.cy.on("tap", "node",
+            function (evt) {
+              let node = evt.target;
+              this.query = node.data().id;
+              this.search();
+            }.bind(this));
+
+        this.cy.on('mouseover', 'node', function(e){
+          var sel = e.target;
+          this.cy.elements().difference(sel.outgoers()).not(sel).addClass('semitransp');
+          sel.addClass('highlight').outgoers().addClass('highlight');
+        }.bind(this));
+
+        this.cy.on('mouseout', 'node', function(e){
+          var sel = e.target;
+          this.cy.elements().removeClass('semitransp');
+          sel.removeClass('highlight').outgoers().removeClass('highlight');
+        }.bind(this));
+      },
+      setupClusterGraph() {
+        let clusterCy = cytoscape({
+          container: this.$refs.clusterCyto,
+          elements: [],
+          style: Constants.cyStyle
+        })
+
+        this.clusterCy = clusterCy
+      },
     },
     mounted() {
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
 
-      let cy = cytoscape({
-        container: this.$refs.cyto,
-        elements: [],
-        style: Constants.cyStyle
-      })
+      cytoscape.use( cola );
 
-      this.cy = cy
-
-      this.cy.on("tap", "node",
-              function (evt) {
-                  let node = evt.target;
-                  this.query = node.data().id;
-                  this.search();
-                }.bind(this));
-
-      this.cy.on('mouseover', 'node', function(e){
-            var sel = e.target;
-            this.cy.elements().difference(sel.outgoers()).not(sel).addClass('semitransp');
-            sel.addClass('highlight').outgoers().addClass('highlight');
-          }.bind(this));
-
-      this.cy.on('mouseout', 'node', function(e){
-              var sel = e.target;
-              this.cy.elements().removeClass('semitransp');
-              sel.removeClass('highlight').outgoers().removeClass('highlight');
-              }.bind(this));
-      },
-    watch: {
-    }
+      this.setupCyGraph()
+      this.setupClusterGraph()
+      }
   })
 </script>
 
@@ -148,6 +195,12 @@
 }
 
 #cyto {
+  width: 100%;
+  height: 900px;
+  display: block;
+}
+
+#clusterCyto {
   width: 100%;
   height: 900px;
   display: block;
