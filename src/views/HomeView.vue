@@ -5,33 +5,28 @@
         dark
         fluid
     >
+      <v-progress-linear
+          indeterminate
+          color="purple darken-2"
+          v-if="searching"
+          class="searchingProgressIndicator"
+      ></v-progress-linear>
+
       <v-row>
         <v-col cols="12">
-          <v-form v-model="valid">
+          <v-form>
             <v-container>
               <v-row>
                 <v-col
-                    cols="10"
+                    cols="12"
                 >
-                  <v-text-field
-                      v-model="query"
-                      :rules="queryRules"
-                      :counter="42"
-                      label=""
-                      clearable
-                      required
-                  ></v-text-field>
-                </v-col>
-                <v-col
-                    cols="2"
-                >
-                  <v-btn
-                      class="mr-4"
-                      @click="search"
-                      :disabled="!valid"
-                  >
-                    Search
-                  </v-btn>
+                  <v-select
+                      v-model="selectedAddress"
+                      :items="tokens"
+                      item-text="name"
+                      item-value="address"
+                      @change="search"
+                  ></v-select>
                 </v-col>
               </v-row>
             </v-container>
@@ -45,9 +40,6 @@
           <v-col cols="12">
             <div id="cyto" ref="cyto"/>
           </v-col>
-<!--          <v-col cols="6">-->
-<!--            <div id="clusterCyto" ref="clusterCyto"/>-->
-<!--          </v-col>-->
         </v-row>
       </v-container>
     </v-main>
@@ -68,13 +60,9 @@
     },
     data() {
       return {
-        valid: false,
-        // query: '0xee599d36b41759d0343d997657e51665f973e944', // Sample Account
-        query: '0xdAC17F958D2ee523a2206206994597C13D831ec7', // Sample Token
-        queryRules: [
-          v => !!v || 'Query is required',
-          v => v.length == 42 || 'Query must be 42 characters',
-        ],
+        searching: false,
+        tokens: [],
+        selectedAddress: '',
         elements: [],
         clusterElements: [],
         apiResultCount: 0,
@@ -86,20 +74,18 @@
     methods: {
       async search() {
         this.searchCount += 1
-        if(this.query.length == 42) {
-          this.searchedQueries.push(this.query)
-
+        if(this.selectedAddress.length == 42) {
+          this.searching = true
+          this.searchedQueries.push(this.selectedAddress)
           this.elements = []
-          // this.elements = await this.graphDataProvider.getRandomNetwork()
-          // this.elements = await this.graphDataProvider.getTransactionsNetworkForAccount(this.query);
-          this.elements = await this.graphDataProvider.getTokenNetwork(this.query)
+          this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress)
           this.cy.add(this.elements)
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
           const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]
-
           var communityNodeCounts = new Map<string, number>()
           var maxNodes = 0
           var communityIdWithMaxNodes = 0
+          this.searching = false
 
           for(var node of nodeToCommunityMapping) {
             var c = 1
@@ -117,9 +103,6 @@
             }
           }
 
-          console.log(communityNodeCounts)
-          console.log(communityIdWithMaxNodes)
-
           for(var id of uniqueCommunityIds) {
             const rnd = Math.floor(Math. random() * Constants.RandomNodeCount)
             const color = Constants.getBackgroundColor(id + " " + id)
@@ -132,13 +115,6 @@
                   'background-color': color
                 })
                 .update()
-
-            // this.clusterCy.style()
-            //     .selector('node.c' + id)
-            //     .style({
-            //       'background-color': color
-            //     })
-            //     .update()
           }
 
           var nodes = this.cy.nodes('')
@@ -170,38 +146,14 @@
           this.cy.style()
               .selector('edge')
               .style({
-                "width":        "mapData(weight, 0, " + maxEdgeWeight.value + ", 0.5, 5)",
+                "width":        "mapData(weight, 0, " + maxEdgeWeight.value + ", 0.5, 10)",
                 "arrow-scale":  "mapData(weight, 0, " + maxEdgeWeight.value + ", 0.5, 1)",
               })
               .update()
 
           this.cy.layout(Constants.coseLayout).run();
-          if(this.searchCount <= 1) {
-            // this.cy.reset()
-            // this.cy.center()
-            // this.cy.fit()
-          }
-
-
           this.cy.fit(this.cy.$('.c' + communityIdWithMaxNodes))
-          // this.cy.pan({
-          //   x: 100,
-          //   y: 100
-          // });
 
-          // this.cy.center()
-          // this.cy.zoom({
-          //   level: 1.0, // the zoom level
-          //   renderedPosition: { x: 100, y: 100 }
-          // })
-
-          // this.clusterElements = []
-          // this.clusterElements = await this.graphDataProvider.getClusterElements(this.elements)
-          // this.clusterCy.elements().remove()
-          // this.clusterCy.add(this.clusterElements)
-          // this.clusterCy.layout(Constants.coseLayout).run()
-          // this.clusterCy.reset()
-          // this.clusterCy.fit()
         }
       },
       playSound (sound) {
@@ -221,7 +173,7 @@
         this.cy.on("tap", "node",
             function (evt) {
               let node = evt.target;
-              this.query = node.data().id;
+              this.selectedAddress = node.data().id;
               this.search();
             }.bind(this));
 
@@ -249,9 +201,14 @@
         this.clusterCy = clusterCy
       },
     },
-    mounted() {
+    async mounted() {
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
+      const theTokens = await this.api.getTopTokens()
+
+      for(var token of theTokens) {
+        this.tokens.push(token)
+      }
 
       cytoscape.use( cola );
 
@@ -263,18 +220,15 @@
 
 <style>
 
-.v-toolbar {
-  padding-top: 30px;
-  padding-bottom: 80px;
+.v-toolbar form {
+  padding-top: 20px;
 }
 
 #cytoscape-div {
 }
 
 #content-container {
-  margin-top: 40px;
   background-color: #222;
-
 }
 
 #cyto {
@@ -290,4 +244,11 @@
   display: block;
 }
 
+.searchingProgressIndicator {
+  width: 100%;
+  height: 4px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
 </style>
