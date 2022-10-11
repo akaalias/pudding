@@ -1,59 +1,47 @@
 export default class Constants {
-    public static maxDepth = 2
-    public static RandomNodeCount = 500
-    public static RandomEdgeCount = 300
-    public static RandomWeightMax = 15
+    public static maxDepth = 1
+
+    public static RandomNodeCount = 250
+    public static EdgeMaxCount = 20
+    public static Modulo = 12
+    public static RandomWeightMax = 100
+    public static LouvainMax = 1
+
+    public static coseLayout = {
+        name: 'cose',
+        animate: false,
+        idealEdgeLength: 100,
+        nodeOverlap: 0.1,
+        refresh: 100,
+        fit: true,
+        animateFilter: function ( node: any, i:any ){ return true; },
+        padding: 100,
+        randomize: false,
+        componentSpacing: 100,
+        nodeRepulsion: 400000,
+        edgeElasticity: 200,
+        nestingFactor: 5,
+        gravity: 0,
+        numIter: 1000,
+        initialTemp: 300,
+        coolingFactor: 0.95,
+        minTemp: 1.0,
+        animationDuration: 3000,
+    }
 
     public static offsetForDepth(depth: number) {
         if(depth >= 3) {
             return 20
         }
         if(depth == 2) {
-            return 10
+            return 15
         }
         if(depth == 1) {
-            return 10
+            return 30
         }
 
         return 10
     }
-
-    public static colaLayout = {
-        name: 'cola',
-        animate: true, // whether to show the layout as it's running
-        refresh: 1, // number of ticks per frame; higher is faster but more jerky
-        maxSimulationTime: 4000, // max length in ms to run the layout
-        ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
-        fit: true, // on every layout reposition of nodes, fit the viewport
-        padding: 30, // padding around the simulation
-        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-        nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
-    }
-
-    public static coseLayout = {
-        name: 'cose',
-        animate: false,
-        idealEdgeLength: 100,
-        nodeOverlap: 150,
-        refresh: 20,
-        fit: false,
-        padding: 30,
-        randomize: false,
-        componentSpacing: 100,
-        nodeRepulsion: 400000,
-        edgeElasticity: 100,
-        nestingFactor: 5,
-        gravity: 80,
-        numIter: 1000,
-        initialTemp: 200,
-        coolingFactor: 0.95,
-        minTemp: 1.0
-    }
-
-    public static gridLayout = {
-        name: 'grid'
-    }
-
 
     public static concentricLayout = {
         name: 'concentric',
@@ -85,13 +73,28 @@ export default class Constants {
         transform: function (node: any, position: any ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
     }
 
+    public static colaLayout = {
+        name: 'cola',
+        animate: true, // whether to show the layout as it's running
+        refresh: 1, // number of ticks per frame; higher is faster but more jerky
+        maxSimulationTime: 4000, // max length in ms to run the layout
+        ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
+        fit: true, // on every layout reposition of nodes, fit the viewport
+        padding: 30, // padding around the simulation
+        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+        nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
+    }
+
+    public static gridLayout = {
+        name: 'grid'
+    }
+
+
     public static cyStyle = [
         {
             selector: 'node',
             style: {
                 'label': '',
-                "width": "mapData(score, 0, 50, 0, 50)",
-                "height": "mapData(score, 0, 50, 0, 50)",
                 "font-size": "24px",
                 "text-valign": "center",
                 "text-halign": "center",
@@ -106,36 +109,47 @@ export default class Constants {
         {
             selector: 'node.target',
             style: {
-                'background-color': 'red',
                 'border-color': 'red',
+                'border-width': '5px'
+            }
+        },
+        {
+            selector: 'node.prior-target',
+            style: {
+                'border-color': 'white',
                 'border-width': '10px'
             }
         }
         , {
             selector: 'edge',
             style: {
-                "font-size": "6px",
+                "font-size": "12px",
                 "opacity": 1,
-                "line-color": "#333",
-                "width": 'mapData(weight, 1, 100, 1, 100)',
-                'arrow-scale': 'mapData(weight, 1, 100, 1, 3)',
+                "line-color": "#555",
                 'mid-target-arrow-fill': 'filled',
                 'text-margin-x': 10,
                 'text-margin-y': 10,
-                'mid-target-arrow-color': "#333",
+                'mid-target-arrow-color': "#555",
                 'mid-target-arrow-shape': 'triangle',
-                // 'curve-style': 'haystack',
-                // 'haystack-radius': 0.8,
+                'curve-style': 'unbundled-bezier',
+                'haystack-radius': 0.2,
             }
         },
         {
             selector: 'node.highlight',
             style: {
-                'label': 'data(label)',
-                'border-color': '#FFF',
-                'border-width': '2px'
+                'border-color': '#999',
+                'border-width': '1px'
             }
         },
+        {
+            selector: 'node.showLabel',
+            style: {
+                'label': 'data(label)',
+                'border-width': '4px'
+            }
+        }
+        ,
         {
             selector: 'node.semitransp',
             style:{ 'opacity': '0.5' }
@@ -143,15 +157,20 @@ export default class Constants {
         {
             selector: 'edge.highlight',
             style: {
-                'mid-target-arrow-color': '#FFF',
-                'label': 'data(weight)',
-                'color': 'white',
+                // 'label': 'data(weight)',
+                // 'color': '#333',
             }
         },
         {
             selector: 'edge.semitransp',
             style:{ 'opacity': '0.2' }
-        }]
+        },
+        {
+            selector: 'node.community',
+            style: {
+            }
+        }
+    ]
 
     public static colors = [
         "AliceBlue",

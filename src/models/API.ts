@@ -8,6 +8,8 @@ export default class API {
     private fetchedAccounts: string[] = []
 
     public async getTransactionsForAccount(account: string, depth: number) {
+        // console.log("getTransactionsForAccount: " + depth + " " + account)
+
         if(depth <= 0) {
             return
         }
@@ -40,6 +42,41 @@ export default class API {
             }
         }
         return [...new Set(accounts)]
+    }
+
+    public async getLatestTokenTransactions(token: string) {
+        // /getTokenHistory/0xff71cb760666ab06aa73f34995b42dd4b85ea07b?apiKey=freekey&type=transfer&limit=5
+        /*
+            {
+                operations: [
+                    {
+                        timestamp:       # operation timestamp,
+                        transactionHash: # transaction hash,
+                        tokenInfo:       # token data (same format as token info),
+                        type:            # operation type (transfer, mint, or burn),
+                        address:         # operation target address, if available,
+                        from:            # source address, if two addresses were involved,
+                        to:              # destination address, if two addresses were involved,
+                        value:           # operation value
+                    },
+                    ...
+                ]
+            }
+         */
+        const limit = 1000
+        const endpoint = 'https://api.ethplorer.io'
+        const action = '/getTokenHistory/'
+        const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
+        const requestURL = endpoint + action + token + "?apiKey=" + apiKey + "&type=transfer&limit=" + limit
+
+        const response = await fetch(requestURL, {
+            method: "GET",
+        });
+
+        const jsonData = await response.json();
+        const transactions = jsonData["operations"]
+
+        return transactions
     }
 
     public async getTransactions(account: string, offset: number) {

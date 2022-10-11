@@ -23,6 +23,62 @@ export default class GraphDataProvider {
         this.api = api
     }
 
+    public async getTokenNetwork(token: string){
+        // /getTokenHistory/0xff71cb760666ab06aa73f34995b42dd4b85ea07b?apiKey=freekey&type=transfer&limit=5
+        /*
+            {
+                operations: [
+                    {
+                        timestamp:       # operation timestamp,
+                        transactionHash: # transaction hash,
+                        tokenInfo:       # token data (same format as token info),
+                        type:            # operation type (transfer, mint, or burn),
+                        address:         # operation target address, if available,
+                        from:            # source address, if two addresses were involved,
+                        to:              # destination address, if two addresses were involved,
+                        value:           # operation value
+                    },
+                    ...
+                ]
+            }
+         */
+
+        var elements: any[] = []
+        var edges:any[] = []
+        var nodeIds:string[] = []
+
+        const operations = await this.api.getLatestTokenTransactions(token)
+        for(var element of operations) {
+            const from: string = element['from']
+            const to: string = element['to']
+            const value: string = element['value']
+
+            if(!nodeIds.includes(from)) {
+                nodeIds.push(from)
+                elements.push({data: {id: from, label: from.substring(0, 10)}})
+            }
+
+            if(!nodeIds.includes(to)) {
+                nodeIds.push(to)
+                elements.push({data: {id: to, label: to.substring(0, 10)}})
+            }
+
+            elements.push({
+                data:
+                    {
+                        id: "" + from + "" + to,
+                        source: from,
+                        target: to,
+                        weight: parseInt(value),
+                        value: value
+                    }
+            })
+        }
+
+        return elements
+
+    }
+
     public async getNodeToCommunityMap(elements: any[]) {
         var edges:any[] = []
         var nodeIds:string[] = []
@@ -37,7 +93,7 @@ export default class GraphDataProvider {
             }
         }
 
-        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, 1);
+        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, Constants.LouvainMax);
         var map = new Map(Object.entries(nodeToCommunityMapping));
 
         return map
@@ -58,20 +114,20 @@ export default class GraphDataProvider {
             }
         }
 
-        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, 1);
+        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, Constants.LouvainMax);
 
         var nodeToCommunityMappingNodeIds: any[] = []
 
         for(let nodeToCommunityMappingNodeId in nodeToCommunityMapping) {
             let commId = nodeToCommunityMapping[nodeToCommunityMappingNodeId]
             if(!nodeToCommunityMappingNodeIds.includes(commId)) {
-                returnElements.push({ data: {id: "C" + commId, label: "C" + commId, score: 1} })
+                returnElements.push({ data: {id: "C" + commId, label: "C" + commId, score: 1}, classes: 'community' })
             }
         }
 
         for(let nodeId of nodeIds) {
-            returnElements.push({ data: {id: nodeId, label: nodeId, score: 1} })
             let communityId = nodeToCommunityMapping[nodeId]
+            returnElements.push({ data: {id: nodeId, label: nodeId, score: 1}, classes: 'c'+communityId })
             returnElements.push({
                 data:
                     {
@@ -86,60 +142,40 @@ export default class GraphDataProvider {
         return returnElements
     }
 
-    public async getBasicNetwork() {
-        var elements: any[] = []
-        elements.push({ data: {id: "1", label: "1", score: 1} })
-        elements.push({ data: {id: "2", label: "2", score: 1} })
-        elements.push({
-            data:
-                {
-                    id: "12",
-                    source: "1",
-                    target: "2",
-                    weight: 1
-                }
-        })
-
-        elements.push({ data: {id: "3", label: "3", score: 1} })
-        elements.push({ data: {id: "4", label: "4", score: 1} })
-        elements.push({
-            data:
-                {
-                    id: "34",
-                    source: "3",
-                    target: "4",
-                    weight: 1
-                }
-        })
-
-        return elements
-    }
-
     public async getRandomNetwork() {
         var elements: any[] = []
 
         for(var counter:number = 0; counter <= Constants.RandomNodeCount; counter++){
-            elements.push({ data: {id: "node" + counter + "", label: "" + counter, score: Math.floor(Math. random() * Constants.RandomNodeCount) + 1} })
+            let from:string = "node" + counter
+            elements.push({ data: {id: from, label: "" + counter, score: Math.floor(Math. random() * Constants.RandomNodeCount) + 1} })
         }
 
-        for(var counter:number = 0; counter <= Constants.RandomEdgeCount; counter++){
+        for(var counter:number = 0; counter <= Constants.RandomNodeCount; counter++) {
+            let from:string = "node" + counter
+            let edgeCount:number = Math.floor(Math. random() * Constants.EdgeMaxCount) + 1
 
-            let from:number = Math.floor(Math. random() * Constants.RandomNodeCount) + 1;
-            let to:number = Math.floor(Math. random() * Constants.RandomNodeCount) + 1;
-            let weight:number  = Math.floor(Math. random() * Constants.RandomWeightMax) + 1;
+            if(Math.floor(Math. random() * Constants.RandomNodeCount) % Constants.Modulo == 0) {
+                for(var v:number = 0; v <= edgeCount; v++) {
+                    let to:number = Math.floor(Math. random() * Constants.RandomNodeCount) + 1;
+                    let weight:number  = Math.floor(Math. random() * Constants.RandomWeightMax) + 1;
 
-            elements.push({
-                data:
-                    {
-                        id: "" + from + "" + to,
-                        source: "node" + from,
-                        target: "node" + to,
-                        weight: weight,
-                        value: weight
-                    }
-            })
+                    elements.push({
+                        data:
+                            {
+                                id: "" + from + "" + to,
+                                source: from,
+                                target: "node" + to,
+                                weight: weight,
+                                value: weight
+                            }
+                    })
+
+                }
+            }
+
         }
-        return elements
+
+            return elements
     }
 
     public async getTransactionsNetworkForAccount(account: string) {
