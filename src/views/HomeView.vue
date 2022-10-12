@@ -61,17 +61,6 @@
               @change="search"
               :color="computedRelationshipEdgeColorEnd"
           >
-            <template v-slot:append>
-              <v-text-field
-                  v-model="connectionThreshold"
-                  class="mt-0 pt-0"
-                  hide-details
-                  single-line
-                  type="number"
-                  style="width: 50px"
-                  @click="search"
-              ></v-text-field>
-            </template>
           </v-slider>
 
           <v-slider
@@ -85,17 +74,6 @@
               @change="search"
               :color="computedTransactionEdgeColorEnd"
           >
-            <template v-slot:append>
-              <v-text-field
-                  v-model="totalSumThreshold"
-                  class="mt-0 pt-0"
-                  hide-details
-                  single-line
-                  type="number"
-                  style="width: 50px"
-                  @change="search"
-              ></v-text-field>
-            </template>
           </v-slider>
 
 
@@ -110,21 +88,8 @@
               @change="search"
               :color="computedFiatEdgeColorEnd"
           >
-            <template v-slot:append>
-              <v-text-field
-                  v-model="totalFiatThreshold"
-                  class="mt-0 pt-0"
-                  hide-details
-                  single-line
-                  type="number"
-                  style="width: 50px"
-                  @change="search"
-              ></v-text-field>
-            </template>
           </v-slider>
-
         </v-card>
-
         <v-row>
           <v-col cols="12">
             <div id="cyto" ref="cyto"/>

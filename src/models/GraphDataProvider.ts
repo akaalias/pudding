@@ -112,5 +112,25 @@ export default class GraphDataProvider {
             return elements
         }
     }
+
+    public async getNodeToCommunityMap(elements: any[]) {
+        var edges:any[] = []
+        var nodeIds:string[] = []
+
+        for(var element of elements) {
+            let elD = element.data
+            if(elD.source != undefined) {
+                edges.push(elD)
+            }
+            if(elD.id != undefined && elD.label != undefined) {
+                nodeIds.push(elD.id)
+            }
+        }
+
+        var nodeToCommunityMapping = louvain.jLouvain(nodeIds, edges, Constants.LouvainMax);
+        var map = new Map(Object.entries(nodeToCommunityMapping));
+
+        return map
+    }
 }
 
