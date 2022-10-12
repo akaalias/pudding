@@ -66,7 +66,7 @@
           <v-slider
               v-if="selectedFocus == 'Transactions'"
               v-model="totalSumThreshold"
-              :max="computedMaxTotalSum"
+              :max="maxTotalSum"
               :hint="totalSumThresholdLabel"
               persistent-hint
               min="1"
@@ -112,7 +112,8 @@
         searchCount: 0,
         searchedQueries: [],
         connectionThreshold: 1,
-        maxConnections: 100,
+        maxConnections: 1,
+        maxTotalSum: 1,
         totalSumThreshold: 1,
         selectedFocus: Constants.RelationshipFocus,
         focusItems: [Constants.RelationshipFocus, Constants.TransactionFocus]
@@ -121,6 +122,7 @@
     methods: {
       async searchFromScratch() {
         this.maxConnections = 1
+        this.maxTotalSum = 1
         this.connectionThreshold = 1
         this.totalSumThreshold = 1
         this.search()
@@ -181,6 +183,7 @@
           var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
             return edge.data('humanReadableTotalSum')
           });
+          this.maxTotalSum = maxEdgeTotalHumanreadableSum.value
 
           // Get max score
           var maxNodeScore = this.cy.nodes().max(function(node){
@@ -325,14 +328,6 @@
       },
       computedTransactionEdgeColorEnd() {
         return Constants.TransactionEdgeColorEnd
-      },
-      computedMaxTotalSum() {
-        // Get max TX totalSum
-        var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
-          return edge.data('humanReadableTotalSum')
-        });
-
-        return maxEdgeTotalHumanreadableSum.value
       }
     }
   })
