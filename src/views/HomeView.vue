@@ -38,19 +38,34 @@
         <v-row>
           <v-col cols="2">
             <h2>Filters</h2>
+
+            <v-select
+                v-model="selectedFocus"
+                :items="focusItems"
+            >
+
+            </v-select>
+
             <v-slider
+                v-if="selectedFocus == 'Relationships'"
                 v-model="connectionThreshold"
-                label="Relationship"
-                thumb-label
                 :max="maxConnections"
+                :hint="connectionThresholdLabel"
+                persistent-hint
+                min="1"
+                thumb-label
+                @change="search"
+            ></v-slider>
+
+            <v-slider
+                v-if="selectedFocus == 'Transactions'"
+                v-model="totalSumThreshold"
+                hint="Total Sum"
+                persistent-hint
+                thumb-label
+                :max="maxTotalSum"
                 min="1"
             ></v-slider>
-            Max: {{maxConnections}}
-            Selected: {{connectionThreshold}}
-
-            <v-btn @click="search">
-              Apply
-            </v-btn>
           </v-col>
           <v-col cols="10">
             <div id="cyto" ref="cyto"/>
@@ -89,6 +104,9 @@
         connectednessPercentile: 0,
         connectionThreshold: 1,
         maxConnections: 1000,
+        maxTotalSum: 1000000000,
+        selectedFocus: Constants.RelationshipFocus,
+        focusItems: [Constants.RelationshipFocus, Constants.TransactionFocus]
       }
     },
     methods: {
@@ -202,7 +220,6 @@
 
           // Filter out edges and nodes
           var filteredElements = []
-
           this.cy.filter(function(element, i){
             if(!element.isEdge()) {
               return false
@@ -233,8 +250,8 @@
               .style({
                 "width":        "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 10)",
                 "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1.2)",
-                "line-color": "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #fff)",
-                'mid-target-arrow-color': "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #efefef)",
+                "line-color": "mapData(transactions, 0, " + maxEdgeTransactions.value + ", #333, #fff)",
+                'mid-target-arrow-color': "mapData(transactions, 0, " + maxEdgeTransactions.value + ", #333, #efefef)",
               })
               .update()
           console.timeEnd('Execution Time');
@@ -244,7 +261,8 @@
           console.log("this.cy.layout()")
           console.time('Execution Time');
           this.cy.layout(Constants.coseLayout).run();
-          this.cy.fit(this.cy.$('.c' + communityIdWithMaxNodes))
+          this.cy.fit()
+          // this.cy.fit(this.cy.$('.c' + communityIdWithMaxNodes))
           console.timeEnd('Execution Time');
 
           // Indicate finished
@@ -292,7 +310,6 @@
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
       this.rawTokens = await this.api.getTopTokens()
-
       for(var token of this.rawTokens) {
         this.tokenLookupTable.set(token['address'], token)
         this.tokens.push(token)
@@ -300,6 +317,11 @@
       // cytoscape.use( cola );
 
       this.setupCyGraph()
+    },
+    computed: {
+      connectionThresholdLabel() {
+        return "Minimum Relationship Strength:" + " " + this.connectionThreshold
+      }
     }
   })
 </script>

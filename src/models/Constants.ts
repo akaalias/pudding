@@ -6,6 +6,9 @@ export default class Constants {
     public static RandomWeightMax = 100
     public static LouvainMax = 1
     public static maxDepth = 1
+    public static RelationshipFocus = "Relationships"
+    public static TransactionFocus = "Transactions"
+
 
     public static coseLayout = {
         name: 'cose',

@@ -24,59 +24,80 @@ export default class GraphDataProvider {
     }
 
     public async getTokenNetwork(token: string, tokenInfo: any){
-        var elements: any[] = []
-        var edges:any[] = []
-        var nodeIds:string[] = []
-        const rate:number = tokenInfo['price']['rate']
-        const currency:string = tokenInfo['price']['currency']
+        const tokenLowercase = token.toLowerCase()
+        if (this.cache.get(tokenLowercase) != null) {
+            return this.cache.get(tokenLowercase)
+        } else {
+            var elements: any[] = []
+            var edges: any[] = []
+            var nodeIds: string[] = []
+            const rate: number = tokenInfo['price']['rate']
+            const currency: string = tokenInfo['price']['currency']
 
-        var fromToTransactionCounts = new Map<string, any>()
-        const operations = await this.api.getLatestTokenTransactions(token)
-        for(var element of operations) {
-            const from: string = element['from']
-            const to: string = element['to']
-            const value: string = element['value']
-            const valueFloat: number = parseFloat(value)
-            const fromToId = from + to
-            const decimals: number = parseInt(element['tokenInfo']['decimals'])
-            const symbol: string = element['tokenInfo']['symbol']
+            var fromToTransactionCounts = new Map<string, any>()
+            const operations = await this.api.getLatestTokenTransactions(tokenLowercase)
+            for (var element of operations) {
+                const from: string = element['from']
+                const to: string = element['to']
+                const value: string = element['value']
+                const valueFloat: number = parseFloat(value)
+                const fromToId = from + to
+                const decimals: number = parseInt(element['tokenInfo']['decimals'])
+                const symbol: string = element['tokenInfo']['symbol']
 
-            if(!nodeIds.includes(from)) {
-                nodeIds.push(from)
-                elements.push({data: {id: from, label: from.substring(0, 10), type: 'node'}})
+                if (!nodeIds.includes(from)) {
+                    nodeIds.push(from)
+                    elements.push({data: {id: from, label: from.substring(0, 10), type: 'node'}})
+                }
+
+                if (!nodeIds.includes(to)) {
+                    nodeIds.push(to)
+                    elements.push({data: {id: to, label: to.substring(0, 10), type: 'node'}})
+                }
+
+                // Start counting relationships
+                if (!fromToTransactionCounts.has(fromToId)) {
+                    fromToTransactionCounts.set(fromToId, {
+                        id: fromToId,
+                        from: from,
+                        to: to,
+                        transactions: 1,
+                        totalSum: valueFloat,
+                        decimals: decimals,
+                        symbol: symbol,
+                    })
+                } else {
+                    var currentRecord = fromToTransactionCounts.get(fromToId)
+                    currentRecord['transactions'] = currentRecord['transactions'] + 1
+                    currentRecord['totalSum'] = currentRecord['totalSum'] + valueFloat
+                    fromToTransactionCounts.set(fromToId, currentRecord)
+                }
             }
-
-            if(!nodeIds.includes(to)) {
-                nodeIds.push(to)
-                elements.push({data: {id: to, label: to.substring(0, 10), type: 'node'}})
-            }
-
-            // Start counting relationships
-            if(!fromToTransactionCounts.has(fromToId)) {
-                fromToTransactionCounts.set(fromToId, {
-                    id: fromToId,
-                    from: from,
-                    to: to,
-                    transactions: 1,
-                    totalSum: valueFloat,
-                    decimals: decimals,
-                    symbol: symbol,
+            for (var connection of fromToTransactionCounts.values()) {
+                let humanReadableTotalSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
+                let price = humanReadableTotalSum * rate
+                let description = connection['transactions'] + ' TXs, ' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + price.toFixed(2) + ' ' + currency
+                // @ts-ignore
+                elements.push({
+                    data: {
+                        id: connection['fromToId'],
+                        source: connection['from'],
+                        target: connection['to'],
+                        weight: connection['transactions'],
+                        value: connection['totalSum'],
+                        transactions: connection['transactions'],
+                        totalSum: connection['totalSum'],
+                        humanReadableTotalSum: humanReadableTotalSum,
+                        description: description,
+                        type: 'edge'
+                    }
                 })
-            } else {
-                var currentRecord = fromToTransactionCounts.get(fromToId)
-                currentRecord['transactions'] = currentRecord['transactions'] + 1
-                currentRecord['totalSum'] = currentRecord['totalSum'] + valueFloat
-                fromToTransactionCounts.set(fromToId, currentRecord)
             }
+
+            this.cache.set(tokenLowercase, elements);
+
+            return elements
         }
-        for(var connection of fromToTransactionCounts.values()) {
-            let humanReadableTotalSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
-            let price = humanReadableTotalSum * rate
-            let description = connection['transactions'] + ' TXs, ' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + price.toFixed(2) + ' ' + currency
-            // @ts-ignore
-            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'], humanReadableTotalSum: humanReadableTotalSum, description: description, type: 'edge'} })
-        }
-        return elements
     }
 
     public async getNodeToCommunityMap(elements: any[]) {
