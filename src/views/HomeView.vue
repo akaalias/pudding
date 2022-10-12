@@ -35,39 +35,98 @@
     </v-app-bar>
     <v-main>
       <v-container fluid id="content-container">
+        <v-card
+            id="filters"
+            class="mx-auto"
+            max-width="300"
+            tile
+            v-if="elements.length > 0"
+        >
+          <h2>Focus</h2>
+          <v-select
+              v-model="selectedFocus"
+              :items="focusItems"
+              @change="search"
+          > </v-select>
+
+          <h2>Filters</h2>
+          <v-slider
+              v-if="selectedFocus == 'Relationships'"
+              v-model="connectionThreshold"
+              :max="maxConnections"
+              :hint="connectionThresholdLabel"
+              persistent-hint
+              min="1"
+              thumb-label
+              @change="search"
+              :color="computedRelationshipEdgeColorEnd"
+          >
+            <template v-slot:append>
+              <v-text-field
+                  v-model="connectionThreshold"
+                  class="mt-0 pt-0"
+                  hide-details
+                  single-line
+                  type="number"
+                  style="width: 50px"
+                  @click="search"
+              ></v-text-field>
+            </template>
+          </v-slider>
+
+          <v-slider
+              v-if="selectedFocus == 'Transactions'"
+              v-model="totalSumThreshold"
+              :max="computedMaxTotalSum"
+              :hint="totalSumThresholdLabel"
+              persistent-hint
+              min="1"
+              thumb-label
+              @change="search"
+              :color="computedTransactionEdgeColorEnd"
+          >
+            <template v-slot:append>
+              <v-text-field
+                  v-model="totalSumThreshold"
+                  class="mt-0 pt-0"
+                  hide-details
+                  single-line
+                  type="number"
+                  style="width: 50px"
+                  @change="search"
+              ></v-text-field>
+            </template>
+          </v-slider>
+
+
+          <v-slider
+              v-if="selectedFocus == 'Fiat'"
+              v-model="totalFiatThreshold"
+              :max="computedMaxTotalFiat"
+              :hint="totalFiatThresholdLabel"
+              persistent-hint
+              min="1"
+              thumb-label
+              @change="search"
+              :color="computedFiatEdgeColorEnd"
+          >
+            <template v-slot:append>
+              <v-text-field
+                  v-model="totalFiatThreshold"
+                  class="mt-0 pt-0"
+                  hide-details
+                  single-line
+                  type="number"
+                  style="width: 50px"
+                  @change="search"
+              ></v-text-field>
+            </template>
+          </v-slider>
+
+        </v-card>
+
         <v-row>
-          <v-col cols="2">
-            <h2>Filters</h2>
-
-            <v-select
-                v-model="selectedFocus"
-                :items="focusItems"
-            >
-
-            </v-select>
-
-            <v-slider
-                v-if="selectedFocus == 'Relationships'"
-                v-model="connectionThreshold"
-                :max="maxConnections"
-                :hint="connectionThresholdLabel"
-                persistent-hint
-                min="1"
-                thumb-label
-                @change="search"
-            ></v-slider>
-
-            <v-slider
-                v-if="selectedFocus == 'Transactions'"
-                v-model="totalSumThreshold"
-                hint="Total Sum"
-                persistent-hint
-                thumb-label
-                :max="maxTotalSum"
-                min="1"
-            ></v-slider>
-          </v-col>
-          <v-col cols="10">
+          <v-col cols="12">
             <div id="cyto" ref="cyto"/>
           </v-col>
         </v-row>
@@ -101,12 +160,14 @@
         api: new API(),
         searchCount: 0,
         searchedQueries: [],
-        connectednessPercentile: 0,
         connectionThreshold: 1,
         maxConnections: 1000,
-        maxTotalSum: 1000000000,
+        maxTotalSum: 1000000,
+        maxTotalFiat: 1000000,
+        totalSumThreshold: 1,
+        totalFiatThreshold: 1,
         selectedFocus: Constants.RelationshipFocus,
-        focusItems: [Constants.RelationshipFocus, Constants.TransactionFocus]
+        focusItems: [Constants.RelationshipFocus, Constants.TransactionFocus, Constants.FiatFocus]
       }
     },
     methods: {
@@ -117,54 +178,17 @@
           this.elements = []
 
           // Get Elements
-          console.log("-------------------------------------")
-          console.log("this.graphDataProvider.getTokenNetwork()")
-          console.time('Execution Time');
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
-          console.timeEnd('Execution Time');
 
           // Get Communities
-          console.log("-------------------------------------")
-          console.log("this.graphDataProvider.getNodeToCommunityMap()")
-          console.time('Execution Time');
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
-          console.timeEnd('Execution Time');
-
           const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]
 
-          // Get Top Community
-          console.log("-------------------------------------")
-          console.log("Get Top Community")
-          console.time('Execution Time');
-          var communityNodeCounts = new Map<string, number>()
-          var maxNodes = 0
-          var communityIdWithMaxNodes = 0
-
-          for(var node of nodeToCommunityMapping) {
-            var c = 1
-            if(communityNodeCounts.get(node[1]) == undefined) {
-              communityNodeCounts.set(node[1], c)
-            } else {
-              c = communityNodeCounts.get(node[1])
-              c += 1
-              communityNodeCounts.set(node[1], c)
-            }
-
-            if(c > maxNodes) {
-              maxNodes = c
-              communityIdWithMaxNodes = node[1]
-            }
-          }
-          console.timeEnd('Execution Time');
-
           // Generate Community Classes
-          console.log("-------------------------------------")
-          console.log("Generate Community Classes")
-          console.time('Execution Time');
           for(var id of uniqueCommunityIds) {
             const rnd = Math.floor(Math. random() * Constants.RandomNodeCount)
-            const color = Constants.getBackgroundColor(id + " " + id)
-            // const color = Constants.colors[id]
+            // const color = Constants.getBackgroundColor(id + " " + id)
+            const color = Constants.colors[id]
             // const color = Constants.StringToColor.next(id + " ")
 
             this.cy.style()
@@ -174,21 +198,12 @@
                 })
                 .update()
           }
-          console.timeEnd('Execution Time');
-
 
           // Set Elements
-          console.log("-------------------------------------")
-          console.log("this.cy.add(this.elements)")
-          console.time('Execution Time');
           this.cy.remove('')
           this.cy.add(this.elements)
-          console.timeEnd('Execution Time');
 
           // Update Nodes
-          console.log("-------------------------------------")
-          console.log("Update Nodes")
-          console.time('Execution Time');
           var nodes = this.cy.nodes('')
 
           // Update Node Community Classes
@@ -206,36 +221,21 @@
           var maxEdgeTransactions = this.cy.edges().max(function(edge){
             return edge.data('transactions')
           });
-          console.log("maxEdgeTransactions: " + maxEdgeTransactions.value)
 
           // Get max TX totalSum
           var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
             return edge.data('humanReadableTotalSum')
           });
 
+          // Get max TX fiat
+          var maxEdgeTotalHumanreadableFiat = this.cy.edges().max(function(edge){
+            return edge.data('fiat')
+          });
+
           // Get max score
           var maxNodeScore = this.cy.nodes().max(function(node){
             return node.data('score')
           });
-
-          // Filter out edges and nodes
-          var filteredElements = []
-          this.cy.filter(function(element, i){
-            if(!element.isEdge()) {
-              return false
-            }
-            let txs = element.data('transactions')
-            let result = txs < this.connectionThreshold
-            return result
-          }.bind(this)).remove();
-
-          this.cy.filter(function(element, i){
-            if(!element.isNode()) {
-              return false
-            }
-            let hasEdges = element.connectedEdges().length <= 0
-            return hasEdges
-          }.bind(this)).remove();
 
           this.cy.style()
               .selector('node')
@@ -245,29 +245,92 @@
               })
               .update()
 
+          // Apply Filters...
+          if(this.selectedFocus == Constants.RelationshipFocus) {
+            // Filter out edges and nodes
+            var filteredElements = []
+            this.cy.filter(function(element, i){
+              if(!element.isEdge()) {
+                return false
+              }
+              let txs = element.data('transactions')
+              let result = txs < this.connectionThreshold
+              return result
+            }.bind(this)).remove();
+
+          } else if(this.selectedFocus == Constants.TransactionFocus) {
+            // Filter out edges and nodes
+            var filteredElements = []
+            this.cy.filter(function(element, i){
+              if(!element.isEdge()) {
+                return false
+              }
+              let humanReadableTotalSum = element.data('humanReadableTotalSum')
+              let result = humanReadableTotalSum < this.totalSumThreshold
+              return result
+            }.bind(this)).remove();
+
+          } else if(this.selectedFocus == Constants.FiatFocus) {
+            // Filter out edges and nodes
+            var filteredElements = []
+            this.cy.filter(function(element, i){
+              if(!element.isEdge()) {
+                return false
+              }
+              let fiatSum = element.data('fiat')
+              let result = fiatSum < this.totalFiatThreshold
+              return result
+            }.bind(this)).remove();
+          }
+
+          // Remove orphaned nodes
+          this.cy.filter(function(element, i){
+            if(!element.isNode()) {
+              return false
+            }
+            let hasEdges = element.connectedEdges().length <= 0
+            return hasEdges
+          }.bind(this)).remove();
+
+          // Set up edge classes
+          var dataMapProperty = 'transactions'
+          var dataMapMaximum = maxEdgeTransactions.value
+          var dataMapColorStart = Constants.RelationshipEdgeColorStart
+          var dataMapColorEnd = Constants.RelationshipEdgeColorEnd
+          var descriptionProperty = 'relationshipDescription'
+
+          if(this.selectedFocus == Constants.TransactionFocus) {
+            // Change mapping values
+            dataMapProperty = 'humanReadableTotalSum'
+            dataMapMaximum = maxEdgeTotalHumanreadableSum.value
+            dataMapColorStart = Constants.TransactionEdgeColorStart
+            dataMapColorEnd = Constants.TransactionEdgeColorEnd
+            descriptionProperty = 'transactionDescription'
+          } else if (this.selectedFocus == Constants.FiatFocus) {
+            dataMapProperty = 'fiat'
+            dataMapMaximum = maxEdgeTotalHumanreadableFiat.value
+            dataMapColorStart = Constants.FiatEdgeColorStart
+            dataMapColorEnd = Constants.FiatEdgeColorEnd
+            descriptionProperty = 'transactionDescription'
+          }
+
           this.cy.style()
               .selector('edge')
               .style({
-                "width":        "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 10)",
-                "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1.2)",
-                "line-color": "mapData(transactions, 0, " + maxEdgeTransactions.value + ", #333, #fff)",
-                'mid-target-arrow-color': "mapData(transactions, 0, " + maxEdgeTransactions.value + ", #333, #efefef)",
+                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 10)",
+                "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
+                "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
+                'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
               })
               .update()
-          console.timeEnd('Execution Time');
 
           // Run Layout
-          console.log("-------------------------------------")
-          console.log("this.cy.layout()")
-          console.time('Execution Time');
           this.cy.layout(Constants.coseLayout).run();
           this.cy.fit()
-          // this.cy.fit(this.cy.$('.c' + communityIdWithMaxNodes))
-          console.timeEnd('Execution Time');
 
           // Indicate finished
           this.maxConnections = maxEdgeTransactions.value
-
+          this.maxTotalSum = maxEdgeTotalHumanreadableSum.value
           this.searching = false
         }
       },
@@ -321,6 +384,38 @@
     computed: {
       connectionThresholdLabel() {
         return "Minimum Relationship Strength:" + " " + this.connectionThreshold
+      },
+      totalSumThresholdLabel() {
+        let token = this.tokenLookupTable.get(this.selectedAddress)
+        let symbol = token['symbol']
+        return "Minimum Total " + symbol + ": " + this.totalSumThreshold
+      },
+      totalFiatThresholdLabel() {
+        return "Minimum Dollar: " + this.totalFiatThreshold
+      },
+      computedRelationshipEdgeColorEnd() {
+        return Constants.RelationshipEdgeColorEnd
+      },
+      computedTransactionEdgeColorEnd() {
+        return Constants.TransactionEdgeColorEnd
+      },
+      computedFiatEdgeColorEnd() {
+        return Constants.FiatEdgeColorEnd
+      },
+      computedMaxTotalSum() {
+        // Get max TX totalSum
+        var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
+          return edge.data('humanReadableTotalSum')
+        });
+
+        return maxEdgeTotalHumanreadableSum.value
+      },
+      computedMaxTotalFiat() {
+        var maxEdgeTotalHumanreadableFiat = this.cy.edges().max(function(edge){
+          return edge.data('fiat')
+        });
+
+        return maxEdgeTotalHumanreadableFiat.value
       }
     }
   })
@@ -358,6 +453,20 @@
   position: fixed;
   top: 0px;
   left: 0px;
+}
+
+#filters {
+  padding: 10px;
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  z-index: 1;
+}
+
+#filters h2 {
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0.5;
 }
 
 </style>

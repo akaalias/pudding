@@ -36,6 +36,7 @@ export default class GraphDataProvider {
 
             var fromToTransactionCounts = new Map<string, any>()
             const operations = await this.api.getLatestTokenTransactions(tokenLowercase)
+
             for (var element of operations) {
                 const from: string = element['from']
                 const to: string = element['to']
@@ -73,10 +74,19 @@ export default class GraphDataProvider {
                     fromToTransactionCounts.set(fromToId, currentRecord)
                 }
             }
+
+            // Create Relationship Edges
             for (var connection of fromToTransactionCounts.values()) {
                 let humanReadableTotalSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
-                let price = humanReadableTotalSum * rate
-                let description = connection['transactions'] + ' TXs, ' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + price.toFixed(2) + ' ' + currency
+                let fiat = humanReadableTotalSum * rate
+                let humanReadableWithCurrency = fiat.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "USD"
+                });
+
+                let relationshipDescription = connection['transactions'] + ' TXs (' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + humanReadableWithCurrency + ')'
+                let transactionDescription = humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + humanReadableWithCurrency + '(' + connection['transactions'] + ' TXs)'
+
                 // @ts-ignore
                 elements.push({
                     data: {
@@ -88,7 +98,11 @@ export default class GraphDataProvider {
                         transactions: connection['transactions'],
                         totalSum: connection['totalSum'],
                         humanReadableTotalSum: humanReadableTotalSum,
-                        description: description,
+                        description: relationshipDescription,
+                        relationshipDescription: relationshipDescription,
+                        transactionDescription: transactionDescription,
+                        fiat: fiat,
+                        humanReadableFiat: humanReadableWithCurrency,
                         type: 'edge'
                     }
                 })

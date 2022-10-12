@@ -7,8 +7,14 @@ export default class Constants {
     public static LouvainMax = 1
     public static maxDepth = 1
     public static RelationshipFocus = "Relationships"
+    public static RelationshipEdgeColorStart = "#4f2f2f"
+    public static RelationshipEdgeColorEnd = "#FF9494"
     public static TransactionFocus = "Transactions"
-
+    public static TransactionEdgeColorStart = "#525d6e"
+    public static TransactionEdgeColorEnd = "#7e92af"
+    public static FiatFocus = "Fiat"
+    public static FiatEdgeColorStart = "#526e61"
+    public static FiatEdgeColorEnd = "#90C8AC"
 
     public static coseLayout = {
         name: 'cose',
