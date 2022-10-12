@@ -47,11 +47,15 @@ export default class GraphDataProvider {
         var edges:any[] = []
         var nodeIds:string[] = []
 
+        // {"fromto": 100}
+        var fromToTransactionCounts = new Map<string, any>()
         const operations = await this.api.getLatestTokenTransactions(token)
         for(var element of operations) {
             const from: string = element['from']
             const to: string = element['to']
             const value: string = element['value']
+            const valueFloat: number = parseFloat(value)
+            const fromToId = from + to
 
             if(!nodeIds.includes(from)) {
                 nodeIds.push(from)
@@ -63,20 +67,39 @@ export default class GraphDataProvider {
                 elements.push({data: {id: to, label: to.substring(0, 10)}})
             }
 
-            elements.push({
-                data:
-                    {
-                        id: "" + from + "" + to,
-                        source: from,
-                        target: to,
-                        weight: parseInt(value),
-                        value: value
-                    }
-            })
+            // Start counting relationships
+            if(!fromToTransactionCounts.has(fromToId)) {
+                fromToTransactionCounts.set(fromToId, {
+                    id: fromToId,
+                    from: from,
+                    to: to,
+                    transactions: 1,
+                    totalSum: valueFloat
+                })
+            } else {
+                var currentRecord = fromToTransactionCounts.get(fromToId)
+                currentRecord['transactions'] = currentRecord['transactions'] + 1
+                currentRecord['totalSum'] = currentRecord['totalSum'] + valueFloat
+                fromToTransactionCounts.set(fromToId, currentRecord)
+            }
+
+            // elements.push({
+            //     data:
+            //         {
+            //             id: "" + from + "" + to,
+            //             source: from,
+            //             target: to,
+            //             weight: valueFloat,
+            //             value: valueFloat
+            //         }
+            // })
         }
-
+        for(var connection of fromToTransactionCounts.values()) {
+            console.log(connection)
+            // @ts-ignore
+            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'] } })
+        }
         return elements
-
     }
 
     public async getNodeToCommunityMap(elements: any[]) {

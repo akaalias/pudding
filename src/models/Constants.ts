@@ -132,6 +132,7 @@ export default class Constants {
                 'mid-target-arrow-color': "#555",
                 'mid-target-arrow-shape': 'triangle',
                 'curve-style': 'unbundled-bezier',
+                // 'curve-style': 'haystack',
                 'haystack-radius': 0.2,
             }
         },

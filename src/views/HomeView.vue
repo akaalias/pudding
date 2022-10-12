@@ -78,14 +78,30 @@
           this.searching = true
           this.searchedQueries.push(this.selectedAddress)
           this.elements = []
+
+          // Get Elements
+          console.log("-------------------------------------")
+          console.log("this.graphDataProvider.getTokenNetwork()")
+          console.time('Execution Time');
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress)
-          this.cy.add(this.elements)
+          console.timeEnd('Execution Time');
+
+          // Get Communities
+          console.log("-------------------------------------")
+          console.log("this.graphDataProvider.getNodeToCommunityMap()")
+          console.time('Execution Time');
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
+          console.timeEnd('Execution Time');
+
           const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]
+
+          // Get Top Community
+          console.log("-------------------------------------")
+          console.log("Get Top Community")
+          console.time('Execution Time');
           var communityNodeCounts = new Map<string, number>()
           var maxNodes = 0
           var communityIdWithMaxNodes = 0
-          this.searching = false
 
           for(var node of nodeToCommunityMapping) {
             var c = 1
@@ -102,7 +118,12 @@
               communityIdWithMaxNodes = node[1]
             }
           }
+          console.timeEnd('Execution Time');
 
+          // Generate Community Classes
+          console.log("-------------------------------------")
+          console.log("Generate Community Classes")
+          console.time('Execution Time');
           for(var id of uniqueCommunityIds) {
             const rnd = Math.floor(Math. random() * Constants.RandomNodeCount)
             const color = Constants.getBackgroundColor(id + " " + id)
@@ -116,23 +137,35 @@
                 })
                 .update()
           }
+          console.timeEnd('Execution Time');
 
+          // Set Elements
+          console.log("-------------------------------------")
+          console.log("this.cy.add(this.elements)")
+          console.time('Execution Time');
+          this.cy.add(this.elements)
+          console.timeEnd('Execution Time');
+
+          // Update Nodes
+          console.log("-------------------------------------")
+          console.log("Update Nodes")
+          console.time('Execution Time');
           var nodes = this.cy.nodes('')
+
+          // Update Node Community Classes
           for(var node of nodes) {
             let nId = node.data('id')
             this.cy.$('#' + nId).addClass("c" + nodeToCommunityMapping.get(nId))
             if(this.searchedQueries.includes(nId)) {
               this.cy.$('#' + nId).addClass("target")
             }
+            // Update node score
             this.cy.$('#' + nId).data("score", this.cy.$('#' + nId).incomers().length)
           }
 
+          // Get max score
           var maxNodeScore = this.cy.nodes().max(function(node){
             return node.data('score')
-          });
-
-          var maxEdgeWeight = this.cy.edges().max(function(edge){
-            return edge.data('weight')
           });
 
           this.cy.style()
@@ -143,17 +176,36 @@
               })
               .update()
 
+          // Get max TX transaction count
+          var maxEdgeTransactions = this.cy.edges().max(function(edge){
+            return edge.data('transactions')
+          });
+
+          // Get max TX totalSum
+          var maxEdgeTotalSum = this.cy.edges().max(function(edge){
+            return edge.data('totalSum')
+          });
+
           this.cy.style()
               .selector('edge')
               .style({
-                "width":        "mapData(weight, 0, " + maxEdgeWeight.value + ", 0.5, 10)",
-                "arrow-scale":  "mapData(weight, 0, " + maxEdgeWeight.value + ", 0.5, 1)",
+                "width":        "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 10)",
+                "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1)",
+                "opacity": "mapData(totalSum, 0, " + maxEdgeTotalSum.value + ", 0.1, 1)",
               })
               .update()
+          console.timeEnd('Execution Time');
 
+          // Run Layout
+          console.log("-------------------------------------")
+          console.log("this.cy.layout()")
+          console.time('Execution Time');
           this.cy.layout(Constants.coseLayout).run();
           this.cy.fit(this.cy.$('.c' + communityIdWithMaxNodes))
+          console.timeEnd('Execution Time');
 
+          // Indicate finished
+          this.searching = false
         }
       },
       playSound (sound) {
@@ -170,26 +222,26 @@
         })
 
         this.cy = cy
-        this.cy.on("tap", "node",
-            function (evt) {
-              let node = evt.target;
-              this.selectedAddress = node.data().id;
-              this.search();
-            }.bind(this));
+        // this.cy.on("tap", "node",
+        //     function (evt) {
+        //       let node = evt.target;
+        //       this.selectedAddress = node.data().id;
+        //       this.search();
+        //     }.bind(this));
 
-        this.cy.on('mouseover', 'node', function(e){
-          var sel = e.target;
-          this.cy.elements().difference(sel.neighborhood()).not(sel).addClass('semitransp');
-          sel.addClass('showLabel')
-          sel.addClass('highlight').neighborhood().addClass('highlight');
-        }.bind(this));
-
-        this.cy.on('mouseout', 'node', function(e){
-          var sel = e.target;
-          this.cy.elements().removeClass('semitransp');
-          sel.removeClass('showLabel')
-          sel.removeClass('highlight').neighborhood().removeClass('highlight');
-        }.bind(this));
+        // this.cy.on('mouseover', 'node', function(e){
+        //   var sel = e.target;
+        //   this.cy.elements().difference(sel.neighborhood()).not(sel).addClass('semitransp');
+        //   sel.addClass('showLabel')
+        //   sel.addClass('highlight').neighborhood().addClass('highlight');
+        // }.bind(this));
+        //
+        // this.cy.on('mouseout', 'node', function(e){
+        //   var sel = e.target;
+        //   this.cy.elements().removeClass('semitransp');
+        //   sel.removeClass('showLabel')
+        //   sel.removeClass('highlight').neighborhood().removeClass('highlight');
+        // }.bind(this));
       },
       setupClusterGraph() {
         let clusterCy = cytoscape({
