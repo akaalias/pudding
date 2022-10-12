@@ -11,7 +11,6 @@
           v-if="searching"
           class="searchingProgressIndicator"
       ></v-progress-linear>
-
       <v-row>
         <v-col cols="12">
           <v-form>
@@ -37,7 +36,23 @@
     <v-main>
       <v-container fluid id="content-container">
         <v-row>
-          <v-col cols="12">
+          <v-col cols="2">
+            <h2>Filters</h2>
+            <v-slider
+                v-model="connectionThreshold"
+                label="Relationship"
+                thumb-label
+                :max="maxConnections"
+                min="1"
+            ></v-slider>
+            Max: {{maxConnections}}
+            Selected: {{connectionThreshold}}
+
+            <v-btn @click="search">
+              Apply
+            </v-btn>
+          </v-col>
+          <v-col cols="10">
             <div id="cyto" ref="cyto"/>
           </v-col>
         </v-row>
@@ -70,7 +85,10 @@
         apiResultCount: 0,
         api: new API(),
         searchCount: 0,
-        searchedQueries: []
+        searchedQueries: [],
+        connectednessPercentile: 0,
+        connectionThreshold: 1,
+        maxConnections: 1000,
       }
     },
     methods: {
@@ -78,7 +96,6 @@
         this.searchCount += 1
         if(this.selectedAddress.length == 42) {
           this.searching = true
-          this.searchedQueries.push(this.selectedAddress)
           this.elements = []
 
           // Get Elements
@@ -141,10 +158,12 @@
           }
           console.timeEnd('Execution Time');
 
+
           // Set Elements
           console.log("-------------------------------------")
           console.log("this.cy.add(this.elements)")
           console.time('Execution Time');
+          this.cy.remove('')
           this.cy.add(this.elements)
           console.timeEnd('Execution Time');
 
@@ -165,10 +184,41 @@
             this.cy.$('#' + nId).data("score", this.cy.$('#' + nId).incomers().length)
           }
 
+          // Get max TX transaction count
+          var maxEdgeTransactions = this.cy.edges().max(function(edge){
+            return edge.data('transactions')
+          });
+          console.log("maxEdgeTransactions: " + maxEdgeTransactions.value)
+
+          // Get max TX totalSum
+          var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
+            return edge.data('humanReadableTotalSum')
+          });
+
           // Get max score
           var maxNodeScore = this.cy.nodes().max(function(node){
             return node.data('score')
           });
+
+          // Filter out edges and nodes
+          var filteredElements = []
+
+          this.cy.filter(function(element, i){
+            if(!element.isEdge()) {
+              return false
+            }
+            let txs = element.data('transactions')
+            let result = txs < this.connectionThreshold
+            return result
+          }.bind(this)).remove();
+
+          this.cy.filter(function(element, i){
+            if(!element.isNode()) {
+              return false
+            }
+            let hasEdges = element.connectedEdges().length <= 0
+            return hasEdges
+          }.bind(this)).remove();
 
           this.cy.style()
               .selector('node')
@@ -178,23 +228,13 @@
               })
               .update()
 
-          // Get max TX transaction count
-          var maxEdgeTransactions = this.cy.edges().max(function(edge){
-            return edge.data('transactions')
-          });
-
-          // Get max TX totalSum
-          var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
-            return edge.data('humanReadableTotalSum')
-          });
-
           this.cy.style()
               .selector('edge')
               .style({
                 "width":        "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 10)",
-                "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1)",
+                "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1.2)",
                 "line-color": "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #fff)",
-                'mid-target-arrow-color': "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #fff)",
+                'mid-target-arrow-color': "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #efefef)",
               })
               .update()
           console.timeEnd('Execution Time');
@@ -208,6 +248,8 @@
           console.timeEnd('Execution Time');
 
           // Indicate finished
+          this.maxConnections = maxEdgeTransactions.value
+
           this.searching = false
         }
       },
@@ -235,20 +277,6 @@
           var sel = e.target;
           sel.removeClass('showLabel')
         }.bind(this))
-
-        this.cy.on('mouseover', 'node', function(e){
-          var sel = e.target;
-          this.cy.elements().difference(sel.neighborhood()).not(sel).addClass('semitransp');
-          sel.addClass('showLabel')
-          sel.addClass('highlight').neighborhood().addClass('highlight');
-        }.bind(this));
-
-        this.cy.on('mouseout', 'node', function(e){
-          var sel = e.target;
-          this.cy.elements().removeClass('semitransp');
-          sel.removeClass('showLabel')
-          sel.removeClass('highlight').neighborhood().removeClass('highlight');
-        }.bind(this));
       },
       setupClusterGraph() {
         let clusterCy = cytoscape({
@@ -309,4 +337,5 @@
   top: 0px;
   left: 0px;
 }
+
 </style>

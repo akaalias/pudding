@@ -43,12 +43,12 @@ export default class GraphDataProvider {
 
             if(!nodeIds.includes(from)) {
                 nodeIds.push(from)
-                elements.push({data: {id: from, label: from.substring(0, 10)}})
+                elements.push({data: {id: from, label: from.substring(0, 10), type: 'node'}})
             }
 
             if(!nodeIds.includes(to)) {
                 nodeIds.push(to)
-                elements.push({data: {id: to, label: to.substring(0, 10)}})
+                elements.push({data: {id: to, label: to.substring(0, 10), type: 'node'}})
             }
 
             // Start counting relationships
@@ -60,7 +60,7 @@ export default class GraphDataProvider {
                     transactions: 1,
                     totalSum: valueFloat,
                     decimals: decimals,
-                    symbol: symbol
+                    symbol: symbol,
                 })
             } else {
                 var currentRecord = fromToTransactionCounts.get(fromToId)
@@ -74,7 +74,7 @@ export default class GraphDataProvider {
             let price = humanReadableTotalSum * rate
             let description = connection['transactions'] + ' TXs, ' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + price.toFixed(2) + ' ' + currency
             // @ts-ignore
-            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'], humanReadableTotalSum: humanReadableTotalSum, description: description} })
+            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'], humanReadableTotalSum: humanReadableTotalSum, description: description, type: 'edge'} })
         }
         return elements
     }

@@ -8,7 +8,7 @@ export default class API {
     private fetchedAccounts: string[] = []
 
     public async getLatestTokenTransactions(token: string) {
-        const limit = 100
+        const limit = Constants.APIMaxResults
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTokenHistory/'
         const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'

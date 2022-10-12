@@ -1,11 +1,11 @@
 export default class Constants {
-    public static maxDepth = 1
-
+    public static APIMaxResults = 800
     public static RandomNodeCount = 250
     public static EdgeMaxCount = 20
     public static Modulo = 12
     public static RandomWeightMax = 100
     public static LouvainMax = 1
+    public static maxDepth = 1
 
     public static coseLayout = {
         name: 'cose',
@@ -103,7 +103,7 @@ export default class Constants {
                 "text-outline-width": "3px",
                 "color": "#fff",
                 "overlay-padding": "6px",
-                "z-index": "10"
+                "z-index": 1
             },
         },
         {
@@ -145,7 +145,7 @@ export default class Constants {
                 "text-background-opacity": 1,
                 "text-background-color": '#555',
                 "text-background-padding": 5,
-                'z-index': 1
+                'z-index': 1000000
             }
         },
         {
