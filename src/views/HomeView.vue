@@ -62,6 +62,8 @@
       return {
         searching: false,
         tokens: [],
+        rawTokens: [],
+        tokenLookupTable: new Map<string, any>(),
         selectedAddress: '',
         elements: [],
         clusterElements: [],
@@ -83,7 +85,7 @@
           console.log("-------------------------------------")
           console.log("this.graphDataProvider.getTokenNetwork()")
           console.time('Execution Time');
-          this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress)
+          this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
           console.timeEnd('Execution Time');
 
           // Get Communities
@@ -182,8 +184,8 @@
           });
 
           // Get max TX totalSum
-          var maxEdgeTotalSum = this.cy.edges().max(function(edge){
-            return edge.data('totalSum')
+          var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
+            return edge.data('humanReadableTotalSum')
           });
 
           this.cy.style()
@@ -191,7 +193,8 @@
               .style({
                 "width":        "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 10)",
                 "arrow-scale":  "mapData(transactions, 0, " + maxEdgeTransactions.value + ", 0.5, 1)",
-                "opacity": "mapData(totalSum, 0, " + maxEdgeTotalSum.value + ", 0.1, 1)",
+                "line-color": "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #fff)",
+                'mid-target-arrow-color': "mapData(humanReadableTotalSum, 0, " + maxEdgeTotalHumanreadableSum.value + ", #333, #fff)",
               })
               .update()
           console.timeEnd('Execution Time');
@@ -222,26 +225,30 @@
         })
 
         this.cy = cy
-        // this.cy.on("tap", "node",
-        //     function (evt) {
-        //       let node = evt.target;
-        //       this.selectedAddress = node.data().id;
-        //       this.search();
-        //     }.bind(this));
 
-        // this.cy.on('mouseover', 'node', function(e){
-        //   var sel = e.target;
-        //   this.cy.elements().difference(sel.neighborhood()).not(sel).addClass('semitransp');
-        //   sel.addClass('showLabel')
-        //   sel.addClass('highlight').neighborhood().addClass('highlight');
-        // }.bind(this));
-        //
-        // this.cy.on('mouseout', 'node', function(e){
-        //   var sel = e.target;
-        //   this.cy.elements().removeClass('semitransp');
-        //   sel.removeClass('showLabel')
-        //   sel.removeClass('highlight').neighborhood().removeClass('highlight');
-        // }.bind(this));
+        this.cy.on('mouseover', 'edge', function(e){
+          var sel = e.target;
+          sel.addClass('showLabel')
+        }.bind(this))
+
+        this.cy.on('mouseout', 'edge', function(e){
+          var sel = e.target;
+          sel.removeClass('showLabel')
+        }.bind(this))
+
+        this.cy.on('mouseover', 'node', function(e){
+          var sel = e.target;
+          this.cy.elements().difference(sel.neighborhood()).not(sel).addClass('semitransp');
+          sel.addClass('showLabel')
+          sel.addClass('highlight').neighborhood().addClass('highlight');
+        }.bind(this));
+
+        this.cy.on('mouseout', 'node', function(e){
+          var sel = e.target;
+          this.cy.elements().removeClass('semitransp');
+          sel.removeClass('showLabel')
+          sel.removeClass('highlight').neighborhood().removeClass('highlight');
+        }.bind(this));
       },
       setupClusterGraph() {
         let clusterCy = cytoscape({
@@ -256,17 +263,16 @@
     async mounted() {
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
-      const theTokens = await this.api.getTopTokens()
+      this.rawTokens = await this.api.getTopTokens()
 
-      for(var token of theTokens) {
+      for(var token of this.rawTokens) {
+        this.tokenLookupTable.set(token['address'], token)
         this.tokens.push(token)
       }
-
-      cytoscape.use( cola );
+      // cytoscape.use( cola );
 
       this.setupCyGraph()
-      this.setupClusterGraph()
-      }
+    }
   })
 </script>
 

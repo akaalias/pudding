@@ -23,31 +23,13 @@ export default class GraphDataProvider {
         this.api = api
     }
 
-    public async getTokenNetwork(token: string){
-        // /getTokenHistory/0xff71cb760666ab06aa73f34995b42dd4b85ea07b?apiKey=freekey&type=transfer&limit=5
-        /*
-            {
-                operations: [
-                    {
-                        timestamp:       # operation timestamp,
-                        transactionHash: # transaction hash,
-                        tokenInfo:       # token data (same format as token info),
-                        type:            # operation type (transfer, mint, or burn),
-                        address:         # operation target address, if available,
-                        from:            # source address, if two addresses were involved,
-                        to:              # destination address, if two addresses were involved,
-                        value:           # operation value
-                    },
-                    ...
-                ]
-            }
-         */
-
+    public async getTokenNetwork(token: string, tokenInfo: any){
         var elements: any[] = []
         var edges:any[] = []
         var nodeIds:string[] = []
+        const rate:number = tokenInfo['price']['rate']
+        const currency:string = tokenInfo['price']['currency']
 
-        // {"fromto": 100}
         var fromToTransactionCounts = new Map<string, any>()
         const operations = await this.api.getLatestTokenTransactions(token)
         for(var element of operations) {
@@ -56,6 +38,8 @@ export default class GraphDataProvider {
             const value: string = element['value']
             const valueFloat: number = parseFloat(value)
             const fromToId = from + to
+            const decimals: number = parseInt(element['tokenInfo']['decimals'])
+            const symbol: string = element['tokenInfo']['symbol']
 
             if(!nodeIds.includes(from)) {
                 nodeIds.push(from)
@@ -74,7 +58,9 @@ export default class GraphDataProvider {
                     from: from,
                     to: to,
                     transactions: 1,
-                    totalSum: valueFloat
+                    totalSum: valueFloat,
+                    decimals: decimals,
+                    symbol: symbol
                 })
             } else {
                 var currentRecord = fromToTransactionCounts.get(fromToId)
@@ -82,22 +68,13 @@ export default class GraphDataProvider {
                 currentRecord['totalSum'] = currentRecord['totalSum'] + valueFloat
                 fromToTransactionCounts.set(fromToId, currentRecord)
             }
-
-            // elements.push({
-            //     data:
-            //         {
-            //             id: "" + from + "" + to,
-            //             source: from,
-            //             target: to,
-            //             weight: valueFloat,
-            //             value: valueFloat
-            //         }
-            // })
         }
         for(var connection of fromToTransactionCounts.values()) {
-            console.log(connection)
+            let humanReadableTotalSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
+            let price = humanReadableTotalSum * rate
+            let description = connection['transactions'] + ' TXs, ' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + price.toFixed(2) + ' ' + currency
             // @ts-ignore
-            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'] } })
+            elements.push({ data: { id: connection['fromToId'], source: connection['from'], target: connection['to'], weight: connection['transactions'], value: connection['totalSum'], transactions: connection['transactions'], totalSum: connection['totalSum'], humanReadableTotalSum: humanReadableTotalSum, description: description} })
         }
         return elements
     }

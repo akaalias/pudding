@@ -123,17 +123,29 @@ export default class Constants {
         , {
             selector: 'edge',
             style: {
-                "font-size": "12px",
-                "opacity": 1,
-                "line-color": "#555",
                 'mid-target-arrow-fill': 'filled',
-                'text-margin-x': 10,
-                'text-margin-y': 10,
-                'mid-target-arrow-color': "#555",
                 'mid-target-arrow-shape': 'triangle',
                 'curve-style': 'unbundled-bezier',
                 // 'curve-style': 'haystack',
                 'haystack-radius': 0.2,
+                'z-index': 1
+            }
+        },
+        {
+            selector: 'edge.showLabel',
+            style: {
+                'line-opacity': 1.0,
+                'line-color': '#fff',
+                'label': 'data(description)',
+                "font-size": "12px",
+                "text-valign": "center",
+                "text-halign": "center",
+                "color": "#fff",
+                "text-background-shape": 'rectangle',
+                "text-background-opacity": 1,
+                "text-background-color": '#555',
+                "text-background-padding": 5,
+                'z-index': 1
             }
         },
         {

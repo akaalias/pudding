@@ -8,7 +8,7 @@ export default class API {
     private fetchedAccounts: string[] = []
 
     public async getLatestTokenTransactions(token: string) {
-        const limit = 500
+        const limit = 100
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTokenHistory/'
         const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
@@ -20,7 +20,6 @@ export default class API {
 
         const jsonData = await response.json();
         const transactions = jsonData["operations"]
-
         return transactions
     }
 
@@ -36,7 +35,6 @@ export default class API {
 
         const jsonData = await response.json();
         const tokens = jsonData["tokens"]
-
         return tokens
     }
 
