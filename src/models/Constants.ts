@@ -314,7 +314,7 @@ export default class Constants {
         "Plum",
         "PowderBlue",
         "Purple",
-        "RebeccaPurple",
+        "LightPink",
         "Red",
         "RosyBrown",
         "RoyalBlue",
