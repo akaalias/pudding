@@ -161,9 +161,9 @@
         searchCount: 0,
         searchedQueries: [],
         connectionThreshold: 1,
-        maxConnections: 1000,
-        maxTotalSum: 1000000,
-        maxTotalFiat: 1000000,
+        maxConnections: 100,
+        maxTotalSum: 100,
+        maxTotalFiat: 100,
         totalSumThreshold: 1,
         totalFiatThreshold: 1,
         selectedFocus: Constants.RelationshipFocus,
@@ -217,20 +217,26 @@
             this.cy.$('#' + nId).data("score", this.cy.$('#' + nId).incomers().length)
           }
 
+
           // Get max TX transaction count
           var maxEdgeTransactions = this.cy.edges().max(function(edge){
             return edge.data('transactions')
           });
+          this.maxConnections = maxEdgeTransactions.value
 
           // Get max TX totalSum
           var maxEdgeTotalHumanreadableSum = this.cy.edges().max(function(edge){
             return edge.data('humanReadableTotalSum')
           });
 
+          this.maxTotalSum = maxEdgeTotalHumanreadableSum.value
+
           // Get max TX fiat
           var maxEdgeTotalHumanreadableFiat = this.cy.edges().max(function(edge){
             return edge.data('fiat')
           });
+
+          this.maxTotalFiat = maxEdgeTotalHumanreadableFiat.value
 
           // Get max score
           var maxNodeScore = this.cy.nodes().max(function(node){
@@ -391,7 +397,11 @@
         return "Minimum Total " + symbol + ": " + this.totalSumThreshold
       },
       totalFiatThresholdLabel() {
-        return "Minimum Dollar: " + this.totalFiatThreshold
+        let humanReadableWithCurrency = this.totalFiatThreshold.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD"
+        });
+        return "Minimum Dollar: " + humanReadableWithCurrency
       },
       computedRelationshipEdgeColorEnd() {
         return Constants.RelationshipEdgeColorEnd
