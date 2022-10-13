@@ -1,44 +1,40 @@
 <template>
   <v-app>
+    <v-progress-linear
+        indeterminate
+        color="purple darken-2"
+        v-if="searching"
+        class="searchingProgressIndicator"
+    ></v-progress-linear>
     <v-app-bar
         app
         dark
         fluid
     >
-      <v-progress-linear
-          indeterminate
-          color="purple darken-2"
-          v-if="searching"
-          class="searchingProgressIndicator"
-      ></v-progress-linear>
-      <v-row>
-        <v-col cols="12">
-          <v-form>
-            <v-container>
-              <v-row>
-                <v-col
-                    cols="12"
-                >
-                  <v-select
-                      v-model="selectedAddress"
-                      :items="tokens"
-                      item-text="name"
-                      item-value="address"
-                      @change="searchFromScratch"
-                  ></v-select>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-form>
-        </v-col>
-      </v-row>
+      <v-toolbar-title>
+        Pudding
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-select
+          label="Select a Token to explore"
+          v-model="selectedAddress"
+          :items="tokens"
+          item-text="name"
+          item-value="address"
+          @change="searchFromScratch"
+          style="padding-top: 25px; padding-left: 20px;"
+      ></v-select>
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>mdi-heart</v-icon>
+      </v-btn>
+
     </v-app-bar>
     <v-main>
       <v-container fluid id="content-container">
         <v-card
             id="filters"
             class="mx-auto"
-            max-width="300"
             tile
             v-if="elements.length > 0"
         >
@@ -375,13 +371,6 @@
 
 <style>
 
-.v-toolbar form {
-  padding-top: 20px;
-}
-
-#cytoscape-div {
-}
-
 #content-container {
   background-color: #222;
 }
@@ -393,18 +382,13 @@
   background-color: #222;
 }
 
-#clusterCyto {
-  width: 100%;
-  height: 900px;
-  display: block;
-}
-
 .searchingProgressIndicator {
   width: 100%;
-  height: 4px;
+  height: 5px;
   position: fixed;
   top: 0px;
   left: 0px;
+  z-index: 100;
 }
 
 #filters {
@@ -413,6 +397,7 @@
   top: 50px;
   left: 20px;
   z-index: 1;
+  background-color: #333;
 }
 
 #filters h2 {
