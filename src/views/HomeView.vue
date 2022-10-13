@@ -49,7 +49,6 @@
                 :items="focusItems"
                 @change="search"
             > </v-select>
-            <h2>Filters</h2>
             <v-slider
                 v-if="selectedFocus == 'Relationships' || selectedFocus == 'Hybrid'"
                 v-model="connectionThreshold"
