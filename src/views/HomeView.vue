@@ -17,21 +17,6 @@
           Pudding
         </v-btn>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-select
-          label="Select a Token to explore"
-          v-model="selectedAddress"
-          :items="tokens"
-          item-text="name"
-          item-value="address"
-          @change="searchFromScratch"
-          style="padding-top: 25px; padding-left: 20px;"
-      ></v-select>
-      <v-spacer></v-spacer>
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
     </v-app-bar>
     <v-main>
       <v-container fluid id="content-container">
@@ -39,7 +24,6 @@
             id="filters"
             class="mx-auto"
             tile
-            v-if="elements.length > 0"
         >
           <v-btn x-small
                  icon
@@ -49,10 +33,18 @@
               mdi-minus
             </v-icon>
           </v-btn>
+          <v-select
+              label="Select a Token to explore"
+              v-model="selectedAddress"
+              :items="tokens"
+              item-text="name"
+              item-value="address"
+              @change="searchFromScratch"
+          ></v-select>
 
-          <div id="menuToggleWrapper" v-if="showMenu">
-            <h2>Focus</h2>
+          <div id="menuToggleWrapper" v-if="elements.length > 0">
             <v-select
+                label="Research Focus"
                 v-model="selectedFocus"
                 :items="focusItems"
                 @change="search"
