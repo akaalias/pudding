@@ -47,12 +47,12 @@ export default class GraphDataProvider {
 
                 if (!nodeIds.includes(from)) {
                     nodeIds.push(from)
-                    elements.push({data: {id: from, label: from.substring(0, 10), type: 'node'}})
+                    elements.push({data: {id: from, label: from.substring(0, 16), type: 'node'}})
                 }
 
                 if (!nodeIds.includes(to)) {
                     nodeIds.push(to)
-                    elements.push({data: {id: to, label: to.substring(0, 10), type: 'node'}})
+                    elements.push({data: {id: to, label: to.substring(0, 16), type: 'node'}})
                 }
 
                 // Start counting relationships

@@ -42,39 +42,48 @@
             tile
             v-if="elements.length > 0"
         >
-          <h2>Focus</h2>
-          <v-select
-              v-model="selectedFocus"
-              :items="focusItems"
-              @change="search"
-          > </v-select>
+          <v-btn x-small
+                 icon
+                 @click="toggleShowMenu"
+          id="toggleMenuButton">
+            <v-icon>
+              mdi-minus
+            </v-icon>
+          </v-btn>
 
-          <h2>Filters</h2>
-          <v-slider
-              v-if="selectedFocus == 'Relationships' || selectedFocus == 'Hybrid'"
-              v-model="connectionThreshold"
-              :max="maxConnections"
-              :hint="connectionThresholdLabel"
-              persistent-hint
-              min="1"
-              thumb-label
-              @change="search"
-              :color="computedRelationshipEdgeColorEnd"
-          >
-          </v-slider>
-
-          <v-slider
-              v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid'"
-              v-model="totalSumThreshold"
-              :max="maxTotalSum"
-              :hint="totalSumThresholdLabel"
-              persistent-hint
-              min="1"
-              thumb-label
-              @change="search"
-              :color="computedTransactionEdgeColorEnd"
-          >
-          </v-slider>
+          <div id="menuToggleWrapper" v-if="showMenu">
+            <h2>Focus</h2>
+            <v-select
+                v-model="selectedFocus"
+                :items="focusItems"
+                @change="search"
+            > </v-select>
+            <h2>Filters</h2>
+            <v-slider
+                v-if="selectedFocus == 'Relationships' || selectedFocus == 'Hybrid'"
+                v-model="connectionThreshold"
+                :max="maxConnections"
+                :hint="connectionThresholdLabel"
+                persistent-hint
+                min="1"
+                thumb-label
+                @change="search"
+                :color="computedRelationshipEdgeColorEnd"
+            >
+            </v-slider>
+            <v-slider
+                v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid'"
+                v-model="totalSumThreshold"
+                :max="maxTotalSum"
+                :hint="totalSumThresholdLabel"
+                persistent-hint
+                min="1"
+                thumb-label
+                @change="search"
+                :color="computedTransactionEdgeColorEnd"
+            >
+            </v-slider>
+          </div>
         </v-card>
         <v-row>
           <v-col cols="12">
@@ -100,6 +109,7 @@
     },
     data() {
       return {
+        showMenu: true,
         searching: false,
         tokens: [],
         rawTokens: [],
@@ -264,7 +274,6 @@
           var dataMapColorEnd = Constants.RelationshipEdgeColorEnd
           var descriptionProperty = 'relationshipDescription'
 
-
           this.cy.style()
               .selector('edge.relationship-focus')
               .style({
@@ -302,12 +311,6 @@
           this.searching = false
         }
       },
-      playSound (sound) {
-        if(sound) {
-          var audio = new Audio(sound);
-          audio.play();
-        }
-      },
       setupCyGraph() {
         let cy = cytoscape({
           container: this.$refs.cyto,
@@ -317,25 +320,20 @@
 
         this.cy = cy
 
-        this.cy.on('mouseover', 'edge', function(e){
+        this.cy.on('mouseover', 'edge, node', function(e){
           var sel = e.target;
           sel.addClass('showLabel')
         }.bind(this))
 
-        this.cy.on('mouseout', 'edge', function(e){
+        this.cy.on('mouseout', 'edge, node', function(e){
           var sel = e.target;
           sel.removeClass('showLabel')
         }.bind(this))
-      },
-      setupClusterGraph() {
-        let clusterCy = cytoscape({
-          container: this.$refs.clusterCyto,
-          elements: [],
-          style: Constants.cyStyle
-        })
 
-        this.clusterCy = clusterCy
       },
+      toggleShowMenu() {
+        this.showMenu = !this.showMenu
+      }
     },
     async mounted() {
       this.api = new API()
@@ -390,7 +388,7 @@
 
 #cyto {
   width: 100%;
-  height: 700px;
+  height: 900px;
   display: block;
   background-color: #222;
 }

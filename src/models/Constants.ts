@@ -19,13 +19,12 @@ export default class Constants {
         {
             selector: 'node',
             style: {
-                'label': '',
-                "font-size": "24px",
+                "font-size": "14px",
                 "text-valign": "center",
                 "text-halign": "center",
                 "background-color": "#555",
                 "text-outline-color": "#555",
-                "text-outline-width": "3px",
+                "text-outline-width": "2px",
                 "color": "#fff",
                 "overlay-padding": "6px",
                 "z-index": 1
@@ -36,13 +35,6 @@ export default class Constants {
             style: {
                 'border-color': 'red',
                 'border-width': '5px'
-            }
-        },
-        {
-            selector: 'node.prior-target',
-            style: {
-                'border-color': 'white',
-                'border-width': '10px'
             }
         }
         ,
@@ -85,17 +77,9 @@ export default class Constants {
             }
         },
         {
-            selector: 'node.highlight',
-            style: {
-                'border-color': '#999',
-                'border-width': '1px'
-            }
-        },
-        {
             selector: 'node.showLabel',
             style: {
                 'label': 'data(label)',
-                'border-width': '4px'
             }
         }
         ,
