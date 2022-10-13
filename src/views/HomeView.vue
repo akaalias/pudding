@@ -135,7 +135,6 @@
 
           // Get Elements
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
-          console.log(this.elements.length)
 
           // Get Communities
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
@@ -143,10 +142,7 @@
 
           // Generate Community Classes
           for(var id of uniqueCommunityIds) {
-            const rnd = Math.floor(Math. random() * Constants.RandomNodeCount)
-            // const color = Constants.getBackgroundColor(id + " " + id)
-            const color = Constants.colors[id]
-            // const color = Constants.StringToColor.next(id + " ")
+            const color = Constants.colors[id]// Constants.StringToColor.next(id)
 
             this.cy.style()
                 .selector('node.c' + id)
@@ -268,13 +264,6 @@
           var dataMapColorEnd = Constants.RelationshipEdgeColorEnd
           var descriptionProperty = 'relationshipDescription'
 
-          if(this.selectedFocus == Constants.TransactionFocus) {
-            dataMapProperty = 'humanReadableTotalSum'
-            dataMapMaximum = maxEdgeTotalHumanreadableSum.value
-            dataMapColorStart = Constants.TransactionEdgeColorStart
-            dataMapColorEnd = Constants.TransactionEdgeColorEnd
-            descriptionProperty = 'transactionDescription'
-          }
 
           this.cy.style()
               .selector('edge.relationship-focus')
@@ -287,15 +276,20 @@
               })
               .update()
 
+          dataMapProperty = 'humanReadableTotalSum'
+          dataMapMaximum = maxEdgeTotalHumanreadableSum.value
+          dataMapColorStart = Constants.TransactionEdgeColorStart
+          dataMapColorEnd = Constants.TransactionEdgeColorEnd
+          descriptionProperty = 'transactionDescription'
+
           this.cy.style()
               .selector('edge.transaction-focus')
               .style({
-                "width": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", 0.5, 10)",
-                "arrow-scale": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
-                "line-color": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", " + Constants.TransactionEdgeColorStart + ", " + Constants.TransactionEdgeColorEnd + ")",
-                'mid-target-arrow-color': "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum  + ", " + Constants.TransactionEdgeColorStart + ", " + Constants.TransactionEdgeColorEnd + ")",
-                'control-point-distances': "-30"
-
+                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 10)",
+                "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
+                "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
+                'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
+                'control-point-distances': "40"
               })
               .update()
 

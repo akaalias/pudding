@@ -14,9 +14,6 @@ export default class Constants {
     public static RelationshipEdgeColorEnd = "#FF9494"
     public static TransactionEdgeColorStart = "#525d6e"
     public static TransactionEdgeColorEnd = "#7e92af"
-    public static FiatFocus = "Fiat"
-    public static FiatEdgeColorStart = "#526e61"
-    public static FiatEdgeColorEnd = "#90C8AC"
 
     public static cyStyle = [
         {
