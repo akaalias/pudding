@@ -76,15 +76,20 @@ export default class GraphDataProvider {
 
             // Create Relationship Edges
             for (var connection of fromToTransactionCounts.values()) {
-                let humanReadableTotalSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
-                let fiat = humanReadableTotalSum * rate
-                let humanReadableWithCurrency = fiat.toLocaleString("en-US", {
-                    style: "currency",
-                    currency: "USD"
-                });
+                let humanReadableTotalTokenSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
+                var fiat = 0
+                var humanReadableFiatWithCurrency = "Rate unavailable"
+                if(!isNaN(rate)) {
+                    fiat = humanReadableTotalTokenSum * rate
+                    humanReadableFiatWithCurrency = fiat.toLocaleString("en-US", {
+                        style: "currency",
+                        currency: "USD"
+                    });
+                }
 
-                let relationshipDescription = connection['transactions'] + ' TXs (' + humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + humanReadableWithCurrency + ')'
-                let transactionDescription = humanReadableTotalSum.toFixed(2) + ' ' + connection['symbol'] + ' = ' + humanReadableWithCurrency + '(' + connection['transactions'] + ' TXs)'
+                // @ts-ignore
+                let relationshipDescription = connection['transactions'] + ' TX = Total: ' + Intl.NumberFormat().format(humanReadableTotalTokenSum.toFixed(2)) + '' + connection['symbol'] + ' (' + humanReadableFiatWithCurrency + ')'
+                let transactionDescription = relationshipDescription
 
                 // @ts-ignore
                 elements.push({
@@ -96,12 +101,10 @@ export default class GraphDataProvider {
                         value: connection['totalSum'],
                         transactions: connection['transactions'],
                         totalSum: connection['totalSum'],
-                        humanReadableTotalSum: humanReadableTotalSum,
+                        humanReadableTotalSum: humanReadableTotalTokenSum,
                         description: relationshipDescription,
                         relationshipDescription: relationshipDescription,
                         transactionDescription: transactionDescription,
-                        fiat: fiat,
-                        humanReadableFiat: humanReadableWithCurrency,
                         type: 'edge'
                     }
                 })

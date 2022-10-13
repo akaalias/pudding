@@ -121,6 +121,7 @@
     },
     methods: {
       async searchFromScratch() {
+        this.searching = true
         this.maxConnections = 1
         this.maxTotalSum = 1
         this.connectionThreshold = 1
@@ -128,7 +129,6 @@
         this.search()
       },
       async search() {
-        this.searchCount += 1
         if(this.selectedAddress.length == 42) {
           this.searching = true
           this.elements = []
@@ -321,7 +321,14 @@
       totalSumThresholdLabel() {
         let token = this.tokenLookupTable.get(this.selectedAddress)
         let symbol = token['symbol']
-        return "Minimum Total " + symbol + ": " + this.totalSumThreshold
+        let rate = token['price']['rate']
+        let currency = token['price']['currency']
+        let humanReadableWithCurrency = this.totalSumThreshold.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD"
+        });
+
+        return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol + " (" + humanReadableWithCurrency + ")"
       },
       computedRelationshipEdgeColorEnd() {
         return Constants.RelationshipEdgeColorEnd
