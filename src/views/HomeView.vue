@@ -12,7 +12,10 @@
         fluid
     >
       <v-toolbar-title>
-        Pudding
+        <v-btn v-bind:to="'/'">
+          <v-icon>mdi-home</v-icon> &nbsp;
+          Pudding
+        </v-btn>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-select
@@ -335,13 +338,19 @@
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
       this.rawTokens = await this.api.getTopTokens()
+      var tokenString = ""
       for(var token of this.rawTokens) {
         this.tokenLookupTable.set(token['address'], token)
         this.tokens.push(token)
       }
-      // cytoscape.use( cola );
 
       this.setupCyGraph()
+
+      const addressParam = this.$route.query.address;
+      if(!!addressParam) {
+        this.selectedAddress = addressParam;
+        this.searchFromScratch()
+      }
     },
     computed: {
       connectionThresholdLabel() {
