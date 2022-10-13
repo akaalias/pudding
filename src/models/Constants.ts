@@ -7,97 +7,16 @@ export default class Constants {
     public static LouvainMax = 1
     public static maxDepth = 1
     public static RelationshipFocus = "Relationships"
+    public static TransactionFocus = "Transactions"
+    public static HybridFocus = "Hybrid"
+
     public static RelationshipEdgeColorStart = "#4f2f2f"
     public static RelationshipEdgeColorEnd = "#FF9494"
-    public static TransactionFocus = "Transactions"
     public static TransactionEdgeColorStart = "#525d6e"
     public static TransactionEdgeColorEnd = "#7e92af"
     public static FiatFocus = "Fiat"
     public static FiatEdgeColorStart = "#526e61"
     public static FiatEdgeColorEnd = "#90C8AC"
-
-    public static coseLayout = {
-        name: 'cose',
-        animate: false,
-        idealEdgeLength: 100,
-        nodeOverlap: 0.1,
-        refresh: 100,
-        fit: true,
-        animateFilter: function ( node: any, i:any ){ return true; },
-        padding: 100,
-        randomize: false,
-        componentSpacing: 100,
-        nodeRepulsion: 400000,
-        edgeElasticity: 200,
-        nestingFactor: 5,
-        gravity: 0,
-        numIter: 1000,
-        initialTemp: 300,
-        coolingFactor: 0.95,
-        minTemp: 1.0,
-        animationDuration: 3000,
-    }
-
-    public static offsetForDepth(depth: number) {
-        if(depth >= 3) {
-            return 20
-        }
-        if(depth == 2) {
-            return 15
-        }
-        if(depth == 1) {
-            return 30
-        }
-
-        return 10
-    }
-
-    public static concentricLayout = {
-        name: 'concentric',
-        fit: true, // whether to fit the viewport to the graph
-        padding: 30, // the padding on fit
-        startAngle: 3 / 2 * Math.PI, // where nodes start in radians
-        sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
-        clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
-        equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
-        minNodeSpacing: 10, // min spacing between outside of nodes (used for radius adjustment)
-        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-        avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-        nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
-        height: undefined, // height of layout area (overrides container height)
-        width: undefined, // width of layout area (overrides container width)
-        spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
-        concentric: function(node: any ){ // returns numeric value for each node, placing higher nodes in levels towards the centre
-            return node.degree();
-        },
-        levelWidth: function(nodes: any ){ // the variation of concentric values in each level
-            return nodes.maxDegree() / 4;
-        },
-        animate: false, // whether to transition the node positions
-        animationDuration: 500, // duration of animation in ms if enabled
-        animationEasing: undefined, // easing of animation if enabled
-        animateFilter: function (node: any, i: any ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
-        ready: undefined, // callback on layoutready
-        stop: undefined, // callback on layoutstop
-        transform: function (node: any, position: any ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
-    }
-
-    public static colaLayout = {
-        name: 'cola',
-        animate: true, // whether to show the layout as it's running
-        refresh: 1, // number of ticks per frame; higher is faster but more jerky
-        maxSimulationTime: 4000, // max length in ms to run the layout
-        ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
-        fit: true, // on every layout reposition of nodes, fit the viewport
-        padding: 30, // padding around the simulation
-        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-        nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
-    }
-
-    public static gridLayout = {
-        name: 'grid'
-    }
-
 
     public static cyStyle = [
         {
@@ -129,15 +48,26 @@ export default class Constants {
                 'border-width': '10px'
             }
         }
-        , {
+        ,
+        {
             selector: 'edge',
             style: {
                 'mid-target-arrow-fill': 'filled',
                 'mid-target-arrow-shape': 'triangle',
                 'curve-style': 'unbundled-bezier',
-                // 'curve-style': 'haystack',
-                'haystack-radius': 0.2,
                 'z-index': 1
+            }
+        },
+        {
+            selector: 'edge.relationship-focus',
+            style: {
+                'line-color': 'red',
+            }
+        },
+        {
+            selector: 'edge.transaction-focus',
+            style: {
+                'line-color': 'blue',
             }
         },
         {
@@ -194,6 +124,83 @@ export default class Constants {
         }
     ]
 
+    public static coseLayout = {
+        name: 'cose',
+        animate: false,
+        idealEdgeLength: 100,
+        nodeOverlap: 0.1,
+        refresh: 100,
+        fit: true,
+        animateFilter: function ( node: any, i:any ){ return true; },
+        padding: 100,
+        randomize: false,
+        componentSpacing: 100,
+        nodeRepulsion: 400000,
+        edgeElasticity: 200,
+        nestingFactor: 5,
+        gravity: 0,
+        numIter: 1000,
+        initialTemp: 300,
+        coolingFactor: 0.95,
+        minTemp: 1.0,
+        animationDuration: 3000,
+    }
+    public static offsetForDepth(depth: number) {
+        if(depth >= 3) {
+            return 20
+        }
+        if(depth == 2) {
+            return 15
+        }
+        if(depth == 1) {
+            return 30
+        }
+
+        return 10
+    }
+    public static concentricLayout = {
+        name: 'concentric',
+        fit: true, // whether to fit the viewport to the graph
+        padding: 30, // the padding on fit
+        startAngle: 3 / 2 * Math.PI, // where nodes start in radians
+        sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
+        clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
+        equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
+        minNodeSpacing: 10, // min spacing between outside of nodes (used for radius adjustment)
+        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+        avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+        nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+        height: undefined, // height of layout area (overrides container height)
+        width: undefined, // width of layout area (overrides container width)
+        spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
+        concentric: function(node: any ){ // returns numeric value for each node, placing higher nodes in levels towards the centre
+            return node.degree();
+        },
+        levelWidth: function(nodes: any ){ // the variation of concentric values in each level
+            return nodes.maxDegree() / 4;
+        },
+        animate: false, // whether to transition the node positions
+        animationDuration: 500, // duration of animation in ms if enabled
+        animationEasing: undefined, // easing of animation if enabled
+        animateFilter: function (node: any, i: any ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
+        ready: undefined, // callback on layoutready
+        stop: undefined, // callback on layoutstop
+        transform: function (node: any, position: any ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
+    }
+    public static colaLayout = {
+        name: 'cola',
+        animate: true, // whether to show the layout as it's running
+        refresh: 1, // number of ticks per frame; higher is faster but more jerky
+        maxSimulationTime: 4000, // max length in ms to run the layout
+        ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
+        fit: true, // on every layout reposition of nodes, fit the viewport
+        padding: 30, // padding around the simulation
+        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+        nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
+    }
+    public static gridLayout = {
+        name: 'grid'
+    }
     public static colors = [
         "AliceBlue",
         "AntiqueWhite",
@@ -343,11 +350,9 @@ export default class Constants {
         "WhiteSmoke",
         "Yellow",
     ]
-
     public static colorForNumber(nodeId: any) {
         return Constants.intToRGB(Constants.hashCode("" + nodeId))
     }
-
     private static hashCode(str: string) { // java String#hashCode
         var hash = 0;
         for (var i = 0; i < str.length; i++) {
@@ -355,7 +360,6 @@ export default class Constants {
         }
         return hash;
     }
-
     private static intToRGB(i: number){
         var c = (i & 0x00FFFFFF)
             .toString(16)
@@ -363,15 +367,12 @@ export default class Constants {
 
         return "00000".substring(0, 6 - c.length) + c;
     }
-
     public static getBackgroundColor(i: any) {
         let stringUniqueHash = [...(i + "")].reduce((acc, char) => {
             return char.charCodeAt(0) + ((acc << 5) - acc);
         }, 0);
         return `hsl(${stringUniqueHash % 360}, 95%, 35%)`;
     }
-
-// Takes any string and converts it into a #RRGGBB color.
     public static StringToColor = (function(){
         var instance: any = null;
 

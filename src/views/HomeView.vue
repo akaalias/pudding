@@ -51,7 +51,7 @@
 
           <h2>Filters</h2>
           <v-slider
-              v-if="selectedFocus == 'Relationships'"
+              v-if="selectedFocus == 'Relationships' || selectedFocus == 'Hybrid'"
               v-model="connectionThreshold"
               :max="maxConnections"
               :hint="connectionThresholdLabel"
@@ -64,7 +64,7 @@
           </v-slider>
 
           <v-slider
-              v-if="selectedFocus == 'Transactions'"
+              v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid'"
               v-model="totalSumThreshold"
               :max="maxTotalSum"
               :hint="totalSumThresholdLabel"
@@ -115,8 +115,8 @@
         maxConnections: 1,
         maxTotalSum: 1,
         totalSumThreshold: 1,
-        selectedFocus: Constants.RelationshipFocus,
-        focusItems: [Constants.RelationshipFocus, Constants.TransactionFocus]
+        selectedFocus: Constants.HybridFocus,
+        focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus]
       }
     },
     methods: {
@@ -135,6 +135,7 @@
 
           // Get Elements
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
+          console.log(this.elements.length)
 
           // Get Communities
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
@@ -211,6 +212,8 @@
               return result
             }.bind(this)).remove();
 
+            this.cy.$('.transaction-focus').remove()
+
           } else if(this.selectedFocus == Constants.TransactionFocus) {
             // Filter out edges and nodes
             var filteredElements = []
@@ -223,6 +226,30 @@
               return result
             }.bind(this)).remove();
 
+            this.cy.$('.relationship-focus').remove()
+
+          } else if(this.selectedFocus == Constants.HybridFocus) {
+            // Filter out edges and nodes
+            var filteredElements = []
+            this.cy.filter(function(element, i){
+              if(!element.isEdge()) {
+                return false
+              }
+              let txs = element.data('transactions')
+              let result = txs < this.connectionThreshold
+              return result
+            }.bind(this)).remove();
+
+            // Filter out edges and nodes
+            var filteredElements = []
+            this.cy.filter(function(element, i){
+              if(!element.isEdge()) {
+                return false
+              }
+              let humanReadableTotalSum = element.data('humanReadableTotalSum')
+              let result = humanReadableTotalSum < this.totalSumThreshold
+              return result
+            }.bind(this)).remove();
           }
 
           // Remove orphaned nodes
@@ -250,14 +277,28 @@
           }
 
           this.cy.style()
-              .selector('edge')
+              .selector('edge.relationship-focus')
               .style({
                 "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 10)",
                 "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
                 "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
+                'control-point-distances': "80"
               })
               .update()
+
+          this.cy.style()
+              .selector('edge.transaction-focus')
+              .style({
+                "width": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", 0.5, 10)",
+                "arrow-scale": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
+                "line-color": "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum + ", " + Constants.TransactionEdgeColorStart + ", " + Constants.TransactionEdgeColorEnd + ")",
+                'mid-target-arrow-color': "mapData(" + 'humanReadableTotalSum' + ", 0, " + dataMapMaximum  + ", " + Constants.TransactionEdgeColorStart + ", " + Constants.TransactionEdgeColorEnd + ")",
+                'control-point-distances': "-30"
+
+              })
+              .update()
+
 
           // Run Layout
           this.cy.layout(Constants.coseLayout).run();

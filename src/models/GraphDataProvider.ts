@@ -94,7 +94,7 @@ export default class GraphDataProvider {
                 // @ts-ignore
                 elements.push({
                     data: {
-                        id: connection['fromToId'],
+                        id: connection['id'] + 'relationship',
                         source: connection['from'],
                         target: connection['to'],
                         weight: connection['transactions'],
@@ -104,10 +104,31 @@ export default class GraphDataProvider {
                         humanReadableTotalSum: humanReadableTotalTokenSum,
                         description: relationshipDescription,
                         relationshipDescription: relationshipDescription,
-                        transactionDescription: transactionDescription,
-                        type: 'edge'
-                    }
+                        type: 'edge',
+                        classes: 'relationship-focus',
+                    },
+                    classes: 'relationship-focus',
                 })
+
+                // @ts-ignore
+                elements.push({
+                    data: {
+                        id: connection['id'] + 'transaction',
+                        source: connection['from'],
+                        target: connection['to'],
+                        weight: connection['transactions'],
+                        value: connection['totalSum'],
+                        transactions: connection['transactions'],
+                        totalSum: connection['totalSum'],
+                        humanReadableTotalSum: humanReadableTotalTokenSum,
+                        description: relationshipDescription,
+                        relationshipDescription: relationshipDescription,
+                        type: 'edge',
+                        classes: 'transaction-focus',
+                    },
+                    classes: 'transaction-focus',
+                })
+
             }
 
             this.cache.set(tokenLowercase, elements);
