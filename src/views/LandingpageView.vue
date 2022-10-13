@@ -3,14 +3,10 @@
     <v-container fluid id="landingpage-container">
       <v-row
           align="center"
-          justify="space-around"
+          justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">Get from <i>hairball</i> to <u>story</u> faster.</h1>
-
-          <!--
-          <h1 class="display-4">Find the Story In the Hairball Faster</h1>
-          -->
+          <h1 class="display-4">Find the story faster.</h1>
           <h2 class="display-1">
             Pudding is Ecosystem Reconnaissance For Forensic Crypto Researchers
           </h2>
@@ -19,18 +15,21 @@
     </v-container>
 
     <v-container fluid id="explore-container">
-
+      <h2 class="headline centered">Explore Ethererum Tokens</h2>
       <v-row>
         <v-col cols="3" v-for="token in tokens">
           <v-card
               elevation="2"
           >
-            <v-card-title>{{token.name}}</v-card-title>
+            <v-card-title>
+              {{token.name}}
+            </v-card-title>
 
             <v-card-actions>
               <v-btn
                   elevation="4"
-                  light
+                  dark
+                  small
                   v-bind:to="token.address"
               >
                 Explore {{token.name}}
@@ -82,8 +81,14 @@ export default Vue.extend({
 .display-4 {
 
 }
-.display-4, .display-1 {
-  margin-bottom: 32pt;
+.display-4 {
+  margin-top: 10%;
+  text-shadow: 0px 0px 15px black ;
+}
+
+.display-1 {
+  margin-top: 32pt;
+  text-shadow: 0px 0px 15px black ;
 }
 .landingpage-app {
   background-color: #333;
@@ -93,6 +98,12 @@ export default Vue.extend({
 }
 
 #landingpage-container {
-  height: 400px;
+  height: 700px;
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
+}
+
+.headline {
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 </style>
