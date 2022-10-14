@@ -136,7 +136,6 @@ export default class GraphDataProvider {
             return elements
         }
     }
-
     public async getNodeToCommunityMap(elements: any[]) {
         var edges:any[] = []
         var nodeIds:string[] = []

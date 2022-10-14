@@ -25,14 +25,6 @@
             class="mx-auto"
             tile
         >
-          <v-btn x-small
-                 icon
-                 @click="toggleShowMenu"
-          id="toggleMenuButton">
-            <v-icon>
-              mdi-minus
-            </v-icon>
-          </v-btn>
           <v-select
               label="Select a Token to explore"
               v-model="selectedAddress"
@@ -42,7 +34,17 @@
               @change="searchFromScratch"
           ></v-select>
 
-          <div id="menuToggleWrapper" v-if="elements.length > 0">
+          <div id="toggleMenuButtonContainer">
+            <v-btn x-small
+                   icon
+                   @click="toggleShowMenu"
+                   id="toggleMenuButton">
+              <v-icon dark>
+                {{showMenu ? "mdi-minus" : "mdi-plus"}}
+              </v-icon>
+            </v-btn>
+          </div>
+          <div id="menuItems" v-if="elements.length > 0 && showMenu">
             <v-select
                 label="Research Focus"
                 v-model="selectedFocus"
@@ -73,6 +75,12 @@
                 :color="computedTransactionEdgeColorEnd"
             >
             </v-slider>
+
+            <v-btn
+                v-on:click="exportPNG"
+                block
+            > Export PNG
+            </v-btn>
           </div>
         </v-card>
         <v-row>
@@ -323,16 +331,27 @@
       },
       toggleShowMenu() {
         this.showMenu = !this.showMenu
+      },
+      async exportPNG() {
+        Promise.resolve(this.cy.png({ output: "blob-promise" })).then(
+            (result) => {
+              var image = new Image();
+              image.src = URL.createObjectURL(result);
+              window.open(image.src, "_blank");
+            }
+        )
       }
     },
     async mounted() {
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
+
       this.rawTokens = await this.api.getTopTokens()
-      var tokenString = ""
       for(var token of this.rawTokens) {
-        this.tokenLookupTable.set(token['address'], token)
-        this.tokens.push(token)
+        if(Constants.AvailableTokenAddresses().includes(token['address'])) {
+          this.tokenLookupTable.set(token['address'], token)
+          this.tokens.push(token)
+        }
       }
 
       this.setupCyGraph()
@@ -404,6 +423,9 @@
   text-transform: uppercase;
   font-size: 12px;
   opacity: 0.5;
+}
+
+#toggleMenuButtonContainer {
 }
 
 </style>
