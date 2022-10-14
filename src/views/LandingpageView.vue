@@ -1,17 +1,15 @@
 <template>
   <v-app class="landingpage-app">
     <div id="new-banner">
-      <b>New for Crypto Researchers:</b> Free Ecosystem Reconnaissance On Ethereum ERC20 Tokens
+      New! For Crypto Researchers
     </div>
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="8">
-          <h1 class="display-3">From “hairball” to “hairline crack”: <br>Find the story sooner.</h1>
-          <h3>...and "Pudding" because that's where the proof is.</h3>
+        <v-col cols="12">
+          <h1 class="display-3"><span class="highlight">From “hairball” to “hairline fracture”</span> – Find the story sooner with ecosystem reconnaissance.</h1>
         </v-col>
       </v-row>
     </v-container>
-
     <v-container fluid id="explore-container">
       <v-row>
         <v-col cols="4" v-for="token in tokens">
@@ -70,7 +68,6 @@
 
       </v-row>
     </v-container>
-
     <v-container fluid id="contact-container" class="contact">
       <v-row>
         <v-col cols="12">
@@ -109,6 +106,8 @@
       </v-row>
     </v-container>
     <footer>
+      <h2>"Pudding", because <i>that's</i> where the proof is</h2>
+      <br>
       <p>
         Copyright 2022 –
         Made with love by <a href="https://alexisrondeau.me" target="_blank">Alexis Rondeau</a> –
@@ -117,13 +116,10 @@
     </footer>
   </v-app>
 </template>
-
 <script lang="ts">
 import Vue from 'vue'
 import Constants from "@/models/Constants"
-
 export default Vue.extend({
-
   name: 'Landingpage',
   components: {
   },
@@ -132,17 +128,28 @@ export default Vue.extend({
       tokens: Constants.AvailableTokens
     }
   }})
-
 </script>
-
 <style scoped>
+#new-banner {
+  background-color: #222;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
+}
+
 h1 {
   margin-top: 10%;
+  text-shadow: 0px 0px 10px black;
 }
 
 h3 {
   margin-top: 5%;
   font-weight: normal;
+  text-shadow: 0px 0px 10px black;
+}
+
+.highlight {
+  background-color: blueviolet;
 }
 
 .landingpage-app {
@@ -153,17 +160,10 @@ h3 {
 }
 
 #landingpage-container {
-  height: 500px;
-  background-position: right;
+  height: 600px;
+  background-position: bottom;
   background-size: 100%;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
-}
-
-#new-banner {
-  background-color: blueviolet;
-  padding: 5px;
-  width: 100%;
-  text-align: center;
 }
 
 .headline {
@@ -192,12 +192,11 @@ h3 {
 }
 
 footer {
-  border-top: 2px dotted #1e1e1e;
+  background-color: #222;
   padding: 40px;
-  margin-top: 100px;
+  margin-top: 50px;
   font-size: 10pt;
   text-align: center;
-  opacity: 0.3;
 }
 footer:hover {
   opacity: 1;
