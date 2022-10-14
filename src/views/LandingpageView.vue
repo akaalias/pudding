@@ -9,10 +9,8 @@
           justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">From “Hairball” to “Hairline Crack”</h1>
-
-          <h2>Ecosystem Reconnaissance For Forensic Crypto Researchers</h2>
-            <h3>Pudding, because that's where the proof is.</h3>
+          <h1 class="display-4">From “hairball” to “hairline crack”: Find the story sooner.</h1>
+            <h3>(Oh, and "Pudding" because that's where the proof is.)</h3>
         </v-col>
       </v-row>
     </v-container>

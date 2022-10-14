@@ -27,21 +27,22 @@ export default class Constants {
         {name: 'Tether USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tether USD.png', deepLink: '/home?address=0xdac17f958d2ee523a2206206994597c13d831ec7', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
         {name: 'USD Coin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/USD Coin.png', deepLink: '/home?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},
         {name: 'Dai', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', deepLink: '/home?address=0x6b175474e89094c44da98b954eedeac495271d0f', address: '0x6b175474e89094c44da98b954eedeac495271d0f'},
-        {name: 'Curve DAO Token', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', deepLink: '/home?address=0xd533a949740bb3306d119cc777fa900ba034cd52', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
-        {name: 'Shiba Inu', deepLink: '/home?address=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce', address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'},
-        {name: 'Wrapped Bitcoin', deepLink: '/home?address=0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'},
-        {name: 'Chainlink', deepLink: '/home?address=0x514910771af9ca656af840dff83e8264ecf986ca', address: '0x514910771af9ca656af840dff83e8264ecf986ca'},
-        {name: 'HEX', deepLink: '/home?address=0x2b591e99afe9f32eaa6214f7b7629768c40eeb39', address: '0x2b591e99afe9f32eaa6214f7b7629768c40eeb39'},
-        {name: 'Matic Network', deepLink: '/home?address=0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0', address: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'},
-        {name: 'Hedron', deepLink: '/home?address=0x3819f64f282bf135d62168c1e513280daf905e06', address: '0x3819f64f282bf135d62168c1e513280daf905e06'},
-        {name: 'Binance USD', deepLink: '/home?address=0x4fabb145d64652a948d72533023f6e7a623c7c53', address: '0x4fabb145d64652a948d72533023f6e7a623c7c53'},
-        {name: 'SAND', deepLink: '/home?address=0x3845badade8e6dff049820680d1f14bd3903a5d0', address: '0x3845badade8e6dff049820680d1f14bd3903a5d0'},
-        {name: 'ApeCoin', deepLink: '/home?address=0x4d224452801aced8b2f0aebe155379bb5d594381', address: '0x4d224452801aced8b2f0aebe155379bb5d594381'},
-        {name: 'Quant', deepLink: '/home?address=0x4a220e6096b25eadb88358cb44068a3248254675', address: '0x4a220e6096b25eadb88358cb44068a3248254675'},
-        {name: 'Convex Finance', deepLink: '/home?address=0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b', address: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b'},
-        {name: 'Gala', deepLink: '/home?address=0x15d4c048f83bd7e37d49ea4c83a07267ec4203da', address: '0x15d4c048f83bd7e37d49ea4c83a07267ec4203da'},
-        {name: 'Uniswap', deepLink: '/home?address=0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'},
-        {name: 'New World Order', deepLink: '/home?address=0x00c2999c8b2adf4abc835cc63209533973718eb1', address: '0x00c2999c8b2adf4abc835cc63209533973718eb1'}]
+        {name: 'Curve DAO Token', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Curve DAO Token.png', deepLink: '/home?address=0xd533a949740bb3306d119cc777fa900ba034cd52', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
+        {name: 'Shiba Inu', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Shiba Inu.png', deepLink: '/home?address=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce', address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'},
+        {name: 'Wrapped Bitcoin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Wrapped Bitcoin.png', deepLink: '/home?address=0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'},
+        {name: 'Chainlink', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Chainlink.png', deepLink: '/home?address=0x514910771af9ca656af840dff83e8264ecf986ca', address: '0x514910771af9ca656af840dff83e8264ecf986ca'},
+        // {name: 'HEX', deepLink: '/home?address=0x2b591e99afe9f32eaa6214f7b7629768c40eeb39', address: '0x2b591e99afe9f32eaa6214f7b7629768c40eeb39'},
+        // {name: 'Matic Network', deepLink: '/home?address=0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0', address: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'},
+        // {name: 'Hedron', deepLink: '/home?address=0x3819f64f282bf135d62168c1e513280daf905e06', address: '0x3819f64f282bf135d62168c1e513280daf905e06'},
+        // {name: 'Binance USD', deepLink: '/home?address=0x4fabb145d64652a948d72533023f6e7a623c7c53', address: '0x4fabb145d64652a948d72533023f6e7a623c7c53'},
+        // {name: 'SAND', deepLink: '/home?address=0x3845badade8e6dff049820680d1f14bd3903a5d0', address: '0x3845badade8e6dff049820680d1f14bd3903a5d0'},
+        // {name: 'ApeCoin', deepLink: '/home?address=0x4d224452801aced8b2f0aebe155379bb5d594381', address: '0x4d224452801aced8b2f0aebe155379bb5d594381'},
+        // {name: 'Quant', deepLink: '/home?address=0x4a220e6096b25eadb88358cb44068a3248254675', address: '0x4a220e6096b25eadb88358cb44068a3248254675'},
+        // {name: 'Convex Finance', deepLink: '/home?address=0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b', address: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b'},
+        // {name: 'Gala', deepLink: '/home?address=0x15d4c048f83bd7e37d49ea4c83a07267ec4203da', address: '0x15d4c048f83bd7e37d49ea4c83a07267ec4203da'},
+        // {name: 'Uniswap', deepLink: '/home?address=0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'},
+        // {name: 'New World Order', deepLink: '/home?address=0x00c2999c8b2adf4abc835cc63209533973718eb1', address: '0x00c2999c8b2adf4abc835cc63209533973718eb1'}
+        ]
 
     public static cyStyle = [
         {
