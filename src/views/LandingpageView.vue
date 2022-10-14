@@ -6,7 +6,7 @@
     <v-container fluid id="landingpage-container">
       <v-row>
         <v-col cols="6">
-          <h1 class="display-3">From “hairball” to “hairline crack”. Find the story sooner.</h1>
+          <h1 class="display-3">From “hairball” to “hairline crack”: Find the story sooner.</h1>
           <h3>(Oh, and "Pudding" because that's where the proof is.)</h3>
         </v-col>
       </v-row>
@@ -15,7 +15,7 @@
     <v-container fluid id="explore-container">
       <h2 class="headline centered">Explore Ethererum Tokens</h2>
       <v-row>
-        <v-col cols="3" v-for="token in tokens">
+        <v-col cols="4" v-for="token in tokens">
           <v-card
               elevation="2"
           >
@@ -43,6 +43,32 @@
             </v-card-actions>
           </v-card>
         </v-col>
+
+        <v-col cols="4">
+          <v-card
+              elevation="2"
+          >
+            <v-img
+                height="350px"
+           >
+              <v-card-title>
+                Missing Something?
+              </v-card-title>
+            </v-img>
+
+            <v-card-actions>
+              <v-btn class="cta"
+                     href="https://calendly.com/alexis-rondeau"
+                     color="primary"
+                     elevation="5"
+                     small
+              >
+                Request a token!
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+
       </v-row>
     </v-container>
 
