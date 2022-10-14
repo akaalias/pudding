@@ -1,28 +1,27 @@
 <template>
   <v-app class="landingpage-app">
 
-	<!--
     <div id="new-banner">
-      New! For Crypto Researchers
+        Hello and welcome to Pudding Research
     </div>
--->
+
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="6">
-          <h1 class="display-3"><span class="highlight">Follow the money, <br>connect the dots, <br>find the story.</span></h1>
+        <v-col cols="md-6">
+          <h1 class="display-3"><span class="highlight">Follow the money, connect the dots, find the story.</span></h1>
           <br>
-          <h2 class="display-2"><span class="highlight-2">Pudding Research is forensic reconnaissance for Ethereum ERC20 token ecosystems</span></h2>
+          <h2 class="display-2"><span class="highlight-2">
+            <i>Pudding</i> the FUN back into forensic analysis and reconnaissance of crypto-currency token ecosystems</span>
+          </h2>
         </v-col>
       </v-row>
     </v-container>
     <v-container fluid id="explore-container">
       <v-row>
-        <v-col cols="4" v-for="token in tokens">
-          <v-card
-              elevation="2"
-          >
+        <v-col cols="md-4" v-for="token in tokens">
+          <v-card elevation="4" >
             <v-img
-                height="350px"
+                height="300px"
                 v-bind:src="token.imageFileName"
                 v-if="token.imageFileName"
             >
@@ -30,53 +29,69 @@
                 {{token.name}}
               </v-card-title>
             </v-img>
-            <v-card-title v-if="!token.imageFileName">
-              {{token.name}}
-            </v-card-title>
             <v-card-actions>
-              <v-btn
-                  elevation="4"
-                  dark
-                  small
-                  v-bind:to="token.deepLink"
-              >
-                Explore {{token.name}}
-              </v-btn>
+              <v-list-item class="grow">
+                <v-row
+                    align="center"
+                    justify="end"
+                >
+                  <v-btn
+                      elevation="1"
+                      dark
+                      small
+                      v-bind:to="token.deepLink"
+                  >
+                    Explore {{token.name}}
+                    <v-icon
+                        right
+                        dark
+                    >
+                      mdi-arrow-right
+                    </v-icon>
+                  </v-btn>
+                </v-row>
+              </v-list-item>
             </v-card-actions>
           </v-card>
         </v-col>
 
-        <v-col cols="4">
-          <v-card
-              elevation="2"
-          >
+        <v-col cols="md-4">
+          <v-card elevation="4" >
             <v-img
-                height="350px"
-           >
+                height="300px"
+                src="https://raw.githubusercontent.com/akaalias/pudding/main/public/img/missing-token.png">
               <v-card-title>
-                Missing Something?
+                Missing a Token?
               </v-card-title>
             </v-img>
-
             <v-card-actions>
-              <v-btn class="cta"
-                     href="https://calendly.com/alexis-rondeau"
-                     color="primary"
-                     elevation="5"
-                     small
-              >
-                Request a token!
-              </v-btn>
+              <v-list-item class="grow">
+                <v-row
+                    align="center"
+                    justify="end"
+                >
+                  <v-btn class="cta"
+                         href="https://calendly.com/alexis-rondeau"
+                         color="primary"
+                         elevation="5"
+                         small
+                  >
+                    Request a token!
+                  </v-btn>
+                </v-row>
+              </v-list-item>
             </v-card-actions>
           </v-card>
         </v-col>
-
       </v-row>
     </v-container>
+
     <v-container fluid id="contact-container" class="contact">
       <v-row>
-        <v-col cols="12">
-          <h1 class="">Got questions? Let's talk.</h1>
+        <v-col cols="md-3">
+        </v-col>
+        <v-col cols="md-6">
+          <h2 class="centered">Got questions? Let's talk.</h2>
           <p>
             <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/alexis-portrait.jpg"
                  class="portrait" />
@@ -111,7 +126,7 @@
       </v-row>
     </v-container>
     <footer>
-      <h2>"Pudding", because <i>that's</i> where the proof is</h2>
+      <h2>Pudding (because <i>that's</i> where the proof is)</h2>
       <br>
       <p>
         Copyright 2022 –
@@ -136,7 +151,7 @@ export default Vue.extend({
 </script>
 <style scoped>
 #new-banner {
-  background-color: #222;
+  background-color: #310f50;
   padding: 5px;
   width: 100%;
   text-align: center;
@@ -169,7 +184,7 @@ h2.display-2 {
 
 #landingpage-container {
   min-height: 600px;
-  background-position: center;
+  background-position: bottom;
   background-size: 100%;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
 }
