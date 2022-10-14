@@ -5,8 +5,10 @@
     </div>
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="12">
-          <h1 class="display-3"><span class="highlight">From “hairball” to “hairline fracture”</span> – Find the story sooner with ecosystem reconnaissance.</h1>
+        <v-col cols="8">
+          <h1 class="display-4"><span class="highlight">Find better questions.</span></h1>
+          <br>
+          <h2 class="display-2"><span class="highlight">Follow the money with forensic crypto ecosystem reconnaissance</span></h2>
         </v-col>
       </v-row>
     </v-container>
@@ -139,13 +141,10 @@ export default Vue.extend({
 
 h1 {
   margin-top: 10%;
-  text-shadow: 0px 0px 10px black;
 }
 
-h3 {
-  margin-top: 5%;
-  font-weight: normal;
-  text-shadow: 0px 0px 10px black;
+h2 {
+  font-size: 24px;
 }
 
 .highlight {
