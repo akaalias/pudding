@@ -25,15 +25,6 @@
             class="mx-auto"
             tile
         >
-          <v-select
-              label="Select a Token to explore"
-              v-model="selectedAddress"
-              :items="tokens"
-              item-text="name"
-              item-value="address"
-              @change="searchFromScratch"
-          ></v-select>
-
           <div id="toggleMenuButtonContainer">
             <v-btn x-small
                    icon
@@ -44,6 +35,16 @@
               </v-icon>
             </v-btn>
           </div>
+
+          <v-select
+              label="Select a Token to explore"
+              v-model="selectedAddress"
+              :items="tokens"
+              item-text="name"
+              item-value="address"
+              @change="searchFromScratch"
+              v-if="showMenu"
+          ></v-select>
           <div id="menuItems" v-if="elements.length > 0 && showMenu">
             <v-select
                 label="Research Focus"
