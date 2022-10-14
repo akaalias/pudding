@@ -23,14 +23,17 @@
           >
             <v-img
                 height="200px"
-                src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"
+                v-bind:src="token.imageFileName"
+                v-if="token.imageFileName"
             >
-
               <v-card-title>
                 {{token.name}}
               </v-card-title>
-
             </v-img>
+
+            <v-card-title v-if="!token.imageFileName">
+              {{token.name}}
+            </v-card-title>
 
             <v-card-actions>
               <v-btn

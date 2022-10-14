@@ -22,11 +22,11 @@ export default class Constants {
         return this.AvailableTokens.map(x => x.address)
     }
 
-    public static AvailableTokens =
-        [{name: 'WETH', deepLink: '/home?address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', image: ''},
-        {name: 'Tether USD', deepLink: '/home?address=0xdac17f958d2ee523a2206206994597c13d831ec7', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
-        {name: 'USD Coin', deepLink: '/home?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},
-        {name: 'Dai', deepLink: '/home?address=0x6b175474e89094c44da98b954eedeac495271d0f', address: '0x6b175474e89094c44da98b954eedeac495271d0f'},
+    public static AvailableTokens = [
+        {name: 'WETH', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'},
+        {name: 'Tether USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tether USD.png', deepLink: '/home?address=0xdac17f958d2ee523a2206206994597c13d831ec7', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
+        {name: 'USD Coin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/USD Coin.png', deepLink: '/home?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},
+        {name: 'Dai', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', deepLink: '/home?address=0x6b175474e89094c44da98b954eedeac495271d0f', address: '0x6b175474e89094c44da98b954eedeac495271d0f'},
         {name: 'Curve DAO Token', deepLink: '/home?address=0xd533a949740bb3306d119cc777fa900ba034cd52', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
         {name: 'Shiba Inu', deepLink: '/home?address=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce', address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'},
         {name: 'Wrapped Bitcoin', deepLink: '/home?address=0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'},
@@ -76,15 +76,9 @@ export default class Constants {
             }
         },
         {
-            selector: 'edge.relationship-focus',
+            selector: 'edge.transaction-focus.showLabel',
             style: {
-                'line-color': 'red',
-            }
-        },
-        {
-            selector: 'edge.transaction-focus',
-            style: {
-                'line-color': 'blue',
+                "text-background-color": 'blue',
             }
         },
         {
@@ -93,15 +87,13 @@ export default class Constants {
                 'line-opacity': 1.0,
                 'line-color': '#fff',
                 'label': 'data(description)',
+                'text-offset': 100,
                 "font-size": "12px",
-                "text-valign": "center",
-                "text-halign": "center",
                 "color": "#fff",
                 "text-background-shape": 'rectangle',
                 "text-background-opacity": 1,
-                "text-background-color": '#555',
                 "text-background-padding": 5,
-                'z-index': 1000000
+                'z-index': 10000000,
             }
         },
         {

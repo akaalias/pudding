@@ -283,6 +283,13 @@
               })
               .update()
 
+          this.cy.style()
+              .selector('edge.relationship-focus.showLabel')
+              .style({
+                "text-background-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
+              })
+              .update()
+
           dataMapProperty = 'humanReadableTotalSum'
           dataMapMaximum = maxEdgeTotalHumanreadableSum.value
           dataMapColorStart = Constants.TransactionEdgeColorStart
@@ -297,6 +304,13 @@
                 "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'control-point-distances': "40"
+              })
+              .update()
+
+          this.cy.style()
+              .selector('edge.transaction-focus.showLabel')
+              .style({
+                "text-background-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
               })
               .update()
 
