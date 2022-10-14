@@ -18,7 +18,8 @@
     "web3": "^1.8.0",
     "vue-cytoscape": "^1.0.8",
     "cytoscape-cola": "^2.5.0",
-    "louvain-algorithm": "^1.0.4"
+    "louvain-algorithm": "^1.0.4",
+    "vue-meta": "^2.4.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
