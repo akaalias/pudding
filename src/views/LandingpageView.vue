@@ -1,15 +1,15 @@
 <template>
   <v-app class="landingpage-app">
+    <div id="new-banner">
+      <b>New for Crypto Researchers:</b> Pudding is Ecosystem Reconnaissance On Ethereum ERC20 Tokens
+    </div>
     <v-container fluid id="landingpage-container">
       <v-row
           align="center"
           justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">Find the real story sooner</h1>
-          <h2 class="display-1">
-            Pudding is Ecosystem Reconnaissance For Forensic Crypto Researchers
-          </h2>
+          <h1 class="display-4">Find the interesting stories sooner</h1>
         </v-col>
       </v-row>
     </v-container>
@@ -49,7 +49,6 @@
         </v-col>
       </v-row>
     </v-container>
-
   </v-app>
 </template>
 
@@ -75,12 +74,12 @@ export default Vue.extend({
 
 }
 .display-4 {
-  margin-top: 10%;
-  text-shadow: 0px 0px 15px black ;
+  margin-top: 15%;
+  text-shadow: 0px 0px 10px black;
 }
 
 .display-1 {
-  margin-top: 32pt;
+  margin-top: 12pt;
   text-shadow: 0px 0px 15px black ;
 }
 .landingpage-app {
@@ -92,7 +91,17 @@ export default Vue.extend({
 
 #landingpage-container {
   height: 700px;
+  background-color: #222;
+  background-size: 100%;
+  background-position: center;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
+}
+
+#new-banner {
+  background-color: blueviolet !important;
+  padding: 5px;
+  width: 100%;
+  text-align: center;
 }
 
 .headline {
