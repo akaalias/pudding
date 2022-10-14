@@ -4,13 +4,10 @@
       <b>New for Crypto Researchers:</b> Free Ecosystem Reconnaissance On Ethereum ERC20 Tokens
     </div>
     <v-container fluid id="landingpage-container">
-      <v-row
-          align="center"
-          justify="center"
-      >
-        <v-col cols="12" class="centered">
-          <h1 class="display-4">From “hairball” to “hairline crack”: Find the story sooner.</h1>
-            <h3>(Oh, and "Pudding" because that's where the proof is.)</h3>
+      <v-row>
+        <v-col cols="6">
+          <h1 class="display-3">From “hairball” to “hairline crack”. Find the story sooner.</h1>
+          <h3>(Oh, and "Pudding" because that's where the proof is.)</h3>
         </v-col>
       </v-row>
     </v-container>
@@ -23,7 +20,7 @@
               elevation="2"
           >
             <v-img
-                height="200px"
+                height="350px"
                 v-bind:src="token.imageFileName"
                 v-if="token.imageFileName"
             >
@@ -48,6 +45,51 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-container fluid id="contact-container" class="contact">
+      <v-row>
+        <v-col cols="12">
+          <h1 class="">Got questions? Let's talk.</h1>
+          <p>
+            <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/alexis-portrait.jpg"
+                 class="portrait" />
+          </p>
+          <p>
+            Oh, hi there!
+          </p>
+          <p>
+            Alexis here, great to meet you.
+          </p>
+
+          <p>
+            If you want to add a new token to the list, learn more about Pudding, how to integrate ecosystem reconnaissance into your existing auditing
+            and diligence workflow, or just chat in general: I want to hear from you!
+          </p>
+          <p>
+            I've found <em>the best way by far</em> is to talk personally so I've opened up office hours this week.
+          </p>
+          <p>
+            Click on the button below and book a time right away.
+          </p>
+          <p>
+            <v-btn class="cta"
+                   href="https://calendly.com/alexis-rondeau"
+                   color="primary"
+                   elevation="5"
+            >
+              Let's talk about your questions!
+            </v-btn>
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
+    <footer>
+      <p>
+        Copyright 2022 –
+        Made with love by <a href="https://alexisrondeau.me" target="_blank">Alexis Rondeau</a> –
+        <a href="https://github.com/akaalias/pudding" target="_blank">Open Source on Github</a>
+      </p>
+    </footer>
   </v-app>
 </template>
 
@@ -69,18 +111,15 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.display-4 {
-
-}
-.display-4 {
-  margin-top: 15%;
-  text-shadow: 0px 0px 10px black;
+h1 {
+  margin-top: 10%;
 }
 
-.display-1 {
-  margin-top: 12pt;
-  text-shadow: 0px 0px 15px black ;
+h3 {
+  margin-top: 5%;
+  font-weight: normal;
 }
+
 .landingpage-app {
   background-color: #333;
 }
@@ -90,14 +129,13 @@ export default Vue.extend({
 
 #landingpage-container {
   height: 700px;
-  background-color: #222;
-  background-position: center;
+  background-position: bottom;
   background-size: 700px;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
 }
 
 #new-banner {
-  background-color: blueviolet !important;
+  background-color: blueviolet;
   padding: 5px;
   width: 100%;
   text-align: center;
@@ -105,6 +143,38 @@ export default Vue.extend({
 
 .headline {
   margin-top: 50px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
+}
+
+.contact h1, .contact h1 {
+  margin-top: 120px;
+  font-size: 48pt;
+  text-align: center;
+}
+.contact p, .contact p {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  font-size: 18pt;
+  text-align: center;
+}
+
+.portrait {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  padding: 10px;
+  background: #fff;
+}
+
+footer {
+  border-top: 2px dotted #1e1e1e;
+  padding: 40px;
+  margin-top: 100px;
+  font-size: 10pt;
+  text-align: center;
+  opacity: 0.3;
+}
+footer:hover {
+  opacity: 1;
 }
 </style>
