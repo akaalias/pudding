@@ -5,10 +5,10 @@
     </div>
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="8">
+        <v-col cols="6">
           <h1 class="display-4"><span class="highlight">Find better questions.</span></h1>
           <br>
-          <h2 class="display-2"><span class="highlight">Follow the money with forensic crypto ecosystem reconnaissance</span></h2>
+          <h2 class="display-2"><span class="highlight-2">Follow the money with forensic ecosystem reconnaissance</span></h2>
         </v-col>
       </v-row>
     </v-container>
@@ -149,6 +149,10 @@ h2 {
 
 .highlight {
   background-color: blueviolet;
+}
+
+.highlight-2 {
+  background-color: #6c22b0;
 }
 
 .landingpage-app {
