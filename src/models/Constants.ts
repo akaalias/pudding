@@ -27,7 +27,7 @@ export default class Constants {
         {name: 'Tether USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tether USD.png', deepLink: '/home?address=0xdac17f958d2ee523a2206206994597c13d831ec7', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
         {name: 'USD Coin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/USD Coin.png', deepLink: '/home?address=0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},
         {name: 'Dai', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', deepLink: '/home?address=0x6b175474e89094c44da98b954eedeac495271d0f', address: '0x6b175474e89094c44da98b954eedeac495271d0f'},
-        {name: 'Curve DAO Token', deepLink: '/home?address=0xd533a949740bb3306d119cc777fa900ba034cd52', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
+        {name: 'Curve DAO Token', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', deepLink: '/home?address=0xd533a949740bb3306d119cc777fa900ba034cd52', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
         {name: 'Shiba Inu', deepLink: '/home?address=0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce', address: '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce'},
         {name: 'Wrapped Bitcoin', deepLink: '/home?address=0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'},
         {name: 'Chainlink', deepLink: '/home?address=0x514910771af9ca656af840dff83e8264ecf986ca', address: '0x514910771af9ca656af840dff83e8264ecf986ca'},

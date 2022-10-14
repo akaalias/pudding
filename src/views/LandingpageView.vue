@@ -1,7 +1,7 @@
 <template>
   <v-app class="landingpage-app">
     <div id="new-banner">
-      <b>New for Crypto Researchers:</b> Pudding is Ecosystem Reconnaissance On Ethereum ERC20 Tokens
+      <b>New for Crypto Researchers:</b> Free Ecosystem Reconnaissance On Ethereum ERC20 Tokens
     </div>
     <v-container fluid id="landingpage-container">
       <v-row
@@ -9,7 +9,10 @@
           justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">Find the story sooner.</h1>
+          <h1 class="display-4">From “Hairball” to “Hairline Crack”</h1>
+
+          <h2>Ecosystem Reconnaissance For Forensic Crypto Researchers</h2>
+            <h3>Pudding, because that's where the proof is.</h3>
         </v-col>
       </v-row>
     </v-container>
@@ -30,11 +33,9 @@
                 {{token.name}}
               </v-card-title>
             </v-img>
-
             <v-card-title v-if="!token.imageFileName">
               {{token.name}}
             </v-card-title>
-
             <v-card-actions>
               <v-btn
                   elevation="4"
@@ -92,8 +93,8 @@ export default Vue.extend({
 #landingpage-container {
   height: 700px;
   background-color: #222;
-  background-size: 100%;
   background-position: center;
+  background-size: 700px;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
 }
 
