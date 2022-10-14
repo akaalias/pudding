@@ -6,9 +6,9 @@
     <v-container fluid id="landingpage-container">
       <v-row>
         <v-col cols="6">
-          <h1 class="display-4"><span class="highlight">Find better questions.</span></h1>
+          <h1 class="display-3"><span class="highlight">Follow the money, <br>connect the dots, <br>find the story.</span></h1>
           <br>
-          <h2 class="display-2"><span class="highlight-2">Follow the money with forensic ecosystem reconnaissance</span></h2>
+          <h2 class="display-2"><span class="highlight-2">Pudding Research is forensic reconnaissance for Ethereum ERC20 token ecosystems</span></h2>
         </v-col>
       </v-row>
     </v-container>
@@ -139,12 +139,14 @@ export default Vue.extend({
   text-align: center;
 }
 
-h1 {
+h1.display-3 {
   margin-top: 10%;
+  line-height: 120%;
 }
 
-h2 {
-  font-size: 24px;
+h2.display-2 {
+  font-size: 36px !important;
+  line-height: 120%;
 }
 
 .highlight {
@@ -152,7 +154,7 @@ h2 {
 }
 
 .highlight-2 {
-  background-color: #6c22b0;
+  background-color: #571c8d;
 }
 
 .landingpage-app {
@@ -163,8 +165,8 @@ h2 {
 }
 
 #landingpage-container {
-  height: 600px;
-  background-position: bottom;
+  min-height: 600px;
+  background-position: center;
   background-size: 100%;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
 }
