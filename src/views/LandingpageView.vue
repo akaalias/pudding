@@ -13,7 +13,6 @@
     </v-container>
 
     <v-container fluid id="explore-container">
-      <h2 class="headline centered">Explore Ethererum Tokens</h2>
       <v-row>
         <v-col cols="4" v-for="token in tokens">
           <v-card
@@ -154,9 +153,9 @@ h3 {
 }
 
 #landingpage-container {
-  height: 700px;
-  background-position: center;
-  background-size: 700px;
+  height: 500px;
+  background-position: right;
+  background-size: 100%;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
 }
 
