@@ -76,8 +76,10 @@
             >
             </v-slider>
 
+            <br>
             <v-btn
                 v-on:click="exportPNG"
+                small
                 block
             > Export PNG
             </v-btn>

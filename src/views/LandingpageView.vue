@@ -9,7 +9,7 @@
           justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">Find the interesting stories sooner</h1>
+          <h1 class="display-4">Find the story sooner.</h1>
         </v-col>
       </v-row>
     </v-container>
