@@ -1,8 +1,11 @@
 <template>
   <v-app class="landingpage-app">
+
+	<!--
     <div id="new-banner">
       New! For Crypto Researchers
     </div>
+-->
     <v-container fluid id="landingpage-container">
       <v-row>
         <v-col cols="6">
