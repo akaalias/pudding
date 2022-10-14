@@ -35,7 +35,6 @@
               </v-icon>
             </v-btn>
           </div>
-
           <v-select
               label="Select a Token to explore"
               v-model="selectedAddress"
@@ -56,9 +55,9 @@
                 v-if="selectedFocus == 'Relationships' || selectedFocus == 'Hybrid'"
                 v-model="connectionThreshold"
                 :max="maxConnections"
+                min="0"
                 :hint="connectionThresholdLabel"
                 persistent-hint
-                min="1"
                 thumb-label
                 @change="search"
                 :color="computedRelationshipEdgeColorEnd"
@@ -68,12 +67,12 @@
                 v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid'"
                 v-model="totalSumThreshold"
                 :max="maxTotalSum"
+                min="0"
                 :hint="totalSumThresholdLabel"
+                :color="computedTransactionEdgeColorEnd"
                 persistent-hint
-                min="1"
                 thumb-label
                 @change="search"
-                :color="computedTransactionEdgeColorEnd"
             >
             </v-slider>
 
@@ -122,21 +121,24 @@
         api: new API(),
         searchCount: 0,
         searchedQueries: [],
+        minimumConnections: 1,
         connectionThreshold: 1,
-        maxConnections: 1,
-        maxTotalSum: 1,
-        totalSumThreshold: 1,
+        maxConnections: 0,
+        maxTotalSum: 0,
+        totalSumThreshold: 0,
+        minimumTotalSum: 0,
         selectedFocus: Constants.HybridFocus,
         focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus]
+
       }
     },
     methods: {
       async searchFromScratch() {
         this.searching = true
-        this.maxConnections = 1
-        this.maxTotalSum = 1
+        this.maxConnections = 0
+        this.maxTotalSum = 0
         this.connectionThreshold = 1
-        this.totalSumThreshold = 1
+        this.totalSumThreshold = 0
         this.search()
       },
       async search() {
@@ -306,7 +308,6 @@
                 "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
                 "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-                'control-point-distances': "40"
               })
               .update()
 
@@ -316,7 +317,6 @@
                 "text-background-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
               })
               .update()
-
 
           // Run Layout
           this.cy.layout(Constants.coseLayout).run();

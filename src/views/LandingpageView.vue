@@ -5,9 +5,9 @@
     </div>
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="6">
-          <h1 class="display-3">From “hairball” to “hairline crack”: Find the story sooner.</h1>
-          <h3>(Oh, and "Pudding" because that's where the proof is.)</h3>
+        <v-col cols="8">
+          <h1 class="display-3">From “hairball” to “hairline crack”: <br>Find the story sooner.</h1>
+          <h3>...and "Pudding" because that's where the proof is.</h3>
         </v-col>
       </v-row>
     </v-container>
@@ -155,7 +155,7 @@ h3 {
 
 #landingpage-container {
   height: 700px;
-  background-position: bottom;
+  background-position: center;
   background-size: 700px;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
 }
