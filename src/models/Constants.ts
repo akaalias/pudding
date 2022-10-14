@@ -84,10 +84,7 @@ export default class Constants {
         {
             selector: 'edge.showLabel',
             style: {
-                'line-opacity': 1.0,
-                'line-color': '#fff',
                 'label': 'data(description)',
-                'text-offset': 100,
                 "font-size": "12px",
                 "color": "#fff",
                 "text-background-shape": 'rectangle',

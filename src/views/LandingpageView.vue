@@ -6,7 +6,7 @@
           justify="center"
       >
         <v-col cols="12" class="centered">
-          <h1 class="display-4">Find the story faster.</h1>
+          <h1 class="display-4">Find the real story sooner</h1>
           <h2 class="display-1">
             Pudding is Ecosystem Reconnaissance For Forensic Crypto Researchers
           </h2>
@@ -92,7 +92,7 @@ export default Vue.extend({
 
 #landingpage-container {
   height: 700px;
-  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
 }
 
 .headline {
