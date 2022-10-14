@@ -88,9 +88,9 @@
 
     <v-container fluid id="contact-container" class="contact">
       <v-row>
-        <v-col cols="md-3">
+        <v-col cols="md-2">
         </v-col>
-        <v-col cols="md-6">
+        <v-col cols="md-8">
           <h2 class="centered">Got questions? Let's talk.</h2>
           <p>
             <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/alexis-portrait.jpg"
@@ -122,6 +122,8 @@
               Let's talk about your questions!
             </v-btn>
           </p>
+        </v-col>
+        <v-col cols="md-2">
         </v-col>
       </v-row>
     </v-container>
