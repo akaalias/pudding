@@ -157,7 +157,7 @@ h3 {
   height: 700px;
   background-position: center;
   background-size: 700px;
-  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/hairline-cracks.png');
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
 }
 
 #new-banner {

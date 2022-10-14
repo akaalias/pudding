@@ -280,7 +280,7 @@
           this.cy.style()
               .selector('edge.relationship-focus')
               .style({
-                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 10)",
+                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 1, 10)",
                 "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
                 "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
@@ -304,7 +304,7 @@
           this.cy.style()
               .selector('edge.transaction-focus')
               .style({
-                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 10)",
+                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 1, 10)",
                 "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
                 "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
                 'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
