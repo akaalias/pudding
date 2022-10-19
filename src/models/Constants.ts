@@ -1,5 +1,5 @@
 export default class Constants {
-    public static APIMaxResults = 100
+    public static APIMaxResults = 500
     public static RandomNodeCount = 250
     public static EdgeMaxCount = 20
     public static Modulo = 12
@@ -55,7 +55,7 @@ export default class Constants {
                 "color": "#fff",
                 'width': '15px',
                 'height': '15px',
-                "background-color": "#666",
+                "background-color": "#444",
             },
         },
         {
@@ -79,14 +79,12 @@ export default class Constants {
             selector: 'node.address',
             style: {
                 "shape": "ellipse",
-                "background-color": "#666",
             },
         },
         {
             selector: 'node.contract',
             style: {
                 "shape": "triangle",
-                "background-color": "#666",
             },
         },
         {
@@ -98,9 +96,12 @@ export default class Constants {
         {
             selector: 'edge',
             style: {
-                'curve-style': 'unbundled-bezier',
+                'curve-style': 'haystack',
+                'haystack-radius': 0.3,
+                // 'curve-style': 'unbundled-bezier',
                 'width': '1px',
-                'line-color': '#555'
+                'line-color': '#ccc',
+                'line-opacity': 0.5
             },
         },
     ]

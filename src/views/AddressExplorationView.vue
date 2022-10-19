@@ -29,7 +29,6 @@
       <v-container fluid id="content-container">
         <v-row>
           <v-col cols="12">
-            <h1>Explore Eth Addresses</h1>
             <div id="cyto" ref="cyto"/>
           </v-col>
         </v-row>
@@ -81,11 +80,15 @@
           this.cy.$('#' + this.address).addClass('current-target')
 
           if(this.searchedAddresses.length == 1) {
-            this.cy.layout(Constants.colaLayout).run();
+            this.cy.layout(Constants.coseLayout).run();
             this.cy.fit()
           } else {
-            this.cy.layout(Constants.colaLayout).run();
+            this.cy.layout(Constants.coseLayout).run();
           }
+          this.cy.zoom({
+            position: this.cy.getElementById(this.address).position()
+          });
+
 
           // Indicate finished
           this.searching = false

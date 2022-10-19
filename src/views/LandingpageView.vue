@@ -25,7 +25,7 @@
               large
               to="/explore"
           >
-            Explore Ethereum Addresses
+            Explore Ethereum Addresses<sup class="sup"><i>Beta</i></sup>
             <v-icon
                 right
                 dark
@@ -246,5 +246,9 @@ footer {
 }
 footer:hover {
   opacity: 1;
+}
+
+.sup {
+  color: #a265da;
 }
 </style>
