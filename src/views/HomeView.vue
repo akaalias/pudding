@@ -89,7 +89,111 @@
           <v-col cols="12">
             <div id="cyto" ref="cyto"/>
           </v-col>
+          <v-btn
+              small
+              @click="sheet = !sheet"
+              id="info-button"
+          >
+            <v-icon small left>mdi-information</v-icon> &nbsp;
+            Show Guide
+          </v-btn>
         </v-row>
+
+        <v-dialog
+            transition="dialog-bottom-transition"
+            max-width="600"
+            v-model="sheet"
+            scrollable>
+          <v-card>
+            <v-card-text>
+                <v-btn
+                    class="mt-6"
+                    text
+                    color="red"
+                    @click="sheet = !sheet"
+                >
+                  Close
+                </v-btn>
+                  <img src="https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png" style="width: 100%"/>
+                  <h2>Wait. What in the world am I even looking at here?</h2>
+                  <br/>
+                  <p>
+                    Great question!
+                    </p>
+                  <p>
+                    First and foremost, those hairballs that you're looking at are...
+                    <b>the network of most recent transactions of a specific ERC20 token between addresses</b> on the Ethereum Blockchain.
+                  </p>
+
+                  <p>
+                    This network shows you <i>"WHO sent HOW MUCH TOKENS to WHOM?"</i>
+                  </p>
+
+                  <p>
+                    Currently you're seeing a snapshot of the most recent 1,000 transactions for a particular token.
+                  </p>
+
+                  <h3>
+                    The Circles
+                  </h3>
+                  <br/>
+                  <p>
+                    Circles represent individual Ethereum addresses.
+                  </p>
+                  <p>
+                    The <b>color</b> of each circle represents the <a href="https://en.wikipedia.org/wiki/Louvain_method">Louvain community</a> that each address belongs to based on the data available.
+                    Circles of the same color belong in the same community.
+                  </p>
+
+                  <p>
+                    The relative <b>size</b> of each circle represents their 'authority' inside the network, meaning how many incoming arrows it has from other addresses.
+                  </p>
+
+                  <h3>
+                    The Arrows Between Circles
+                  </h3>
+                  <br/>
+                  <p>
+                    The arrows between circles represent the most recent transactions that two addresses were involved in.
+                  </p>
+                  <p>
+                    The arrow <b>direction</b> tells you which address was the SENDER and which was the RECEIVER of tokens.
+                  </p>
+
+                  <h4>Arrow Color and Thickness: Pink </h4>
+                  <p>
+                    A pink arrow shows you the STRENGTH of the relationship between two nodes.
+                    The THICKER a pink arrow is, the more transactions the two addresses recently had.
+                  </p>
+
+                  <h4>Arrow Color and Thickness: Gray</h4>
+                  <p>
+                    A gray arrow shows you HOW MUCH VALUE was recently exchanged between two nodes.
+                    The THICKER a gray arrow is, the more VALUE the two addresses recently exchanged.
+                  </p>
+
+                  <h3>Exploring the Hairball</h3>
+                  <br/>
+                  <p>
+                    Now that you have a basic understanding of what is on your screen, you can start poking around in a few ways.
+                  </p>
+                  <p>
+                    The easiest way is to simply use your trackpad or mouse to
+                     <b>zoom in and out</b>. You can also <b>click and drag</b> to move the whole
+                    canvas around. You can also <b>click and drag</b> individual circles and select many with <b>click-shift drag</b>.
+                  </p>
+
+                  <p>
+                    When you <b>hover</b> over an item, you will see extra information about it.
+                  </p>
+
+                  <h3>Using Filters</h3>
+                  <p>
+                    The most powerful feature to pull the stories out of a hairball is to <b>filter down</b> transactions by <b>strength of relationship</b>, <b>value of transaction</b> or both.
+                  </p>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
       </v-container>
     </v-main>
   </v-app>
@@ -128,8 +232,8 @@
         totalSumThreshold: 0,
         minimumTotalSum: 0,
         selectedFocus: Constants.HybridFocus,
-        focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus]
-
+        focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus],
+        sheet: false
       }
     },
     methods: {
@@ -443,6 +547,12 @@
 }
 
 #toggleMenuButtonContainer {
+}
+
+#info-button {
+  position: absolute;
+  bottom: 100px;
+  right: 100px;
 }
 
 </style>
