@@ -22,6 +22,66 @@ export default class GraphDataProvider {
         this.api = api
     }
 
+    public async getAddressNetwork(address: string) {
+        const addressLowercase = address.toLowerCase()
+        var nodeIds: string[] = []
+        var elements: any[] = []
+        const operations = await this.api.getTransactionsForAddress(addressLowercase)
+
+        if (!nodeIds.includes(addressLowercase)) {
+            nodeIds.push(addressLowercase)
+            elements.push({data: {id: addressLowercase, label: addressLowercase.substring(0, 16)}, classes: 'address'})
+        }
+
+        // create nodes
+        for(var operation of operations) {
+            const from = operation['from']
+            const to = operation['to']
+            const value = operation['value']
+            const hash = operation['hash']
+            const contractAddress = operation['contractAddress']
+
+            if (!nodeIds.includes(from)) {
+                nodeIds.push(from)
+                elements.push({data: {id: from, label: from.substring(0, 16)}, classes: 'address'})
+            }
+
+            if(to != '') {
+                if (!nodeIds.includes(to)) {
+                    nodeIds.push(to)
+                    elements.push({data: {id: to, label: to.substring(0, 16)}, classes: 'address'})
+                }
+
+                elements.push({
+                    data: {
+                        id: hash,
+                        source: from,
+                        target: to,
+                        weight: value
+                    }
+                })
+            }
+
+            if(contractAddress != '') {
+                if (!nodeIds.includes(contractAddress)) {
+                    nodeIds.push(contractAddress)
+                    elements.push({data: {id: contractAddress, label: contractAddress.substring(0, 16)}, classes: 'contract'})
+                    }
+                }
+
+            elements.push({
+                data: {
+                    id: hash,
+                    source: from,
+                    target: contractAddress,
+                    weight: value
+                }
+            })
+
+            }
+        return elements
+    }
+
     public async getTokenNetwork(token: string, tokenInfo: any){
         const tokenLowercase = token.toLowerCase()
         if (this.cache.get(tokenLowercase) != null) {

@@ -1,5 +1,5 @@
 export default class Constants {
-    public static APIMaxResults = 800
+    public static APIMaxResults = 100
     public static RandomNodeCount = 250
     public static EdgeMaxCount = 20
     public static Modulo = 12
@@ -21,7 +21,6 @@ export default class Constants {
     public static AvailableTokenAddresses() {
         return this.AvailableTokens.map(x => x.address)
     }
-
     public static AvailableTokens = [
         {name: 'WETH', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'},
         {name: 'Tether USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tether USD.png', deepLink: '/home?address=0xdac17f958d2ee523a2206206994597c13d831ec7', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
@@ -43,6 +42,68 @@ export default class Constants {
         // {name: 'Uniswap', deepLink: '/home?address=0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'},
         // {name: 'New World Order', deepLink: '/home?address=0x00c2999c8b2adf4abc835cc63209533973718eb1', address: '0x00c2999c8b2adf4abc835cc63209533973718eb1'}
         ]
+
+    public static ExploreAddressCyStyle = [
+        {
+            selector: 'node',
+            style: {
+                "font-size": "8px",
+                "text-outline-color": "#555",
+                "text-outline-width": "1px",
+                "text-valign": "center",
+                "text-halign": "center",
+                "color": "#fff",
+                'width': '15px',
+                'height': '15px',
+                "background-color": "#666",
+            },
+        },
+        {
+            selector: 'node.target',
+            style: {
+                'width': '30px',
+                'height': '30px',
+                'border-width': '5px',
+                "shape": "ellipse",
+                "border-color": "red",
+            },
+        },
+        {
+            selector: 'node.current-target',
+            style: {
+                "shape": "ellipse",
+                "border-color": "yellow",
+            },
+        },
+        {
+            selector: 'node.address',
+            style: {
+                "shape": "ellipse",
+                "background-color": "#666",
+            },
+        },
+        {
+            selector: 'node.contract',
+            style: {
+                "shape": "triangle",
+                "background-color": "#666",
+            },
+        },
+        {
+            selector: 'node.show-label',
+            style: {
+                "label": "data(label)",
+            },
+        },
+        {
+            selector: 'edge',
+            style: {
+                'curve-style': 'unbundled-bezier',
+                'width': '1px',
+                'line-color': '#555'
+            },
+        },
+    ]
 
     public static cyStyle = [
         {
@@ -187,14 +248,6 @@ export default class Constants {
     }
     public static colaLayout = {
         name: 'cola',
-        animate: true, // whether to show the layout as it's running
-        refresh: 1, // number of ticks per frame; higher is faster but more jerky
-        maxSimulationTime: 4000, // max length in ms to run the layout
-        ungrabifyWhileSimulating: false, // so you can't drag nodes during layout
-        fit: true, // on every layout reposition of nodes, fit the viewport
-        padding: 30, // padding around the simulation
-        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-        nodeDimensionsIncludeLabels: false, // whether labels should be included in determining the space used by a node
     }
     public static gridLayout = {
         name: 'grid'

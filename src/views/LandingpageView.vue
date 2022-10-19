@@ -18,6 +18,27 @@
     </v-container>
     <v-container fluid id="explore-container">
       <v-row>
+        <v-col cols="md-12 centered">
+          <v-btn
+              elevation="1"
+              dark
+              large
+              to="/explore"
+          >
+            Explore Ethereum Addresses
+            <v-icon
+                right
+                dark
+            >
+              mdi-arrow-right
+            </v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+
+      <br/>
+      <br/>
+      <v-row>
         <v-col cols="md-4" v-for="token in tokens">
           <v-card elevation="4" >
             <v-img

@@ -22,7 +22,6 @@ export default class API {
         const transactions = jsonData["operations"]
         return transactions
     }
-
     public async getTopTokens() {
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTopTokens'
@@ -38,21 +37,11 @@ export default class API {
         return tokens
     }
 
-    /* Old API */
-    public async getTransactionsForAccount(account: string, depth: number) {
-        if(depth <= 0) {
-            return
-        }
-
-        const txs = await this.getTransactions(account, Constants.offsetForDepth(depth))
-        this.allTransactions.push(txs)
-        this.allTransactions.flat()
-        this.totalTransactionsFetchedCount += this.allTransactions.length
-
-        for (let newAccount of this.extractAccounts(txs)) {
-            await this.getTransactionsForAccount(newAccount, depth - 1)
-        }
+    public async getTransactionsForAddress(address: string) {
+        const txs = await this.getTransactions(address)
+        return txs
     }
+
     public getAllTransactionsFlattened() {
         return this.allTransactions.flat()
     }
@@ -71,15 +60,12 @@ export default class API {
         }
         return [...new Set(accounts)]
     }
-    public async getTransactions(account: string, offset: number) {
-        const count = offset
-        const requestURL = 'https://api.etherscan.io/api?module=account&action=txlist&address=' + account + '&startblock=0&endblock=99999999&page=1&offset=' + count + '&sort=asc&apikey=XYHEBQ85935M5CEDH821RHRG8FMQSYASY6';
+    public async getTransactions(address: string) {
+        const count = Constants.APIMaxResults
+        const requestURL = 'https://api.etherscan.io/api?module=account&action=txlist&address=' + address + '&startblock=0&endblock=99999999&page=1&offset=' + count + '&sort=asc&apikey=XYHEBQ85935M5CEDH821RHRG8FMQSYASY6';
         const response = await fetch(requestURL, {
             method: "GET",
         });
-
-        // Be kind to the API
-        await delay(200)
 
         const jsonData = await response.json();
         const transactions = jsonData["result"]

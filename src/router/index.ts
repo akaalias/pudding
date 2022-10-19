@@ -21,9 +21,9 @@ const routes: Array<RouteConfig> = [
     component: HomeView
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/explore',
+    name: 'explore',
+    component: () => import(/* webpackChunkName: "about" */ '../views/AddressExplorationView.vue')
   }
 ]
 
