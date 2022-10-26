@@ -1,5 +1,5 @@
 export default class Constants {
-    public static APIMaxResults = 500
+    public static APIMaxResults = 1000
     public static RandomNodeCount = 250
     public static EdgeMaxCount = 20
     public static Modulo = 12

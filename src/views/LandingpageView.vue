@@ -2,7 +2,7 @@
   <v-app class="landingpage-app">
 
     <div id="new-banner">
-        Hello and welcome to Pudding Research
+        Hello and welcome to Pudding Research!
     </div>
 
     <v-container fluid id="landingpage-container">
@@ -37,7 +37,7 @@
                 >
                   <v-btn
                       elevation="1"
-                      dark
+                      light
                       small
                       v-bind:to="token.deepLink"
                   >
