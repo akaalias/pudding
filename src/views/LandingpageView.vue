@@ -16,28 +16,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-container fluid id="explore-container">
-      <v-row>
-        <v-col cols="md-12 centered">
-          <v-btn
-              elevation="1"
-              dark
-              large
-              to="/explore"
-          >
-            Explore Ethereum Addresses<sup class="sup"><i>Beta</i></sup>
-            <v-icon
-                right
-                dark
-            >
-              mdi-arrow-right
-            </v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-
-      <br/>
-      <br/>
+    <v-container fluid id="explore-tokens-container">
       <v-row>
         <v-col cols="md-4" v-for="token in tokens">
           <v-card elevation="4" >
@@ -103,6 +82,28 @@
               </v-list-item>
             </v-card-actions>
           </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-container id="explore-addresses-container">
+      <v-row>
+        <v-col cols="md-12 centered">
+          <h2>Explore the Transaction Networks of Individual Ethereum Addresses</h2>
+          <v-btn
+              elevation="1"
+              light
+              large
+              to="/explore"
+          >
+            Explore Ethereum Addresses<sup class="sup"><i>Beta</i></sup>
+            <v-icon
+                right
+                dark
+            >
+              mdi-arrow-right
+            </v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -250,5 +251,18 @@ footer:hover {
 
 .sup {
   color: #a265da;
+}
+
+#explore-addresses-container {
+  padding-top: 300px;
+  padding-bottom: 300px;
+
+  background-position: bottom;
+  background-size: 100%;
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/explore-address.png');
+}
+
+#explore-addresses-container h2 {
+  padding: 30px;
 }
 </style>
