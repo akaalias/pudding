@@ -1,17 +1,15 @@
 <template>
   <v-app class="landingpage-app">
-
     <div id="new-banner">
         Hello and welcome to Pudding Research!
     </div>
-
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="md-6">
-          <h1 class="display-3"><span class="highlight">Follow the money, connect the dots, find the story.</span></h1>
+        <v-col cols="md-7">
+          <h1 class="display-3"><span class="highlight">Follow the money<br>Connect the dots<br> Find the story</span></h1>
           <br>
           <h2 class="display-2"><span class="highlight-2">
-            Putting the FUN back into forensic analysis and reconnaissance of crypto-currency token ecosystems</span>
+            Pudding is putting the FUN back into forensic analysis and reconnaissance of crypto-currency token ecosystems</span>
           </h2>
         </v-col>
       </v-row>
@@ -40,7 +38,6 @@
                       light
                       small
                       v-bind:to="token.deepLink"
-                      target="_blank"
                   >
                     Explore {{token.name}}
                     <v-icon
