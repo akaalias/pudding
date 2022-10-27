@@ -37,10 +37,9 @@ export default class Constants {
         {name: 'SAND', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/SAND.png', deepLink: '/home?address=0x3845badade8e6dff049820680d1f14bd3903a5d0', address: '0x3845badade8e6dff049820680d1f14bd3903a5d0'},
         {name: 'ApeCoin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/ApeCoin.png', deepLink: '/home?address=0x4d224452801aced8b2f0aebe155379bb5d594381', address: '0x4d224452801aced8b2f0aebe155379bb5d594381'},
         {name: 'Quant', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Quant.png', deepLink: '/home?address=0x4a220e6096b25eadb88358cb44068a3248254675', address: '0x4a220e6096b25eadb88358cb44068a3248254675'},
-        {name: 'Convex Finance', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b', address: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b'},
-        {name: 'Gala', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0x15d4c048f83bd7e37d49ea4c83a07267ec4203da', address: '0x15d4c048f83bd7e37d49ea4c83a07267ec4203da'},
-        {name: 'Uniswap', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'},
-        {name: 'New World Order', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png', deepLink: '/home?address=0x00c2999c8b2adf4abc835cc63209533973718eb1', address: '0x00c2999c8b2adf4abc835cc63209533973718eb1'}
+        {name: 'Convex Finance', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Convex.png', deepLink: '/home?address=0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b', address: '0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b'},
+        {name: 'Gala', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Gala.png', deepLink: '/home?address=0x15d4c048f83bd7e37d49ea4c83a07267ec4203da', address: '0x15d4c048f83bd7e37d49ea4c83a07267ec4203da'},
+        {name: 'Uniswap', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Uniswap.png', deepLink: '/home?address=0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', address: '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984'},
         ]
 
     public static ExploreAddressCyStyle = [

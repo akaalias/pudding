@@ -22,6 +22,17 @@ export default class API {
         const transactions = jsonData["operations"]
         return transactions
     }
+
+    public async getTokenInfos(addresses: string[]) {
+        const endpoint = 'https://api.ethplorer.io'
+        const action = '/getTopTokens'
+        const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
+        const requestURL = endpoint + action + "?apiKey=" + apiKey
+
+        for(var address of addresses){
+            // TODO: Assemble token info for all
+        }
+    }
     public async getTopTokens() {
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTopTokens'

@@ -90,8 +90,14 @@ export default class GraphDataProvider {
             var elements: any[] = []
             var edges: any[] = []
             var nodeIds: string[] = []
-            const rate: number = tokenInfo['price']['rate']
-            const currency: string = tokenInfo['price']['currency']
+
+            var rate: number = 0
+            var currency: string = "USD"
+
+            if(tokenInfo['price'] == undefined) {
+                rate = tokenInfo['price']['rate']
+                currency = tokenInfo['price']['currency']
+            }
 
             var fromToTransactionCounts = new Map<string, any>()
             const operations = await this.api.getLatestTokenTransactions(tokenLowercase)
