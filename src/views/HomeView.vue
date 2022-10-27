@@ -63,18 +63,46 @@
                 :color="computedRelationshipEdgeColorEnd"
             >
             </v-slider>
+            <br>
             <v-slider
-                v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid'"
+                v-if="selectedFocus == 'Transactions' || selectedFocus == 'Hybrid' && !finetuneTotalSumThreshold"
                 v-model="totalSumThreshold"
                 :max="maxTotalSum"
                 min="0"
                 :hint="totalSumThresholdLabel"
                 :color="computedTransactionEdgeColorEnd"
                 persistent-hint
-                thumb-label
                 @change="search"
             >
+              <template v-slot:append>
+                <v-icon v-if="!finetuneTotalSumThreshold"
+                        dark
+                        small
+                        @click="finetuneTotalSumThreshold = !finetuneTotalSumThreshold"
+                >
+                  mdi-numeric
+                </v-icon>
+              </template>
             </v-slider>
+            <v-text-field v-if="finetuneTotalSumThreshold"
+                          type="number"
+                          v-model="totalSumThreshold"
+                          @change="search"
+                          persistent-hint
+                          :hint="totalSumThresholdLabel"
+                          :color="computedTransactionEdgeColorEnd"
+            >
+              <template v-slot:append>
+                <v-icon v-if="finetuneTotalSumThreshold"
+                        dark
+                        small
+                        @click="finetuneTotalSumThreshold = !finetuneTotalSumThreshold"
+                >
+                  mdi-map-marker-minus
+                </v-icon>
+              </template>
+            </v-text-field>
+
 
             <br>
             <v-btn
@@ -233,7 +261,8 @@
         minimumTotalSum: 0,
         selectedFocus: Constants.HybridFocus,
         focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus],
-        sheet: false
+        sheet: false,
+        finetuneTotalSumThreshold: false
       }
     },
     methods: {

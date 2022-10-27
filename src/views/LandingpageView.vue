@@ -83,6 +83,8 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!--
     <v-container fluid id="explore-addresses-container">
       <v-row>
         <v-col cols="md-12 centered">
@@ -104,6 +106,7 @@
         </v-col>
       </v-row>
     </v-container>
+    -->
 
     <v-container fluid light id="contact-container" class="contact">
       <v-row>
