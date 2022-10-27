@@ -40,6 +40,7 @@
                       light
                       small
                       v-bind:to="token.deepLink"
+                      target="_blank"
                   >
                     Explore {{token.name}}
                     <v-icon
