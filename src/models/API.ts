@@ -11,8 +11,7 @@ export default class API {
         const limit = Constants.APIMaxResults
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTokenHistory/'
-        const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
-        const requestURL = endpoint + action + token + "?apiKey=" + apiKey + "&type=transfer&limit=" + limit
+        const requestURL = endpoint + action + token + Constants.DEFAULT_COLOR_CODE + "&type=transfer&limit=" + limit
 
         const response = await fetch(requestURL, {
             method: "GET",
@@ -23,21 +22,10 @@ export default class API {
         return transactions
     }
 
-    public async getTokenInfos(addresses: string[]) {
-        const endpoint = 'https://api.ethplorer.io'
-        const action = '/getTopTokens'
-        const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
-        const requestURL = endpoint + action + "?apiKey=" + apiKey
-
-        for(var address of addresses){
-            // TODO: Assemble token info for all
-        }
-    }
     public async getTopTokens() {
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTopTokens'
-        const apiKey = 'EK-fLjej-kUvJ9W3-mWhJN'
-        const requestURL = endpoint + action + "?apiKey=" + apiKey
+        const requestURL = endpoint + action + Constants.DEFAULT_COLOR_CODE
 
         const response = await fetch(requestURL, {
             method: "GET",
