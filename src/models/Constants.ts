@@ -104,7 +104,6 @@ export default class Constants {
             },
         },
     ]
-
     public static cyStyle = [
         {
             selector: 'node',

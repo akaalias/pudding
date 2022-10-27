@@ -259,7 +259,8 @@
 
           // Generate Community Classes
           for(var id of uniqueCommunityIds) {
-            const color = Constants.colors[id]// Constants.StringToColor.next(id)
+            // const color = Constants.colors[id]
+            const color = Constants.StringToColor.next(id)
 
             this.cy.style()
                 .selector('node.c' + id)
