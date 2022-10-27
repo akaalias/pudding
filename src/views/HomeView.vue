@@ -17,6 +17,17 @@
           Pudding
         </v-btn>
       </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-btn
+          small
+          right
+          @click="sheet = !sheet"
+      >
+        <v-icon small left>mdi-information</v-icon>
+        Show Guide
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container fluid id="content-container">
@@ -117,14 +128,6 @@
           <v-col cols="12">
             <div id="cyto" ref="cyto"/>
           </v-col>
-          <v-btn
-              small
-              @click="sheet = !sheet"
-              id="info-button"
-          >
-            <v-icon small left>mdi-information</v-icon> &nbsp;
-            Show Guide
-          </v-btn>
         </v-row>
 
         <v-dialog
