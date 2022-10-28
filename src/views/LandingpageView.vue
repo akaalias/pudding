@@ -52,7 +52,6 @@
             </v-card-actions>
           </v-card>
         </v-col>
-
         <v-col cols="md-4">
           <v-card elevation="4" >
             <v-img
@@ -83,31 +82,6 @@
         </v-col>
       </v-row>
     </v-container>
-
-    <!--
-    <v-container fluid id="explore-addresses-container">
-      <v-row>
-        <v-col cols="md-12 centered">
-          <h2><span class="highlight">NEW! Explore the Transaction Networks of Individual Ethereum Addresses</span></h2>
-          <v-btn
-              elevation="1"
-              light
-              large
-              to="/explore"
-          >
-            Explore Ethereum Addresses<sup class="sup"><i>Beta</i></sup>
-            <v-icon
-                right
-                dark
-            >
-              mdi-arrow-right
-            </v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-    -->
-
     <v-container fluid light id="contact-container" class="contact">
       <v-row>
         <v-col cols="md-2">
@@ -148,6 +122,22 @@
         <v-col cols="md-2">
         </v-col>
       </v-row>
+    </v-container>
+    <v-container fluid id="ballet-container">
+      <h2 class="headline">
+        <b>New!</b> Algorand Ballet: Background-Checks for Wallets and Assets
+      </h2>
+      <a href="https://alexisrondeau.me/algorand-ballet#main" target="_blank">
+        <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/ballet-ui.png"/>
+        <br>
+        <br>
+        <br>
+        <p>
+          <v-btn large light color="primary">
+            Visit Algorand Ballet
+          </v-btn>
+        </p>
+      </a>
     </v-container>
     <footer>
       <h2>Pudding (because <i>that's</i> where the proof is)</h2>
@@ -274,5 +264,26 @@ footer:hover {
   padding: 30px;
   transform: rotate(-5deg);
 
+}
+
+#ballet-container {
+  background-color: #280e41;
+  padding: 20px;
+  padding-bottom: 50px;
+  text-align: center;
+}
+
+#ballet-container img {
+  width: 80%;
+  border-radius: 20px;
+  box-shadow: 0px 0px 300px #f63232;
+  border: 1px solid #f63232;
+  padding: 20px;
+  background-color: #333;
+}
+
+#ballet-container .headline {
+  padding: 50px;
+  color: #fff;
 }
 </style>
