@@ -8,17 +8,16 @@
         <v-col cols="md-12">
           <h1 class="display-3">
             <span class="highlight">
-              Follow the Money, Connect the Dots, Find the Story.
+              Follow the Money, Find the Story.
             </span>
           </h1>
           <h2 class="display-2">
             <span class="highlight-2">
-              <span class="underline">Find better questions and have more fun</span> <br>with OSINT reconnaissance of crypto-currency token ecosystems
+              <span class="underline">Have more fun</span> with OSINT analysis and reconnaissance in decentralized finance ecosystems
             </span>
           </h2>
         </v-col>
       </v-row>
-
       <div id="demo-container">
 
       </div>
@@ -189,12 +188,12 @@ h1.display-3 {
 h2.display-2 {
   text-align: center;
   font-size: 36px !important;
-  line-height: 120%;
+  line-height: 125%;
   font-weight: normal;
 }
 
 .underline {
-  border-bottom: 1px solid white;
+  border-bottom: 2px solid white;
 }
 
 .highlight {
