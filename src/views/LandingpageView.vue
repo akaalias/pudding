@@ -5,11 +5,16 @@
     </div>
     <v-container fluid id="landingpage-container">
       <v-row>
-        <v-col cols="md-7">
-          <h1 class="display-3"><span class="highlight">Follow the money<br>Connect the dots<br> Find the story</span></h1>
-          <br>
-          <h2 class="display-2"><span class="highlight-2">
-            Pudding is putting the FUN back into forensic analysis and reconnaissance of crypto-currency token ecosystems</span>
+        <v-col cols="md-12">
+          <h1 class="display-3">
+            <span class="highlight">
+              Follow the Money, Connect the Dots, Find the Story.
+            </span>
+          </h1>
+          <h2 class="display-2">
+            <span class="highlight-2">
+              <span class="underline">Find better questions and have more fun</span> <br>with OSINT reconnaissance of crypto-currency token ecosystems
+            </span>
           </h2>
         </v-col>
       </v-row>
@@ -172,24 +177,28 @@ export default Vue.extend({
 }
 
 h1.display-3 {
+  text-align: center;
   margin-top: 10%;
-  line-height: 120%;
-  transform: rotate(-5deg);
+  margin-bottom: 40px;
 }
 
 h2.display-2 {
+  text-align: center;
   font-size: 36px !important;
   line-height: 120%;
-  transform: rotate(-5deg);
+  font-weight: normal;
+}
+
+.underline {
+  border-bottom: 1px solid white;
 }
 
 .highlight {
-  padding: 5px;
   background-color: blueviolet;
 }
 
 .highlight-2 {
-  background-color: #571c8d;
+  background-color: blueviolet;
 }
 
 .landingpage-app {
@@ -200,10 +209,10 @@ h2.display-2 {
 }
 
 #landingpage-container {
-  min-height: 600px;
-  background-position: bottom;
+  min-height: 700px;
+  background-position-y: -300px;
   background-size: 100%;
-  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png');
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Uniswap.png');
 }
 
 .headline {
