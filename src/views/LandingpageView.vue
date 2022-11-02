@@ -130,7 +130,7 @@
     </v-container>
     <v-container fluid id="ballet-container">
       <h2 class="headline">
-        <b>New!</b> Algorand Ballet: Background-Checks for Wallets and Assets
+        <b>New!</b> Algorand Ballet: OSINT Background-Checks for Wallets and Assets
       </h2>
       <a href="https://alexisrondeau.me/algorand-ballet#main" target="_blank">
         <img src="https://raw.githubusercontent.com/akaalias/algorand-ballet/main/public/img/ballet-ui.png"/>
