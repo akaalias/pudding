@@ -18,6 +18,10 @@
           </h2>
         </v-col>
       </v-row>
+
+      <div id="demo-container">
+
+      </div>
     </v-container>
     <v-container fluid id="explore-tokens-container">
       <v-row>
@@ -178,7 +182,7 @@ export default Vue.extend({
 
 h1.display-3 {
   text-align: center;
-  margin-top: 10%;
+  margin-top: 5%;
   margin-bottom: 40px;
 }
 
@@ -208,11 +212,13 @@ h2.display-2 {
   text-align: center;
 }
 
-#landingpage-container {
-  min-height: 700px;
-  background-position-y: -300px;
+#demo-container {
+  min-height: 400px;
   background-size: 100%;
+  background-position: center;
   background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Uniswap.png');
+}
+#landingpage-container {
 }
 
 .headline {
