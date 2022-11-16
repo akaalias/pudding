@@ -1,4 +1,4 @@
-# pudding
+# Pudding
 
 ## Project setup
 ```
