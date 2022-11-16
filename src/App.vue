@@ -22,7 +22,7 @@ export default Vue.extend({
       { charset: 'utf-8' },
       { name: 'og:title', content: 'Pudding Research – Find better questions sooner.' },
       { name: 'og:description', content: 'Forensic Ecosystem Reconnaissance for Crypto Analysts'},
-      { name: 'og:url', content: 'https://alexisrondeau.me/pudding/' },
+      { name: 'og:url', content: 'https://getpudding.app/' },
       { name: 'og:image', content: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/demo.png' },
       { name: 'og:type', content: 'Website' },
       { name: 'og:site_name', content: 'Pudding Research – Find better questions sooner.'},
