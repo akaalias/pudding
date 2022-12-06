@@ -282,6 +282,12 @@
           this.searching = true
           this.elements = []
 
+          // Get Token Info
+          console.log("Fetching Token Info")
+          let tokenInfo = await this.api.getTokenInfo(this.selectedAddress)
+          this.tokenLookupTable.set(tokenInfo['address'], tokenInfo)
+          this.tokens.push(tokenInfo)
+
           // Get Elements
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
 
@@ -502,12 +508,9 @@
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
 
-      for(var tokenAddress of Constants.AvailableTokenAddresses()) {
-        console.log("Fetching Token Info")
-        let tokenInfo = await this.api.getTokenInfo(tokenAddress)
-
-        this.tokenLookupTable.set(tokenInfo['address'], tokenInfo)
-        this.tokens.push(tokenInfo)
+      // Setup dropdown list
+      for(var token of Constants.AvailableTokens) {
+        this.tokens.push(token)
       }
 
       this.setupCyGraph()
