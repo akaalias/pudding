@@ -37,40 +37,6 @@ export default class API {
     }
 
     public async getTokenInfo(token: string) {
-        /*
-{
-    address:             # token address,
-    totalSupply:         # total token supply,
-    name:                # token name,
-    symbol:              # token symbol,
-    decimals:            # number of significant digits,
-    price: {             # token price (false, if not available),
-        rate:            # current price in currency,
-        currency:        # token price currency (USD),
-        diff:            # 24 hours rate difference (in percent),
-        diff7d:          # 7 days rate difference (in percent),
-        diff30d:         # 30 days rate difference (in percent),
-        marketCapUsd:    # market cap (USD),
-        availableSupply: # available supply,
-        volume24h:       # 24 hours volume,
-        ts:              # last rate update timestamp,
-    },
-    publicTags: []       # [optional] one or more tags from https://ethplorer.io/tag/,
-    owner:               # token owner address,
-    countOps:            # total count of token operations,
-    totalIn:             # total amount of incoming tokens,
-    totalOut:            # total amount of outgoing tokens,
-    transfersCount:      # total number of token operations,
-    ethTransfersCount:   # [optional] total number of ethereum operations,
-    holdersCount:        # total number of token holders,
-    issuancesCount:      # total count of token issuances,
-    image:               # [optional] token image url,
-    description:         # [optional] token description,
-    website:             # [optional] token website url,
-    lastUpdated:         # last updated timestamp,
-}
-         */
-
         const endpoint = 'https://api.ethplorer.io'
         const action = '/getTokenInfo/'
         const requestURL = endpoint + action + token + Constants.DEFAULT_COLOR_CODE

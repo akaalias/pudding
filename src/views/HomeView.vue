@@ -465,6 +465,17 @@
               })
               .update()
 
+          this.cy.on(
+              "taphold",
+              "node",
+              function(event, orignalEvent) {
+                let node = event.target;
+                let url = "https://ethplorer.io/address/" + node.data().id;
+                const type = node.data().type;
+                window.open(url, "_blank", "minimizable=false").focus();
+              }.bind(this)
+          );
+
           // Run Layout
           this.cy.layout(Constants.coseLayout).run();
           this.cy.fit()
