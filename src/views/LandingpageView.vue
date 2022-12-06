@@ -8,7 +8,7 @@
         <v-col cols="md-12">
           <h1 class="display-3">
             <span class="highlight">
-              Follow the Money, Find the Story.
+              Connect the Dots, Follow the Money, Find the Story.
             </span>
           </h1>
           <h2 class="display-2">
