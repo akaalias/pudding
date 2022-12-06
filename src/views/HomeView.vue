@@ -502,12 +502,12 @@
       this.api = new API()
       this.graphDataProvider = new GraphDataProvider(this.api)
 
-      this.rawTokens = await this.api.getTopTokens()
-      for(var token of this.rawTokens) {
-        if(Constants.AvailableTokenAddresses().includes(token['address'])) {
-          this.tokenLookupTable.set(token['address'], token)
-          this.tokens.push(token)
-        }
+      for(var tokenAddress of Constants.AvailableTokenAddresses()) {
+        console.log("Fetching Token Info")
+        let tokenInfo = await this.api.getTokenInfo(tokenAddress)
+
+        this.tokenLookupTable.set(tokenInfo['address'], tokenInfo)
+        this.tokens.push(tokenInfo)
       }
 
       this.setupCyGraph()
@@ -527,11 +527,11 @@
         let symbol = token['symbol']
         let rate = token['price']['rate']
         let currency = token['price']['currency']
-        let humanReadableWithCurrency = this.totalSumThreshold.toLocaleString("en-US", {
+        let multiplicationWithRate = this.totalSumThreshold * rate
+        let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
           style: "currency",
           currency: "USD"
         });
-
         return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol + " (" + humanReadableWithCurrency + ")"
       },
       computedRelationshipEdgeColorEnd() {

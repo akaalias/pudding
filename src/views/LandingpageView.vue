@@ -13,7 +13,7 @@
           </h1>
           <h2 class="display-2">
             <span class="highlight-2">
-              <span class="underline">Have more fun</span> with OSINT analysis and reconnaissance in decentralized finance ecosystems
+              <span class="underline">Have more fun</span> with OSINT analysis for Ethereum ERC-20 ecosystems
             </span>
           </h2>
         </v-col>

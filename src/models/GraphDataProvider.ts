@@ -94,7 +94,7 @@ export default class GraphDataProvider {
             var rate: number = 0
             var currency: string = "USD"
 
-            if(tokenInfo['price'] == undefined) {
+            if(tokenInfo['price'] != undefined) {
                 rate = tokenInfo['price']['rate']
                 currency = tokenInfo['price']['currency']
             }
