@@ -284,6 +284,7 @@
         this.tokens.push(tokenInfo)
       },
       async search() {
+        this.selectedAddress = this.selectedAddress.toLowerCase()
         if(this.selectedAddress.length == 42) {
           await this.fetchTokenInfo()
 
@@ -540,7 +541,9 @@
         return "Minimum Relationship Strength:" + " " + this.connectionThreshold
       },
       totalSumThresholdLabel() {
-        var token = this.tokenLookupTable.get(this.selectedAddress.toLowerCase())
+        this.selectedAddress = this.selectedAddress.toLowerCase()
+        var token = this.tokenLookupTable.get(this.selectedAddress)
+        // console.log(token)
         var symbol = "SYMBOL"
         var rate = -1
         var currency = "UNKNOWN"
