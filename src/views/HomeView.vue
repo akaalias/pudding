@@ -279,21 +279,19 @@
       },
       async fetchTokenInfo() {
         this.selectedAddress = this.selectedAddress.toLowerCase()
-        // Get Token Info
-        console.log("Fetching Token Info for: " + this.selectedAddress)
         let tokenInfo = await this.api.getTokenInfo(this.selectedAddress)
         this.tokenLookupTable.set(tokenInfo['address'].toLowerCase(), tokenInfo)
         this.tokens.push(tokenInfo)
       },
       async search() {
         if(this.selectedAddress.length == 42) {
-          this.fetchTokenInfo()
+          await this.fetchTokenInfo()
 
           this.searching = true
           this.elements = []
 
           // Get Elements
-          this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
+          this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress.toLowerCase()))
 
           // Get Communities
           const nodeToCommunityMapping = await this.graphDataProvider.getNodeToCommunityMap(this.elements)
@@ -514,6 +512,7 @@
 
       // Setup dropdown list
       for(var token of Constants.AvailableTokens) {
+        token.address = token.address.toLowerCase()
         this.tokens.push(token)
       }
 
@@ -530,15 +529,12 @@
         return "Minimum Relationship Strength:" + " " + this.connectionThreshold
       },
       totalSumThresholdLabel() {
-        console.log("Looking for: " + this.selectedAddress + " here:")
-        console.log(this.tokenLookupTable)
-        var token = this.tokenLookupTable.get(this.selectedAddress)
+        var token = this.tokenLookupTable.get(this.selectedAddress.toLowerCase())
         var symbol = "SYMBOL"
-        var rate = 0
+        var rate = -1
         var currency = "UNKNOWN"
 
         if(token != undefined) {
-          console.log("totalSumThresholdLabel: Token")
           symbol = token['symbol']
           rate = token['price']['rate']
           currency = token['price']['currency']

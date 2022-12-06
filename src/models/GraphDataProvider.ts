@@ -151,6 +151,7 @@ export default class GraphDataProvider {
                 let humanReadableTotalTokenSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
                 var fiat = 0
                 var humanReadableFiatWithCurrency = "Rate unavailable"
+
                 if(!isNaN(rate)) {
                     fiat = humanReadableTotalTokenSum * rate
                     humanReadableFiatWithCurrency = fiat.toLocaleString("en-US", {
