@@ -5,7 +5,7 @@ set -e
 
 # build
 npm run build
-
+echo "getpudding.app" > docs/CNAME
 echo -n "My commit message: "
 read MESSAGE
 
