@@ -277,16 +277,20 @@
         this.totalSumThreshold = 0
         this.search()
       },
+      async fetchTokenInfo() {
+        this.selectedAddress = this.selectedAddress.toLowerCase()
+        // Get Token Info
+        console.log("Fetching Token Info for: " + this.selectedAddress)
+        let tokenInfo = await this.api.getTokenInfo(this.selectedAddress)
+        this.tokenLookupTable.set(tokenInfo['address'].toLowerCase(), tokenInfo)
+        this.tokens.push(tokenInfo)
+      },
       async search() {
         if(this.selectedAddress.length == 42) {
+          this.fetchTokenInfo()
+
           this.searching = true
           this.elements = []
-
-          // Get Token Info
-          console.log("Fetching Token Info")
-          let tokenInfo = await this.api.getTokenInfo(this.selectedAddress)
-          this.tokenLookupTable.set(tokenInfo['address'], tokenInfo)
-          this.tokens.push(tokenInfo)
 
           // Get Elements
           this.elements = await this.graphDataProvider.getTokenNetwork(this.selectedAddress, this.tokenLookupTable.get(this.selectedAddress))
@@ -526,10 +530,22 @@
         return "Minimum Relationship Strength:" + " " + this.connectionThreshold
       },
       totalSumThresholdLabel() {
-        let token = this.tokenLookupTable.get(this.selectedAddress)
-        let symbol = token['symbol']
-        let rate = token['price']['rate']
-        let currency = token['price']['currency']
+        console.log("Looking for: " + this.selectedAddress + " here:")
+        console.log(this.tokenLookupTable)
+        var token = this.tokenLookupTable.get(this.selectedAddress)
+        var symbol = "SYMBOL"
+        var rate = 0
+        var currency = "UNKNOWN"
+
+        if(token != undefined) {
+          console.log("totalSumThresholdLabel: Token")
+          symbol = token['symbol']
+          rate = token['price']['rate']
+          currency = token['price']['currency']
+        } else {
+          console.log("Didn't get full token info!!")
+        }
+
         let multiplicationWithRate = this.totalSumThreshold * rate
         let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
           style: "currency",

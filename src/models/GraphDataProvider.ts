@@ -94,7 +94,7 @@ export default class GraphDataProvider {
             var rate: number = 0
             var currency: string = "USD"
 
-            if(tokenInfo['price'] != undefined) {
+            if(tokenInfo != undefined && tokenInfo['price'] != undefined) {
                 rate = tokenInfo['price']['rate']
                 currency = tokenInfo['price']['currency']
             }
@@ -108,8 +108,14 @@ export default class GraphDataProvider {
                 const value: string = element['value']
                 const valueFloat: number = parseFloat(value)
                 const fromToId = from + to
-                const decimals: number = parseInt(element['tokenInfo']['decimals'])
-                const symbol: string = element['tokenInfo']['symbol']
+
+                var decimals: number = 1
+                var symbol: string = "UNDEFINED"
+
+                if(element['tokenInfo'] != undefined) {
+                    decimals = parseInt(element['tokenInfo']['decimals'])
+                    symbol = element['tokenInfo']['symbol']
+                }
 
                 if (!nodeIds.includes(from)) {
                     nodeIds.push(from)
