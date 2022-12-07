@@ -516,6 +516,14 @@
               window.open(image.src, "_blank");
             }
         )
+      },
+      setupFromURL() {
+        const addressParam = this.$route.query.address;
+        if(!!addressParam) {
+          this.selectedAddress = addressParam;
+          this.selectedAddress = this.selectedAddress.toLowerCase()
+          this.searchFromScratch()
+        }
       }
     },
     async mounted() {
@@ -530,11 +538,7 @@
 
       this.setupCyGraph()
 
-      const addressParam = this.$route.query.address;
-      if(!!addressParam) {
-        this.selectedAddress = addressParam;
-        this.searchFromScratch()
-      }
+      this.setupFromURL()
     },
     computed: {
       connectionThresholdLabel() {

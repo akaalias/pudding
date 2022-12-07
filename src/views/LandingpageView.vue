@@ -45,7 +45,7 @@
                       elevation="1"
                       light
                       small
-                      v-bind:to="token.deepLink"
+                      v-bind:to="{ name: 'home', query: { address: token.address }}"
                   >
                     Explore {{token.name}}
                     <v-icon

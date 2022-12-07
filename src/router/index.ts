@@ -11,11 +11,6 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "landingpage" */ '../views/LandingpageView.vue')
   },
   {
-    path: '/landingpage',
-    name: 'landingpage',
-    component: () => import(/* webpackChunkName: "landingpage" */ '../views/LandingpageView.vue')
-  },
-  {
     path: '/home',
     name: 'home',
     component: HomeView
@@ -28,7 +23,7 @@ const routes: Array<RouteConfig> = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes,
   scrollBehavior() {
