@@ -282,11 +282,12 @@
         let tokenInfo = await this.api.getTokenInfo(this.selectedAddress)
         this.tokenLookupTable.set(tokenInfo['address'].toLowerCase(), tokenInfo)
         this.tokens.push(tokenInfo)
+        return tokenInfo
       },
       async search() {
         this.selectedAddress = this.selectedAddress.toLowerCase()
         if(this.selectedAddress.length == 42) {
-          await this.fetchTokenInfo()
+          let currentToken = await this.fetchTokenInfo()
 
           // Update URL
           this.$router.replace({ query: { address: this.selectedAddress } })
@@ -474,6 +475,7 @@
               "node",
               function(event, orignalEvent) {
                 let node = event.target;
+                console.log(node.position())
                 let url = "https://ethplorer.io/address/" + node.data().id;
                 const type = node.data().type;
                 window.open(url, "_blank", "minimizable=false").focus();
@@ -483,6 +485,40 @@
           // Run Layout
           this.cy.layout(Constants.coseLayout).run();
           this.cy.fit()
+
+          let wi = this.cy.width()
+          let he = this.cy.height()
+
+          // Add Label Node
+          this.cy.add(
+              { group: 'nodes',
+                data: { id: 'token-info', label: currentToken.name},
+                classes: 'legend showLabel'},
+          )
+          // Add Label Node
+          let da = new Date().toLocaleDateString('en-US')
+          this.cy.add(
+              { group: 'nodes',
+                data: { id: 'date', label: da},
+                classes: 'date showLabel'},
+          )
+
+          this.cy.style()
+              .selector('#token-info')
+              .style({
+                "font-size": "160px",
+              })
+              .update()
+
+          this.cy.style()
+              .selector('#date')
+              .style({
+                "font-size": "100px",
+              })
+              .update()
+
+          this.cy.$("#token-info").position({x: -wi / 2, y: 100})
+          this.cy.$("#date").position({x: -wi / 2, y: 250})
 
           // Indicate finished
           this.searching = false
@@ -506,7 +542,6 @@
           var sel = e.target;
           sel.removeClass('showLabel')
         }.bind(this))
-
       },
       toggleShowMenu() {
         this.showMenu = !this.showMenu
