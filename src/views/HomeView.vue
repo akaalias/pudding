@@ -288,6 +288,9 @@
         if(this.selectedAddress.length == 42) {
           await this.fetchTokenInfo()
 
+          // Update URL
+          this.$router.replace({ query: { address: this.selectedAddress } })
+
           this.searching = true
           this.elements = []
 
