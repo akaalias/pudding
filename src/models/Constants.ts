@@ -122,20 +122,11 @@ export default class Constants {
         {
             selector: 'node.legend',
             style: {
-                "label": "data(label)",
-                "width": "0px",
-                "text-valign": "center",
-                "text-halign": "left",
-                "color": "#fff"
             },
         },
         {
             selector: 'node.date',
             style: {
-                "label": "data(label)",
-                "text-valign": "center",
-                "text-halign": "left",
-                "color": "#fff"
             },
         },
         {

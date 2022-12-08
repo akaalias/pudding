@@ -492,28 +492,40 @@
           // Add Label Node
           this.cy.add(
               { group: 'nodes',
-                data: { id: 'token-info', label: currentToken.name},
-                classes: 'legend showLabel'},
+                data: { id: 'token-info', label: currentToken.name },
+                classes: 'legend showLabel force-show'},
           )
-          // Add Label Node
-          let da = new Date().toLocaleDateString('en-US')
+          // Add Date Node
+          let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
+          let ti = new Date().toLocaleTimeString('en-us')
+
           this.cy.add(
               { group: 'nodes',
-                data: { id: 'date', label: da},
-                classes: 'date showLabel'},
+                data: { id: 'date', label: da + " - " + ti},
+                classes: 'date showLabel force-show'},
           )
 
           this.cy.style()
               .selector('#token-info')
               .style({
-                "font-size": "160px",
+                "font-size": "120px",
+                "text-valign": "center",
+                "text-halign": "right",
+                'border-width': '0px',
+                "width": "20px",
+                "height": "20px"
               })
               .update()
 
           this.cy.style()
               .selector('#date')
               .style({
-                "font-size": "100px",
+                "font-size": "60px",
+                "text-valign": "center",
+                "text-halign": "right",
+                'border-width': '0px',
+                "width": "10px",
+                "height": "10px"
               })
               .update()
 
@@ -540,7 +552,9 @@
 
         this.cy.on('mouseout', 'edge, node', function(e){
           var sel = e.target;
-          sel.removeClass('showLabel')
+          if(!sel.classes().includes("force-show")) {
+            sel.removeClass('showLabel')
+          }
         }.bind(this))
       },
       toggleShowMenu() {
