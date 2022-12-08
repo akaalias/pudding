@@ -493,7 +493,7 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'token-info', label: currentToken.name },
-                classes: 'legend showLabel force-show'},
+                classes: 'meta-info showLabel force-show'},
           )
           // Add Date Node
           let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
@@ -502,13 +502,26 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'date', label: da + " - " + ti},
-                classes: 'date showLabel force-show'},
+                classes: 'meta-info showLabel force-show'},
+          )
+
+          // Add Min/Max Nodes
+          this.cy.add(
+              { group: 'nodes',
+                data: { id: 'min', label: this.totalSumThresholdLabel},
+                classes: 'meta-info showLabel force-show'},
+          )
+
+          this.cy.add(
+              { group: 'nodes',
+                data: { id: 'max', label: this.maxTotalSumLabel},
+                classes: 'meta-info showLabel force-show'},
           )
 
           this.cy.style()
               .selector('#token-info')
               .style({
-                "font-size": "120px",
+                "font-size": "100px",
                 "text-valign": "center",
                 "text-halign": "right",
                 'border-width': '0px',
@@ -518,9 +531,9 @@
               .update()
 
           this.cy.style()
-              .selector('#date')
+              .selector('#date, #min, #max')
               .style({
-                "font-size": "60px",
+                "font-size": "38px",
                 "text-valign": "center",
                 "text-halign": "right",
                 'border-width': '0px',
@@ -529,8 +542,11 @@
               })
               .update()
 
-          this.cy.$("#token-info").position({x: -wi / 2, y: 100})
-          this.cy.$("#date").position({x: -wi / 2, y: 250})
+          let top = 100
+          this.cy.$("#token-info").position({x: -wi / 2, y: top})
+          this.cy.$("#date").position({x: -wi / 2, y: top + 100})
+          this.cy.$("#min").position({x: -wi / 2, y: top + 160})
+          this.cy.$("#max").position({x: -wi / 2, y: top + 220})
 
           // Indicate finished
           this.searching = false
@@ -596,13 +612,42 @@
       connectionThresholdLabel() {
         return "Minimum Relationship Strength:" + " " + this.connectionThreshold
       },
+      maxConnectionsLabel() {
+        return ""
+      }
+      ,
+      maxTotalSumLabel() {
+        this.selectedAddress = this.selectedAddress.toLowerCase()
+        var token = this.tokenLookupTable.get(this.selectedAddress)
+
+        var symbol = ""
+        var rate = 0
+        var currency = ""
+
+        if(token != undefined) {
+          symbol = token['symbol']
+          rate = token['price']['rate']
+          currency = token['price']['currency']
+        } else {
+          console.log("Didn't get full token info!!")
+        }
+
+        let multiplicationWithRate = this.maxTotalSum * rate
+        let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD"
+        });
+        return "Maximum: " + Intl.NumberFormat().format(this.maxTotalSum) + symbol + " (" + humanReadableWithCurrency + ")"
+
+      }
+      ,
       totalSumThresholdLabel() {
         this.selectedAddress = this.selectedAddress.toLowerCase()
         var token = this.tokenLookupTable.get(this.selectedAddress)
-        // console.log(token)
-        var symbol = "SYMBOL"
-        var rate = -1
-        var currency = "UNKNOWN"
+
+        var symbol = ""
+        var rate = 0
+        var currency = ""
 
         if(token != undefined) {
           symbol = token['symbol']
