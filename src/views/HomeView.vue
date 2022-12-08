@@ -543,10 +543,10 @@
               .update()
 
           let top = 100
-          this.cy.$("#token-info").position({x: -wi / 2, y: top})
-          this.cy.$("#date").position({x: -wi / 2, y: top + 100})
-          this.cy.$("#min").position({x: -wi / 2, y: top + 160})
-          this.cy.$("#max").position({x: -wi / 2, y: top + 220})
+          this.cy.$("#token-info").position({x: wi, y: top})
+          this.cy.$("#date").position({x: wi, y: top + 100})
+          this.cy.$("#min").position({x: wi, y: top + 160})
+          this.cy.$("#max").position({x: wi, y: top + 220})
 
           // Indicate finished
           this.searching = false
