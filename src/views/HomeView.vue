@@ -523,7 +523,7 @@
               .style({
                 "font-size": "100px",
                 "text-valign": "center",
-                "text-halign": "left",
+                "text-halign": "right",
                 'border-width': '0px',
                 "width": "1px",
                 "height": "1px"
@@ -535,7 +535,7 @@
               .style({
                 "font-size": "52px",
                 "text-valign": "center",
-                "text-halign": "left",
+                "text-halign": "right",
                 'border-width': '0px',
                 "width": "1px",
                 "height": "1px"
