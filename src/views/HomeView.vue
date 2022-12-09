@@ -493,7 +493,7 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'token-info', label: currentToken.name },
-                classes: 'meta-info'},
+                classes: 'meta-info showLabel force-show'},
           )
           // Add Date Node
           let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
@@ -502,20 +502,20 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'date', label: da + " - " + ti},
-                classes: 'meta-info'},
+                classes: 'meta-info force-show showLabel'},
           )
 
           // Add Min/Max Nodes
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'min', label: this.totalSumThresholdLabel},
-                classes: 'meta-info'},
+                classes: 'meta-info force-show showLabel'},
           )
 
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'max', label: this.maxTotalSumLabel},
-                classes: 'meta-info'},
+                classes: 'meta-info force-show showLabel'},
           )
 
           this.cy.style()
@@ -523,7 +523,7 @@
               .style({
                 "font-size": "100px",
                 "text-valign": "center",
-                "text-halign": "right",
+                "text-halign": "left",
                 'border-width': '0px',
                 "width": "1px",
                 "height": "1px"
@@ -535,7 +535,7 @@
               .style({
                 "font-size": "52px",
                 "text-valign": "center",
-                "text-halign": "right",
+                "text-halign": "left",
                 'border-width': '0px',
                 "width": "1px",
                 "height": "1px"
@@ -543,10 +543,10 @@
               .update()
 
           let top = 100
-          this.cy.$("#token-info").position({x: 0, y: top})
-          this.cy.$("#date").position({x: 0, y: top + 100})
-          this.cy.$("#min").position({x: 0, y: top + 160})
-          this.cy.$("#max").position({x: 0, y: top + 220})
+          this.cy.$("#token-info").position({x: -20, y: top})
+          this.cy.$("#date").position({x: -20, y: top + 100})
+          this.cy.$("#min").position({x: -20, y: top + 160})
+          this.cy.$("#max").position({x: -20, y: top + 220})
 
           // Indicate finished
           this.searching = false
@@ -577,9 +577,6 @@
         this.showMenu = !this.showMenu
       },
       async exportPNG() {
-        for(var node of this.cy.$('.meta-info')) {
-          node.addClass('showLabel')
-        }
 
         Promise.resolve(this.cy.png({ output: "blob-promise" })).then(
             (result) => {
@@ -588,10 +585,6 @@
               window.open(image.src, "_blank");
             }
         )
-
-        for(var node of this.cy.$('.meta-info')) {
-          node.removeClass('showLabel')
-        }
 
       },
       setupFromURL() {
