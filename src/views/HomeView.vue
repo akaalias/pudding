@@ -493,7 +493,7 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'token-info', label: currentToken.name },
-                classes: 'meta-info showLabel force-show'},
+                classes: 'meta-info'},
           )
           // Add Date Node
           let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
@@ -502,20 +502,20 @@
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'date', label: da + " - " + ti},
-                classes: 'meta-info showLabel force-show'},
+                classes: 'meta-info'},
           )
 
           // Add Min/Max Nodes
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'min', label: this.totalSumThresholdLabel},
-                classes: 'meta-info showLabel force-show'},
+                classes: 'meta-info'},
           )
 
           this.cy.add(
               { group: 'nodes',
                 data: { id: 'max', label: this.maxTotalSumLabel},
-                classes: 'meta-info showLabel force-show'},
+                classes: 'meta-info'},
           )
 
           this.cy.style()
@@ -523,30 +523,30 @@
               .style({
                 "font-size": "100px",
                 "text-valign": "center",
-                "text-halign": "right",
+                "text-halign": "left",
                 'border-width': '0px',
-                "width": "20px",
-                "height": "20px"
+                "width": "1px",
+                "height": "1px"
               })
               .update()
 
           this.cy.style()
               .selector('#date, #min, #max')
               .style({
-                "font-size": "38px",
+                "font-size": "52px",
                 "text-valign": "center",
-                "text-halign": "right",
+                "text-halign": "left",
                 'border-width': '0px',
-                "width": "10px",
-                "height": "10px"
+                "width": "1px",
+                "height": "1px"
               })
               .update()
 
           let top = 100
-          this.cy.$("#token-info").position({x: wi, y: top})
-          this.cy.$("#date").position({x: wi, y: top + 100})
-          this.cy.$("#min").position({x: wi, y: top + 160})
-          this.cy.$("#max").position({x: wi, y: top + 220})
+          this.cy.$("#token-info").position({x: 0, y: top})
+          this.cy.$("#date").position({x: 0, y: top + 100})
+          this.cy.$("#min").position({x: 0, y: top + 160})
+          this.cy.$("#max").position({x: 0, y: top + 220})
 
           // Indicate finished
           this.searching = false
@@ -577,6 +577,10 @@
         this.showMenu = !this.showMenu
       },
       async exportPNG() {
+        for(var node of this.cy.$('.meta-info')) {
+          node.addClass('showLabel')
+        }
+
         Promise.resolve(this.cy.png({ output: "blob-promise" })).then(
             (result) => {
               var image = new Image();
@@ -584,6 +588,11 @@
               window.open(image.src, "_blank");
             }
         )
+
+        for(var node of this.cy.$('.meta-info')) {
+          node.removeClass('showLabel')
+        }
+
       },
       setupFromURL() {
         const addressParam = this.$route.query.address;
