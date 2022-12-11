@@ -630,17 +630,20 @@
           symbol = token['symbol']
           rate = token['price']['rate']
           currency = token['price']['currency']
+
+          if(rate != undefined) {
+            let multiplicationWithRate = this.maxTotalSum * rate
+            let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD"
+            });
+            return "Maximum: " + Intl.NumberFormat().format(this.maxTotalSum) + symbol + " (" + humanReadableWithCurrency + ")"
+          } else {
+            return "Maximum: " + Intl.NumberFormat().format(this.maxTotalSum) + symbol
+          }
         } else {
           console.log("Didn't get full token info!!")
         }
-
-        let multiplicationWithRate = this.maxTotalSum * rate
-        let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD"
-        });
-        return "Maximum: " + Intl.NumberFormat().format(this.maxTotalSum) + symbol + " (" + humanReadableWithCurrency + ")"
-
       }
       ,
       totalSumThresholdLabel() {
@@ -655,16 +658,21 @@
           symbol = token['symbol']
           rate = token['price']['rate']
           currency = token['price']['currency']
+
+          if(rate != undefined) {
+            let multiplicationWithRate = this.totalSumThreshold * rate
+            let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD"
+            });
+            return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol + " (" + humanReadableWithCurrency + ")"
+          } else {
+            return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol
+          }
         } else {
           console.log("Didn't get full token info!!")
         }
 
-        let multiplicationWithRate = this.totalSumThreshold * rate
-        let humanReadableWithCurrency = multiplicationWithRate.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD"
-        });
-        return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol + " (" + humanReadableWithCurrency + ")"
       },
       computedRelationshipEdgeColorEnd() {
         return Constants.RelationshipEdgeColorEnd
