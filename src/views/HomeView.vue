@@ -644,6 +644,8 @@
         } else {
           console.log("Didn't get full token info!!")
         }
+
+        return "Maximum: " + Intl.NumberFormat().format(this.maxTotalSum) + symbol + " (" + humanReadableWithCurrency + ")"
       }
       ,
       totalSumThresholdLabel() {
@@ -666,13 +668,11 @@
               currency: "USD"
             });
             return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol + " (" + humanReadableWithCurrency + ")"
-          } else {
-            return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol
           }
         } else {
           console.log("Didn't get full token info!!")
         }
-
+        return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol
       },
       computedRelationshipEdgeColorEnd() {
         return Constants.RelationshipEdgeColorEnd

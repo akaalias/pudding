@@ -150,7 +150,7 @@ export default class GraphDataProvider {
             for (var connection of fromToTransactionCounts.values()) {
                 let humanReadableTotalTokenSum = connection['totalSum'] / Math.pow(10, connection['decimals'])
                 var fiat = 0
-                var humanReadableFiatWithCurrency = "Rate unavailable"
+                var humanReadableFiatWithCurrency = ""
 
                 if(!isNaN(rate)) {
                     fiat = humanReadableTotalTokenSum * rate
@@ -158,10 +158,12 @@ export default class GraphDataProvider {
                         style: "currency",
                         currency: "USD"
                     });
+
+                    humanReadableFiatWithCurrency = " - (" + humanReadableFiatWithCurrency + ")"
                 }
 
                 // @ts-ignore
-                let relationshipDescription = connection['transactions'] + ' TX = Total: ' + Intl.NumberFormat().format(humanReadableTotalTokenSum.toFixed(2)) + '' + connection['symbol'] + ' (' + humanReadableFiatWithCurrency + ')'
+                let relationshipDescription = connection['transactions'] + ' TX = Total: ' + Intl.NumberFormat().format(humanReadableTotalTokenSum.toFixed(2)) + '' + connection['symbol'] + humanReadableFiatWithCurrency
                 let transactionDescription = relationshipDescription
 
                 // @ts-ignore
