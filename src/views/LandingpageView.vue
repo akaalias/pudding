@@ -3,26 +3,51 @@
     <div id="new-banner">
         Hello and welcome to Pudding Research!
     </div>
-    <v-container fluid id="landingpage-container">
-      <v-row>
-        <v-col cols="md-12">
-          <h1 class="display-3">
+    <section id="above-fold">
+      <v-container fluid id="landingpage-container">
+        <v-row>
+          <v-col cols="md-12">
+            <h1 class="display-3">
             <span class="highlight">
               Connect the Dots, Follow the Money, Find the Story.
             </span>
-          </h1>
-          <h2 class="display-2">
+            </h1>
+            <h2 class="display-2">
             <span class="highlight-2">
-              <span class="underline">Have more fun</span> with OSINT analysis for Ethereum ERC-20 ecosystems
+              Have more fun with OSINT analysis for Ethereum ERC-20 ecosystems
             </span>
-          </h2>
-        </v-col>
-      </v-row>
-      <div id="demo-container">
+            </h2>
+          </v-col>
+        </v-row>
+        <div id="search-container">
+          <v-row>
+            <v-col cols="md-2">
+            </v-col>
+            <v-col cols="md-8">
+              <v-autocomplete
+                  label="Select a Token to explore"
+                  v-model="selectedAddress"
+                  :items="tokens"
+                  item-text="name"
+                  item-value="address"
+                  @change="startSearch"
+                  rounded="true"
+                  outlined="true"
+                  clearable="true"
+                  solo
+                  autofocus
 
-      </div>
-    </v-container>
+              ></v-autocomplete>
+            </v-col>
+            <v-col cols="md-2">
+            </v-col>
+          </v-row>
+        </div>
+      </v-container>
+    </section>
+
     <v-container fluid id="explore-tokens-container">
+      <h2>Explore the Ecosystems</h2>
       <v-row>
         <v-col cols="md-4" v-for="token in tokens">
           <v-card elevation="4" >
@@ -167,9 +192,16 @@ export default Vue.extend({
   },
   data() {
     return {
+      selectedAddress: "",
       tokens: Constants.AvailableTokens
     }
-  }})
+  },
+  methods: {
+    startSearch() {
+      this.$router.push({name: 'home', query: {address: this.selectedAddress}})
+    }
+  }}
+)
 </script>
 <style scoped>
 #new-banner {
@@ -299,5 +331,29 @@ footer:hover {
 #ballet-container .headline {
   padding: 50px;
   color: #fff;
+}
+
+#above-fold {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-size: 100%;
+  background-position: center;
+  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png');
+}
+
+#search-container {
+  padding-top: 150px;
+  padding-bottom: 100px;
+}
+
+#explore-tokens-container {
+}
+
+#explore-tokens-container h2 {
+  padding-top: 50px;
+  text-align: center;
+  font-weight: lighter;
+  font-size: 28pt;
+  margin-bottom: 24pt;
 }
 </style>
