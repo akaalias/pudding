@@ -46,7 +46,7 @@
               </v-icon>
             </v-btn>
           </div>
-          <v-select
+          <v-autocomplete
               label="Select a Token to explore"
               v-model="selectedAddress"
               :items="tokens"
@@ -54,7 +54,7 @@
               item-value="address"
               @change="searchFromScratch"
               v-if="showMenu"
-          ></v-select>
+          ></v-autocomplete>
           <div id="menuItems" v-if="elements.length > 0 && showMenu">
             <v-select
                 label="Research Focus"
