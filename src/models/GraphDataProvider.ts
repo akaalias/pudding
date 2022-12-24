@@ -30,7 +30,7 @@ export default class GraphDataProvider {
 
         if (!nodeIds.includes(addressLowercase)) {
             nodeIds.push(addressLowercase)
-            elements.push({data: {id: addressLowercase, label: addressLowercase.substring(0, 16)}, classes: 'address'})
+            elements.push({data: {id: addressLowercase, label: addressLowercase}, classes: 'address'})
         }
 
         // create nodes
@@ -43,13 +43,13 @@ export default class GraphDataProvider {
 
             if (!nodeIds.includes(from)) {
                 nodeIds.push(from)
-                elements.push({data: {id: from, label: from.substring(0, 16)}, classes: 'address'})
+                elements.push({data: {id: from, label: from}, classes: 'address'})
             }
 
             if(to != '') {
                 if (!nodeIds.includes(to)) {
                     nodeIds.push(to)
-                    elements.push({data: {id: to, label: to.substring(0, 16)}, classes: 'address'})
+                    elements.push({data: {id: to, label: to}, classes: 'address'})
                 }
 
                 elements.push({
@@ -65,7 +65,7 @@ export default class GraphDataProvider {
             if(contractAddress != '') {
                 if (!nodeIds.includes(contractAddress)) {
                     nodeIds.push(contractAddress)
-                    elements.push({data: {id: contractAddress, label: contractAddress.substring(0, 16)}, classes: 'contract'})
+                    elements.push({data: {id: contractAddress, label: contractAddress}, classes: 'contract'})
                     }
                 }
 
@@ -119,12 +119,12 @@ export default class GraphDataProvider {
 
                 if (!nodeIds.includes(from)) {
                     nodeIds.push(from)
-                    elements.push({data: {id: from, label: from.substring(0, 16), type: 'node'}})
+                    elements.push({data: {id: from, label: from, type: 'node'}})
                 }
 
                 if (!nodeIds.includes(to)) {
                     nodeIds.push(to)
-                    elements.push({data: {id: to, label: to.substring(0, 16), type: 'node'}})
+                    elements.push({data: {id: to, label: to, type: 'node'}})
                 }
 
                 // Start counting relationships

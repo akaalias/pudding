@@ -57,6 +57,14 @@
           ></v-autocomplete>
           <div id="menuItems" v-if="elements.length > 0 && showMenu">
             <v-select
+                label="Layout"
+                v-model="selectedLayout"
+                :items="availableLayouts"
+                item-text="name"
+                item-value="name"
+                @change="updateLayout()"
+            > </v-select>
+            <v-select
                 label="Research Focus"
                 v-model="selectedFocus"
                 :items="focusItems"
@@ -113,8 +121,6 @@
                 </v-icon>
               </template>
             </v-text-field>
-
-
             <br>
             <v-btn
                 v-on:click="exportPNG"
@@ -129,7 +135,6 @@
             <div id="cyto" ref="cyto"/>
           </v-col>
         </v-row>
-
         <v-dialog
             transition="dialog-bottom-transition"
             max-width="600"
@@ -236,8 +241,6 @@
   import Constants from "@/models/Constants"
   import API from "@/models/API"
   import cytoscape from 'cytoscape';
-  import cola from 'cytoscape-cola';
-
   export default Vue.extend({
     name: 'Home',
     components: {
@@ -265,7 +268,15 @@
         selectedFocus: Constants.HybridFocus,
         focusItems: [Constants.HybridFocus, Constants.RelationshipFocus, Constants.TransactionFocus],
         sheet: false,
-        finetuneTotalSumThreshold: false
+        finetuneTotalSumThreshold: false,
+        selectedLayout: "Cose",
+        availableLayouts: [ {name: "Cose"},
+                            {name: "Concentric"},
+                            {name: "Grid"},
+                            {name: "Circle"},
+                            {name: "Breadthfirst"},
+        ],
+        currentToken: []
       }
     },
     methods: {
@@ -287,11 +298,12 @@
       async search() {
         this.selectedAddress = this.selectedAddress.toLowerCase()
         if(this.selectedAddress.length == 42) {
-          let currentToken = await this.fetchTokenInfo()
+          this.currentToken = await this.fetchTokenInfo()
 
           // Update URL
           this.$router.replace({ query: { address: this.selectedAddress } })
 
+          // Start search
           this.searching = true
           this.elements = []
 
@@ -333,6 +345,9 @@
             }
             // Update node score
             this.cy.$('#' + nId).data("score", this.cy.$('#' + nId).incomers().length)
+            // For all incomers, sum up the amount
+            // Same for outgoing
+            //
           }
 
           // Get max TX transaction count
@@ -470,88 +485,87 @@
               })
               .update()
 
-          this.cy.on(
-              "taphold",
-              "node",
-              function(event, orignalEvent) {
-                let node = event.target;
-                console.log(node.position())
-                let url = "https://ethplorer.io/address/" + node.data().id;
-                const type = node.data().type;
-                window.open(url, "_blank", "minimizable=false").focus();
-              }.bind(this)
-          );
-
           // Run Layout
-          this.cy.layout(Constants.coseLayout).run();
+          this.cy.layout(this.getLayout()).run();
           this.cy.fit()
 
           let wi = this.cy.width()
           let he = this.cy.height()
 
-          // Add Label Node
-          this.cy.add(
-              { group: 'nodes',
-                data: { id: 'token-info', label: currentToken.name },
-                classes: 'meta-info showLabel force-show'},
-          )
-          // Add Date Node
-          let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
-          let ti = new Date().toLocaleTimeString('en-us')
-
-          this.cy.add(
-              { group: 'nodes',
-                data: { id: 'date', label: da + " - " + ti},
-                classes: 'meta-info force-show showLabel'},
-          )
-
-          // Add Min/Max Nodes
-          this.cy.add(
-              { group: 'nodes',
-                data: { id: 'min', label: this.totalSumThresholdLabel},
-                classes: 'meta-info force-show showLabel'},
-          )
-
-          this.cy.add(
-              { group: 'nodes',
-                data: { id: 'max', label: this.maxTotalSumLabel},
-                classes: 'meta-info force-show showLabel'},
-          )
-
-          this.cy.style()
-              .selector('#token-info')
-              .style({
-                "font-size": "100px",
-                "text-valign": "center",
-                "text-halign": "left",
-                'border-width': '0px',
-                "width": "1px",
-                "height": "1px"
-              })
-              .update()
-
-          this.cy.style()
-              .selector('#date, #min, #max')
-              .style({
-                "font-size": "52px",
-                "text-valign": "center",
-                "text-halign": "left",
-                'border-width': '0px',
-                "width": "1px",
-                "height": "1px"
-              })
-              .update()
-
-          let top = 100
-          this.cy.$("#token-info").position({x: -20, y: top})
-          this.cy.$("#date").position({x: -20, y: top + 100})
-          this.cy.$("#min").position({x: -20, y: top + 160})
-          this.cy.$("#max").position({x: -20, y: top + 220})
+          this.setupExportLabels()
 
           // Indicate finished
           this.searching = false
         }
       },
+      setupExportLabels() {
+
+        this.cy.$("#token-info").remove()
+        this.cy.$("#date").remove()
+        this.cy.$("#min").remove()
+        this.cy.$("#max").remove()
+
+        // Add Label Node
+        this.cy.add(
+            { group: 'nodes',
+              data: { id: 'token-info', label: this.currentToken.name },
+              classes: 'meta-info showLabel force-show'},
+        )
+        // Add Date Node
+        let da = new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric'})
+        let ti = new Date().toLocaleTimeString('en-us')
+
+        this.cy.add(
+            { group: 'nodes',
+              data: { id: 'date', label: da + " - " + ti},
+              classes: 'meta-info force-show showLabel'},
+        )
+
+        // Add Min/Max Nodes
+        this.cy.add(
+            { group: 'nodes',
+              data: { id: 'min', label: this.totalSumThresholdLabel},
+              classes: 'meta-info force-show showLabel'},
+        )
+
+        this.cy.add(
+            { group: 'nodes',
+              data: { id: 'max', label: this.maxTotalSumLabel},
+              classes: 'meta-info force-show showLabel'},
+        )
+
+        this.cy.style()
+            .selector('#token-info')
+            .style({
+              "font-size": "100px",
+              "text-valign": "center",
+              "text-halign": "left",
+              'border-width': '5px',
+              "width": "20px",
+              "height": "20px"
+            })
+            .update()
+
+        this.cy.style()
+            .selector('#date, #min, #max')
+            .style({
+              "font-size": "52px",
+              "text-valign": "center",
+              "text-halign": "left",
+              'border-width': '5px',
+              "width": "20px",
+              "height": "20px"
+            })
+            .update()
+
+        let top = 100
+        this.cy.$("#token-info").position({x: -70, y: top})
+        this.cy.$("#date").position({x: -70, y: top + 100})
+        this.cy.$("#min").position({x: -70, y: top + 160})
+        this.cy.$("#max").position({x: -70, y: top + 220})
+
+      }
+      ,
       setupCyGraph() {
         let cy = cytoscape({
           container: this.$refs.cyto,
@@ -566,12 +580,35 @@
           sel.addClass('showLabel')
         }.bind(this))
 
+        this.cy.on('click', 'edge, node', function(e){
+          var sel = e.target;
+          if(!sel.classes().includes("force-show")) {
+            sel.addClass('force-show')
+          } else {
+            sel.removeClass('force-show')
+            sel.removeClass('showLabel')
+          }
+        }.bind(this))
+
         this.cy.on('mouseout', 'edge, node', function(e){
           var sel = e.target;
           if(!sel.classes().includes("force-show")) {
             sel.removeClass('showLabel')
           }
         }.bind(this))
+
+        // Open node info in a new window
+        this.cy.on(
+            "taphold",
+            "node",
+            function(event, orignalEvent) {
+              let node = event.target;
+              console.log(node.position())
+              let url = "https://ethplorer.io/address/" + node.data().id;
+              const type = node.data().type;
+              window.open(url, "_blank", "minimizable=false").focus();
+            }.bind(this))
+
       },
       toggleShowMenu() {
         this.showMenu = !this.showMenu
@@ -585,7 +622,6 @@
               window.open(image.src, "_blank");
             }
         )
-
       },
       setupFromURL() {
         const addressParam = this.$route.query.address;
@@ -593,6 +629,27 @@
           this.selectedAddress = addressParam;
           this.selectedAddress = this.selectedAddress.toLowerCase()
           this.searchFromScratch()
+        }
+      },
+      updateLayout() {
+        // Run Layout
+        this.cy.layout(this.getLayout()).run();
+        this.cy.fit()
+        this.setupExportLabels()
+      },
+      getLayout() {
+        if(this.selectedLayout == "Cose") {
+          return Constants.coseLayout
+        } else if(this.selectedLayout == "Concentric") {
+          return Constants.concentricLayout
+        } else if(this.selectedLayout == "Grid") {
+          return Constants.gridLayout
+        } else if(this.selectedLayout == "Circle") {
+          return Constants.circleLayout
+        } else if(this.selectedLayout == "Breadthfirst") {
+          return Constants.breadthfirstLayout
+        } else {
+          return Constants.coseLayout
         }
       }
     },

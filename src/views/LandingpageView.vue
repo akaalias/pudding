@@ -25,7 +25,7 @@
             </v-col>
             <v-col cols="md-8">
               <v-autocomplete
-                  label="Select a Token to explore"
+                  label="Find a token you want to explore here"
                   v-model="selectedAddress"
                   :items="tokens"
                   item-text="name"
@@ -35,8 +35,6 @@
                   outlined="true"
                   clearable="true"
                   solo
-                  autofocus
-
               ></v-autocomplete>
             </v-col>
             <v-col cols="md-2">

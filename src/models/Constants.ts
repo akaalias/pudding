@@ -9,12 +9,10 @@ export default class Constants {
     public static RelationshipFocus = "Relationships"
     public static TransactionFocus = "Transactions"
     public static HybridFocus = "Hybrid"
-
     public static RelationshipEdgeColorStart = "#4f2f2f"
     public static RelationshipEdgeColorEnd = "#FF9494"
     public static TransactionEdgeColorStart = "#525d6e"
     public static TransactionEdgeColorEnd = "#7e92af"
-
     public static AvailableTokenNames() {
         return this.AvailableTokens.map(x => x.name)
     }
@@ -25,7 +23,6 @@ export default class Constants {
         {name: 'WETH', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/WETH.png',address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'},
         {name: 'Binance Coin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Binance USD.png', address: '0xb8c77482e45f1f44de1745f52c74426c631bdd52'},
         {name: 'Tether USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tether USD.png', address: '0xdac17f958d2ee523a2206206994597c13d831ec7'},
-        {name: 'Lido Staked Ether', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Uniswap.png', address: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84'},
         {name: 'USD Coin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/USD Coin.png', address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'},
         {name: 'Dai', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png', address: '0x6b175474e89094c44da98b954eedeac495271d0f'},
         {name: 'Curve DAO Token', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Curve DAO Token.png', address: '0xd533a949740bb3306d119cc777fa900ba034cd52'},
@@ -33,6 +30,7 @@ export default class Constants {
         {name: 'Wrapped Bitcoin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Wrapped Bitcoin.png', address: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'},
         {name: 'Tron', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Tron.png', address: '0xe1be5d3f34e89de342ee97e6e90d405884da6c67'},
         {name: 'Decentralized USD', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/USDD.png', address: '0x0C10bF8FcB7Bf5412187A595ab97a3609160b5c6'},
+        {name: 'Lido Staked Ether', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Uniswap.png', address: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84'},
         {name: 'Chainlink', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Chainlink.png', address: '0x514910771af9ca656af840dff83e8264ecf986ca'},
         {name: 'HEX', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/HEX.png', address: '0x2b591e99afe9f32eaa6214f7b7629768c40eeb39'},
         {name: 'Matic Network', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/MATIC.png', address: '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'},
@@ -88,7 +86,6 @@ export default class Constants {
         {name: 'EnjinCoin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/missing-token.png', address: '0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c'},
         {name: 'EnjinCoin', imageFileName: 'https://raw.githubusercontent.com/akaalias/pudding/main/public/img/missing-token.png', address: '0xF629cBd94d3791C9250152BD8dfBDF380E2a3B9c'},
         ]
-
     public static ExploreAddressCyStyle = [
         {
             selector: 'node',
@@ -239,6 +236,21 @@ export default class Constants {
             }
         }
     ]
+    public static offsetForDepth(depth: number) {
+        if(depth >= 3) {
+            return 20
+        }
+        if(depth == 2) {
+            return 15
+        }
+        if(depth == 1) {
+            return 30
+        }
+
+        return 10
+    }
+
+    // Layouts
     public static coseLayout = {
         name: 'cose',
         animate: false,
@@ -260,54 +272,28 @@ export default class Constants {
         minTemp: 1.0,
         animationDuration: 3000,
     }
-    public static offsetForDepth(depth: number) {
-        if(depth >= 3) {
-            return 20
-        }
-        if(depth == 2) {
-            return 15
-        }
-        if(depth == 1) {
-            return 30
-        }
-
-        return 10
-    }
     public static concentricLayout = {
         name: 'concentric',
-        fit: true, // whether to fit the viewport to the graph
-        padding: 30, // the padding on fit
-        startAngle: 3 / 2 * Math.PI, // where nodes start in radians
-        sweep: undefined, // how many radians should be between the first and last node (defaults to full circle)
-        clockwise: true, // whether the layout should go clockwise (true) or counterclockwise/anticlockwise (false)
-        equidistant: false, // whether levels have an equal radial distance betwen them, may cause bounding box overflow
-        minNodeSpacing: 10, // min spacing between outside of nodes (used for radius adjustment)
-        boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-        avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-        nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
-        height: undefined, // height of layout area (overrides container height)
-        width: undefined, // width of layout area (overrides container width)
-        spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
-        concentric: function(node: any ){ // returns numeric value for each node, placing higher nodes in levels towards the centre
-            return node.degree();
-        },
-        levelWidth: function(nodes: any ){ // the variation of concentric values in each level
-            return nodes.maxDegree() / 4;
-        },
-        animate: false, // whether to transition the node positions
-        animationDuration: 500, // duration of animation in ms if enabled
-        animationEasing: undefined, // easing of animation if enabled
-        animateFilter: function (node: any, i: any ){ return true; }, // a function that determines whether the node should be animated.  All nodes animated by default on animate enabled.  Non-animated nodes are positioned immediately when the layout starts
-        ready: undefined, // callback on layoutready
-        stop: undefined, // callback on layoutstop
-        transform: function (node: any, position: any ){ return position; } // transform a given node position. Useful for changing flow direction in discrete layouts
+        animate: true
     }
     public static colaLayout = {
         name: 'cola',
+        animate: true
     }
     public static gridLayout = {
-        name: 'grid'
+        name: 'grid',
+        animate: true
     }
+    public static circleLayout = {
+        name: 'circle',
+        animate: true
+    }
+    public static breadthfirstLayout = {
+        name: 'breadthfirst',
+        animate: true
+    }
+
+    // Colors
     public static colors = [
         "AliceBlue",
         "AntiqueWhite",
