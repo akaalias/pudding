@@ -1,29 +1,24 @@
 <template>
-  <v-app class="landingpage-app">
+  <v-app class="landingpage-app" mobile-breakpoint="800">
     <div id="new-banner">
         Hello and welcome to Pudding Research!
     </div>
-    <section id="above-fold">
+    <section id="above-fold" ref="above-fold">
       <v-container fluid id="landingpage-container">
         <v-row>
           <v-col cols="md-12">
             <h1 class="display-3">
-            <span class="highlight">
-              Connect the Dots, Follow the Money, Find the Story.
-            </span>
+              Have more fun with OSINT analysis for Ethereum ERC-20 ecosystems
             </h1>
             <h2 class="display-2">
-            <span class="highlight-2">
-              Have more fun with OSINT analysis for Ethereum ERC-20 ecosystems
-            </span>
+              Connect the Dots, Follow the Money, Find the Story.
             </h2>
           </v-col>
         </v-row>
         <div id="search-container">
           <v-row>
-            <v-col cols="md-2">
-            </v-col>
-            <v-col cols="md-8">
+            <v-col md="8"
+                   offset-md="2">
               <v-autocomplete
                   label="Find a token you want to explore here"
                   v-model="selectedAddress"
@@ -31,19 +26,16 @@
                   item-text="name"
                   item-value="address"
                   @change="startSearch"
-                  rounded="true"
-                  outlined="true"
-                  clearable="true"
+                  rounded
+                  outlined
+                  clearable
                   solo
               ></v-autocomplete>
-            </v-col>
-            <v-col cols="md-2">
             </v-col>
           </v-row>
         </div>
       </v-container>
     </section>
-
     <v-container fluid id="explore-tokens-container">
       <h2>Explore the Ecosystems</h2>
       <v-row>
@@ -77,34 +69,6 @@
                     >
                       mdi-arrow-right
                     </v-icon>
-                  </v-btn>
-                </v-row>
-              </v-list-item>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col cols="md-4">
-          <v-card elevation="4" >
-            <v-img
-                height="300px"
-                src="https://raw.githubusercontent.com/akaalias/pudding/main/public/img/missing-token.png">
-              <v-card-title>
-                Missing a Token?
-              </v-card-title>
-            </v-img>
-            <v-card-actions>
-              <v-list-item class="grow">
-                <v-row
-                    align="center"
-                    justify="end"
-                >
-                  <v-btn class="cta"
-                         href="https://calendly.com/alexis-rondeau"
-                         color="primary"
-                         elevation="5"
-                         small
-                  >
-                    Request a token!
                   </v-btn>
                 </v-row>
               </v-list-item>
@@ -184,6 +148,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Constants from "@/models/Constants"
+
 export default Vue.extend({
   name: 'Landingpage',
   components: {
@@ -198,7 +163,15 @@ export default Vue.extend({
     startSearch() {
       this.$router.push({name: 'home', query: {address: this.selectedAddress}})
     }
-  }}
+  },
+  mounted() {
+    let demo = this.$refs["above-fold"]
+    let limited = Constants.AvailableTokens.slice(0, 30)
+    const randomElement = limited[Math.floor(Math.random() * limited.length)];
+    // const randomElement = limited[0]
+    demo.style.backgroundImage = "url('" + randomElement.imageFileName + "')"
+  }
+}
 )
 </script>
 <style scoped>
@@ -213,6 +186,9 @@ h1.display-3 {
   text-align: center;
   margin-top: 5%;
   margin-bottom: 40px;
+  font-size: 58pt !important;
+  line-height: 58pt;
+  text-shadow: 0px 0px 10px blueviolet;
 }
 
 h2.display-2 {
@@ -220,18 +196,7 @@ h2.display-2 {
   font-size: 36px !important;
   line-height: 125%;
   font-weight: normal;
-}
-
-.underline {
-  border-bottom: 2px solid white;
-}
-
-.highlight {
-  background-color: blueviolet;
-}
-
-.highlight-2 {
-  background-color: blueviolet;
+  text-shadow: 0px 0px 10px blueviolet;
 }
 
 .landingpage-app {
@@ -332,16 +297,13 @@ footer:hover {
 }
 
 #above-fold {
-  padding-top: 100px;
-  padding-bottom: 100px;
-  background-size: 100%;
-  background-position: center;
-  background-image: url('https://raw.githubusercontent.com/akaalias/pudding/main/public/img/Dai.png');
+  background-position: 50% 230px;
+  background-size: 750px;
 }
 
 #search-container {
-  padding-top: 150px;
-  padding-bottom: 100px;
+  padding-top: 200px;
+  padding-bottom: 200px;
 }
 
 #explore-tokens-container {

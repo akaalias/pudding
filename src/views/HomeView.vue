@@ -603,7 +603,6 @@
             "node",
             function(event, orignalEvent) {
               let node = event.target;
-              console.log(node.position())
               let url = "https://ethplorer.io/address/" + node.data().id;
               const type = node.data().type;
               window.open(url, "_blank", "minimizable=false").focus();
