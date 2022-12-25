@@ -6,9 +6,10 @@
     <section id="above-fold" ref="above-fold">
       <v-container fluid id="landingpage-container">
         <v-row>
-          <v-col cols="md-12">
+          <v-col md="10"
+                 offset-md="1">
             <h1 class="display-3">
-              Have more fun with OSINT analysis for Ethereum ERC-20 ecosystems
+              Have more fun with OSINT analysis of Ethereum ERC-20 ecosystems
             </h1>
             <h2 class="display-2">
               Connect the Dots, Follow the Money, Find the Story.
@@ -187,7 +188,7 @@ h1.display-3 {
   margin-top: 5%;
   margin-bottom: 40px;
   font-size: 58pt !important;
-  line-height: 58pt;
+  line-height: 68pt;
   text-shadow: 0px 0px 10px blueviolet;
 }
 
@@ -304,9 +305,6 @@ footer:hover {
 #search-container {
   padding-top: 200px;
   padding-bottom: 200px;
-}
-
-#explore-tokens-container {
 }
 
 #explore-tokens-container h2 {
