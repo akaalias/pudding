@@ -27,8 +27,8 @@ export default class Constants {
     public static edgePalette(theme: string) {
         if (theme === 'light') {
             return {
-                relationshipStart: "#e6d5cc", relationshipEnd: "#8c2f1f",
-                transactionStart: "#d6d8d4", transactionEnd: "#3d4f66",
+                relationshipStart: "#c9a99c", relationshipEnd: "#8c2f1f",
+                transactionStart: "#b4b9bd", transactionEnd: "#3d4f66",
                 labelText: "#111111", labelBackground: "#fffff8", labelBorder: "#d9d5c3",
             }
         }
