@@ -8,7 +8,6 @@
     ></v-progress-linear>
     <v-app-bar
         app
-        dark
         fluid
     >
       <v-toolbar-title>
@@ -19,6 +18,8 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
+
+      <theme-toggle class="mr-3"/>
 
       <v-btn
           small
@@ -41,7 +42,7 @@
                    icon
                    @click="toggleShowMenu"
                    id="toggleMenuButton">
-              <v-icon dark>
+              <v-icon>
                 {{showMenu ? "mdi-minus" : "mdi-plus"}}
               </v-icon>
             </v-btn>
@@ -95,7 +96,6 @@
             >
               <template v-slot:append>
                 <v-icon v-if="!finetuneTotalSumThreshold"
-                        dark
                         small
                         @click="finetuneTotalSumThreshold = !finetuneTotalSumThreshold"
                 >
@@ -113,7 +113,6 @@
             >
               <template v-slot:append>
                 <v-icon v-if="finetuneTotalSumThreshold"
-                        dark
                         small
                         @click="finetuneTotalSumThreshold = !finetuneTotalSumThreshold"
                 >
@@ -241,9 +240,12 @@
   import Constants from "@/models/Constants"
   import API from "@/models/API"
   import cytoscape from 'cytoscape';
+  import ThemeToggle from "@/components/ThemeToggle.vue"
+  import { themeState } from "@/theme"
   export default Vue.extend({
     name: 'Home',
     components: {
+      ThemeToggle
     },
     data() {
       return {
@@ -276,7 +278,9 @@
                             {name: "Circle"},
                             {name: "Breadthfirst"},
         ],
-        currentToken: []
+        currentToken: [],
+        communityIds: [],
+        edgeMaxima: null
       }
     },
     methods: {
@@ -315,19 +319,8 @@
           const uniqueCommunityIds = [...new Set(nodeToCommunityMapping.values())]
 
           // Generate Community Classes
-          for(var id of uniqueCommunityIds) {
-            var color = Constants.StringToColor.next(id)
-            if(color == null) {
-              color = Constants.colors[id]
-            }
-
-            this.cy.style()
-                .selector('node.c' + id)
-                .style({
-                  'background-color': color
-                })
-                .update()
-          }
+          this.communityIds = uniqueCommunityIds
+          this.applyCommunityColors()
 
           // Set Elements
           this.cy.remove('')
@@ -438,52 +431,8 @@
           }.bind(this)).remove();
 
           // Set up edge classes
-          var dataMapProperty = 'transactions'
-          var dataMapMaximum = maxEdgeTransactions.value
-          var dataMapColorStart = Constants.RelationshipEdgeColorStart
-          var dataMapColorEnd = Constants.RelationshipEdgeColorEnd
-          var descriptionProperty = 'relationshipDescription'
-
-          this.cy.style()
-              .selector('edge.relationship-focus')
-              .style({
-                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 1, 10)",
-                "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
-                "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-                'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-                'control-point-distances': "80"
-              })
-              .update()
-
-          this.cy.style()
-              .selector('edge.relationship-focus.showLabel')
-              .style({
-                "text-background-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-              })
-              .update()
-
-          dataMapProperty = 'humanReadableTotalSum'
-          dataMapMaximum = maxEdgeTotalHumanreadableSum.value
-          dataMapColorStart = Constants.TransactionEdgeColorStart
-          dataMapColorEnd = Constants.TransactionEdgeColorEnd
-          descriptionProperty = 'transactionDescription'
-
-          this.cy.style()
-              .selector('edge.transaction-focus')
-              .style({
-                "width": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 1, 10)",
-                "arrow-scale": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", 0.5, 1.2)",
-                "line-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-                'mid-target-arrow-color': "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum  + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-              })
-              .update()
-
-          this.cy.style()
-              .selector('edge.transaction-focus.showLabel')
-              .style({
-                "text-background-color": "mapData(" + dataMapProperty + ", 0, " + dataMapMaximum + ", " + dataMapColorStart + ", " + dataMapColorEnd + ")",
-              })
-              .update()
+          this.edgeMaxima = {transactions: maxEdgeTransactions.value, totalSum: maxEdgeTotalHumanreadableSum.value}
+          this.applyEdgeColors()
 
           // Run Layout
           this.cy.layout(this.getLayout()).run();
@@ -497,6 +446,82 @@
           // Indicate finished
           this.searching = false
         }
+      },
+      applyCommunityColors() {
+        for(var id of this.communityIds) {
+          this.cy.style()
+              .selector('node.c' + id)
+              .style({
+                'background-color': Constants.communityColor(id, themeState.theme)
+              })
+              .update()
+        }
+      },
+      applyEdgeColors() {
+        if(!this.edgeMaxima) {
+          return
+        }
+        const palette = Constants.edgePalette(themeState.theme)
+        const light = themeState.theme === 'light'
+        const groups = [
+          {selector: 'edge.relationship-focus', property: 'transactions', maximum: this.edgeMaxima.transactions,
+            start: palette.relationshipStart, end: palette.relationshipEnd, extra: {'control-point-distances': "80"}},
+          {selector: 'edge.transaction-focus', property: 'humanReadableTotalSum', maximum: this.edgeMaxima.totalSum,
+            start: palette.transactionStart, end: palette.transactionEnd, extra: {}},
+        ]
+        for(const g of groups) {
+          const mapped = "mapData(" + g.property + ", 0, " + g.maximum + ", " + g.start + ", " + g.end + ")"
+          this.cy.style()
+              .selector(g.selector)
+              .style(Object.assign({
+                "width": "mapData(" + g.property + ", 0, " + g.maximum + ", 1, 10)",
+                "arrow-scale": "mapData(" + g.property + ", 0, " + g.maximum + ", 0.5, 1.2)",
+                "line-color": mapped,
+                'mid-target-arrow-color': mapped,
+              }, g.extra))
+              .update()
+
+          // Light mode: labels are ink on a paper chip, readable at every strength.
+          this.cy.style()
+              .selector(g.selector + '.showLabel')
+              .style({
+                "text-background-color": light ? palette.labelBackground : mapped,
+                "color": palette.labelText,
+                "text-border-width": light ? 1 : 0,
+                "text-border-color": palette.labelBorder,
+                "text-border-opacity": 1,
+              })
+              .update()
+        }
+      },
+      applyGraphTheme() {
+        if(!this.cy) {
+          return
+        }
+        const t = Constants.graphTheme(themeState.theme)
+        this.cy.style()
+            .selector('node')
+            .style({
+              "background-color": t.node,
+              "text-outline-color": t.labelOutline,
+              "color": t.labelText,
+              "font-family": t.font,
+            })
+            .update()
+        this.cy.style()
+            .selector('edge')
+            .style({"font-family": t.font})
+            .update()
+        this.applyCommunityColors()
+        this.cy.style()
+            .selector('node.target')
+            .style({'border-color': t.target})
+            .update()
+        this.cy.style()
+            .selector('.meta-info')
+            .style({"color": t.labelText, "text-outline-color": t.labelOutline, "background-color": t.node})
+            .update()
+        this.applyEdgeColors()
       },
       setupExportLabels() {
 
@@ -574,6 +599,7 @@
         })
 
         this.cy = cy
+        this.applyGraphTheme()
 
         this.cy.on('mouseover', 'edge, node', function(e){
           var sel = e.target;
@@ -731,10 +757,18 @@
         return "Minimum: " + Intl.NumberFormat().format(this.totalSumThreshold) + symbol
       },
       computedRelationshipEdgeColorEnd() {
-        return Constants.RelationshipEdgeColorEnd
+        return Constants.edgePalette(themeState.theme).relationshipEnd
       },
       computedTransactionEdgeColorEnd() {
-        return Constants.TransactionEdgeColorEnd
+        return Constants.edgePalette(themeState.theme).transactionEnd
+      },
+      theme() {
+        return themeState.theme
+      }
+    },
+    watch: {
+      theme() {
+        this.applyGraphTheme()
       }
     }
   })
@@ -743,14 +777,14 @@
 <style>
 
 #content-container {
-  background-color: #222;
+  background-color: var(--graph-bg);
 }
 
 #cyto {
   width: 100%;
   height: 900px;
   display: block;
-  background-color: #222;
+  background-color: var(--graph-bg);
 }
 
 .searchingProgressIndicator {
@@ -768,7 +802,7 @@
   top: 50px;
   left: 20px;
   z-index: 1;
-  background-color: #333;
+  background-color: var(--panel-bg);
 }
 
 #filters h2 {

@@ -13,6 +13,57 @@ export default class Constants {
     public static RelationshipEdgeColorEnd = "#FF9494"
     public static TransactionEdgeColorStart = "#525d6e"
     public static TransactionEdgeColorEnd = "#7e92af"
+
+    // Graph colours per theme. Dark is the original look; light is ink on
+    // paper with the oxblood accent of the recent project sites.
+    public static graphTheme(theme: string) {
+        if (theme === 'light') {
+            return {node: "#9b998c", labelOutline: "#fffff8", labelText: "#111111", target: "#8c2f1f",
+                font: '"Palatino", "Palatino Linotype", "Book Antiqua", Georgia, serif'}
+        }
+        return {node: "#555", labelOutline: "#555", labelText: "#fff", target: "red",
+                font: 'Helvetica Neue, Helvetica, sans-serif'}
+    }
+    public static edgePalette(theme: string) {
+        if (theme === 'light') {
+            return {
+                relationshipStart: "#e6d5cc", relationshipEnd: "#8c2f1f",
+                transactionStart: "#d6d8d4", transactionEnd: "#3d4f66",
+                labelText: "#111111", labelBackground: "#fffff8", labelBorder: "#d9d5c3",
+            }
+        }
+        return {
+            relationshipStart: Constants.RelationshipEdgeColorStart, relationshipEnd: Constants.RelationshipEdgeColorEnd,
+            transactionStart: Constants.TransactionEdgeColorStart, transactionEnd: Constants.TransactionEdgeColorEnd,
+            labelText: "#fff", labelBackground: "#333", labelBorder: "#333",
+        }
+    }
+    // Community colours that read on paper: a hand-picked set first, then
+    // evenly spread hues at ink-friendly lightness.
+    private static lightCommunityColors: string[] = (function () {
+        const picked = ["#8c2f1f", "#2f5d8c", "#3f7a4a", "#8a6a1e", "#6b4a8c", "#1f7a7a", "#b35a1f",
+            "#111111", "#a3485f", "#4f6b2a", "#5a6b8c", "#7a3f6b"]
+        const generated: string[] = []
+        for (let i = 0; i < 52; i++) {
+            const hue = Math.round((i * 137.508 + 20) % 360)
+            const lightness = [34, 44, 52][i % 3]
+            generated.push(`hsl(${hue}, 55%, ${lightness}%)`)
+        }
+        return picked.concat(generated)
+    })()
+    private static communityIndex: {[id: string]: number} = {}
+    public static communityColor(id: any, theme: string) {
+        if (theme === 'light') {
+            const key = "" + id
+            if (Constants.communityIndex[key] === undefined) {
+                Constants.communityIndex[key] = Object.keys(Constants.communityIndex).length
+            }
+            const list = Constants.lightCommunityColors
+            return list[Constants.communityIndex[key] % list.length]
+        }
+        const color = Constants.StringToColor.next(id)
+        return color == null ? (Constants as any).colors[id] : color
+    }
     public static AvailableTokenNames() {
         return this.AvailableTokens.map(x => x.name)
     }

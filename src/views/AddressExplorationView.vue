@@ -8,7 +8,6 @@
     ></v-progress-linear>
     <v-app-bar
         app
-        dark
         fluid
     >
       <v-toolbar-title>
@@ -24,6 +23,7 @@
           v-on:keyup.enter="search"
       >
       </v-text-field>
+      <theme-toggle class="ml-3"/>
     </v-app-bar>
     <v-main>
       <v-container fluid id="content-container">
@@ -44,12 +44,14 @@
   import API from "@/models/API"
   import cytoscape from 'cytoscape';
   import cola from 'cytoscape-cola';
+  import ThemeToggle from "@/components/ThemeToggle.vue"
 
   cytoscape.use(cola)
 
   export default Vue.extend({
     name: 'AddressExploration',
     components: {
+      ThemeToggle
     },
     data() {
       return {
@@ -138,14 +140,14 @@
 }
 
 #content-container {
-  background-color: #222;
+  background-color: var(--graph-bg);
 }
 
 #cyto {
   width: 100%;
   height: 900px;
   display: block;
-  background-color: #222;
+  background-color: var(--graph-bg);
 }
 
 .searchingProgressIndicator {

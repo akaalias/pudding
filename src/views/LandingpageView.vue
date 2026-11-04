@@ -2,6 +2,7 @@
   <v-app class="landingpage-app" mobile-breakpoint="800">
     <div id="new-banner">
         Hello and welcome to Pudding Research!
+        <theme-toggle class="banner-toggle"/>
     </div>
     <section id="above-fold" ref="above-fold">
       <v-container fluid id="landingpage-container">
@@ -66,7 +67,6 @@
                     Explore {{token.name}}
                     <v-icon
                         right
-                        dark
                     >
                       mdi-arrow-right
                     </v-icon>
@@ -149,10 +149,12 @@
 <script lang="ts">
 import Vue from 'vue'
 import Constants from "@/models/Constants"
+import ThemeToggle from "@/components/ThemeToggle.vue"
 
 export default Vue.extend({
   name: 'Landingpage',
   components: {
+    ThemeToggle
   },
   data() {
     return {
@@ -170,17 +172,26 @@ export default Vue.extend({
     let limited = Constants.AvailableTokens.slice(0, 30)
     const randomElement = limited[Math.floor(Math.random() * limited.length)];
     // const randomElement = limited[0]
-    demo.style.backgroundImage = "url('" + randomElement.imageFileName + "')"
+    demo.style.setProperty('--hero-image', "url('" + randomElement.imageFileName + "')")
   }
 }
 )
 </script>
 <style scoped>
 #new-banner {
-  background-color: #310f50;
+  background-color: var(--banner-bg);
+  border-bottom: 1px solid var(--rule);
   padding: 5px;
   width: 100%;
   text-align: center;
+  position: relative;
+}
+
+.banner-toggle {
+  position: absolute !important;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 h1.display-3 {
@@ -189,7 +200,7 @@ h1.display-3 {
   margin-bottom: 40px;
   font-size: 58pt !important;
   line-height: 68pt;
-  text-shadow: 0px 0px 10px blueviolet;
+  text-shadow: var(--hero-glow);
 }
 
 h2.display-2 {
@@ -197,11 +208,11 @@ h2.display-2 {
   font-size: 36px !important;
   line-height: 125%;
   font-weight: normal;
-  text-shadow: 0px 0px 10px blueviolet;
+  text-shadow: var(--hero-glow);
 }
 
 .landingpage-app {
-  background-color: #333;
+  background-color: var(--page-bg);
 }
 .centered {
   text-align: center;
@@ -223,7 +234,9 @@ h2.display-2 {
 
 #contact-container {
   padding-top: 50px;
-  background-color: #401567;
+  background-color: var(--contact-bg);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
 }
 
 .contact h1, .contact h1 {
@@ -247,7 +260,8 @@ h2.display-2 {
 }
 
 footer {
-  background-color: #222;
+  background-color: var(--footer-bg);
+  border-top: 1px solid var(--rule);
   padding: 40px;
   padding-top: 50px;
   font-size: 10pt;
@@ -277,7 +291,7 @@ footer:hover {
 }
 
 #ballet-container {
-  background-color: #280e41;
+  background-color: var(--showcase-bg);
   padding: 20px;
   padding-bottom: 50px;
   text-align: center;
@@ -286,20 +300,71 @@ footer:hover {
 #ballet-container img {
   width: 80%;
   border-radius: 20px;
-  box-shadow: 0px 0px 300px #f63232;
-  border: 1px solid #f63232;
+  box-shadow: var(--showcase-glow);
+  border: var(--showcase-border);
   padding: 20px;
-  background-color: #333;
+  background-color: var(--showcase-frame);
 }
 
 #ballet-container .headline {
   padding: 50px;
-  color: #fff;
+  color: var(--ink);
 }
 
 #above-fold {
+  position: relative;
+}
+
+/* The hero picture sits on its own layer so light mode can invert it
+   without touching the text above it. */
+#above-fold::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--hero-image);
+  background-repeat: no-repeat;
   background-position: 50% 230px;
   background-size: 750px;
+  filter: var(--hero-image-filter);
+  opacity: var(--hero-image-opacity);
+  pointer-events: none;
+}
+
+#above-fold > * {
+  position: relative;
+}
+
+[data-theme="light"] h1.display-3 {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em !important;
+}
+
+[data-theme="light"] h2.display-2 {
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  h1.display-3 {
+    font-size: 36px !important;
+    line-height: 1.2 !important;
+    margin-top: 32px;
+    margin-bottom: 20px;
+  }
+
+  h2.display-2 {
+    font-size: 22px !important;
+  }
+
+  #search-container {
+    padding-top: 120px;
+    padding-bottom: 120px;
+  }
+}
+
+[data-theme="light"] #explore-tokens-container h2,
+[data-theme="light"] footer h2 {
+  font-weight: 400;
 }
 
 #search-container {
